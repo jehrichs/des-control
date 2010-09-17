@@ -15,38 +15,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ACTUATORSETTINGS_H
-#define ACTUATORSETTINGS_H
+#ifndef DCACTUATOR_H
+#define DCACTUATOR_H
 
-#include <QWidget>
+#include "dcmodelitem.h"
 
-namespace Ui {
-    class ActuatorSettings;
-}
-
-class Project;
-class QListWidgetItem;
-class DCActuator;
-
-class ActuatorSettings : public QWidget
+class DCActuator : public DCModelItem
 {
     Q_OBJECT
 
 public:
-    explicit ActuatorSettings(Project * project);
-    ~ActuatorSettings();
+    enum GAProtocol
+    {
+        MAERKLIN,
+        NRMA,
+        SELECTRIX,
+        SERVER
+    };
 
-private slots:
-    void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
-    void newActuator();
-    void deleteCurrent();
-    void saveChanges();
+    explicit DCActuator();
+
+    void setProtocol(GAProtocol protocol);
+    DCActuator::GAProtocol protocol() const;
+
+    void setPort(int port);
+    int port() const;
+
+    void setValue(const QString & value);
+    QString value() const;
+
+    bool initialize();
+    void sendValue();
+
+public slots:
+    void updateValues(const QString & srcpString);
 
 private:
-    void showItem(DCActuator *actuator);
+    GAProtocol m_protocol;
+    int m_port;
 
-    Ui::ActuatorSettings *ui;
-    Project* m_project;
+    QString m_value;
+
 };
 
-#endif // ACTUATORSETTINGS_H
+#endif // DCACTUATOR_H

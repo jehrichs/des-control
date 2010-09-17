@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="sensor.png">images/sensor.png</file>
+        <file alias="train.png">images/train.png</file>
+        <file alias="actuator.png">images/actuator.png</file>
+    </qresource>
+</RCC>

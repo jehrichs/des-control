@@ -24,6 +24,9 @@ namespace Ui {
     class MainWindow;
 }
 
+class Project;
+class ProjectTreeView;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -32,8 +35,22 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public Q_SLOTS:
+    void showSettings();
+    void showAbout();
+    void showDebugConsole();
+
+    void newProject();
+    void saveProject();
+
+    void connectServer();
+    void connectedToServer();
+    void disconnectServer();
+
 private:
     Ui::MainWindow *ui;
+    Project *m_project;
+    ProjectTreeView *m_projectView;
 };
 
 #endif // MAINWINDOW_H

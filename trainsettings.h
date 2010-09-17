@@ -24,16 +24,29 @@ namespace Ui {
     class TrainSettings;
 }
 
+class Project;
+class QListWidgetItem;
+class DCTrain;
+
 class TrainSettings : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit TrainSettings(QWidget *parent = 0);
+    explicit TrainSettings(Project * project);
     ~TrainSettings();
 
+
+private slots:
+    void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
+    void newTrain();
+    void deleteCurrent();
+    void saveChanges();
+
 private:
+    void showItem(DCTrain *train);
     Ui::TrainSettings *ui;
+    Project* m_project;
 };
 
 #endif // TRAINSETTINGS_H

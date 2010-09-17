@@ -15,38 +15,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ACTUATORSETTINGS_H
-#define ACTUATORSETTINGS_H
+#ifndef DCMODELITEM_H
+#define DCMODELITEM_H
 
-#include <QWidget>
+#include <QObject>
 
-namespace Ui {
-    class ActuatorSettings;
-}
-
-class Project;
-class QListWidgetItem;
-class DCActuator;
-
-class ActuatorSettings : public QWidget
+class DCModelItem : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit ActuatorSettings(Project * project);
-    ~ActuatorSettings();
+    explicit DCModelItem();
 
-private slots:
-    void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
-    void newActuator();
-    void deleteCurrent();
-    void saveChanges();
+    void setBusID(int busID);
+    int busID() const;
+
+    void setAddress(int address);
+    int address() const;
+
+    void setName(const QString & name);
+    QString name();
+
+    virtual bool initialize() = 0;
+
+signals:
+    void stateChanged();
+    void itemChanged();
+    void sendSRCPString(const QString & srcpString);
+
+public slots:
+    virtual void updateValues(const QString & srcpString) = 0;
 
 private:
-    void showItem(DCActuator *actuator);
-
-    Ui::ActuatorSettings *ui;
-    Project* m_project;
+    int m_busID;
+    int m_address;
+    QString m_name;
 };
 
-#endif // ACTUATORSETTINGS_H
+#endif // DCMODELITEM_H

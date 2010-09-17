@@ -24,16 +24,28 @@ namespace Ui {
     class SensorSettings;
 }
 
+class Project;
+class QListWidgetItem;
+class DCSensor;
+
 class SensorSettings : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SensorSettings(QWidget *parent = 0);
+    explicit SensorSettings(Project * project);
     ~SensorSettings();
 
+private slots:
+    void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
+    void newSensor();
+    void deleteCurrent();
+    void saveChanges();
+
 private:
+    void showItem(DCSensor *sensor);
     Ui::SensorSettings *ui;
+    Project* m_project;
 };
 
 #endif // SENSORSETTINGS_H

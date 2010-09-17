@@ -21,6 +21,11 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QCoreApplication::setOrganizationName("Uni Bremen IAE");
+    QCoreApplication::setOrganizationDomain("uni-bremen.de");
+    QCoreApplication::setApplicationName("DES-Control");
+
     MainWindow w;
     w.show();
 

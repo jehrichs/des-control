@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
-    <widget class="QListWidget" name="listWidgetTrains">
+    <widget class="QListWidget" name="listWidgetSensors">
      <property name="maximumSize">
       <size>
        <width>150</width>
@@ -46,6 +46,9 @@
           <property name="text">
            <string>Name:</string>
           </property>
+          <property name="buddy">
+           <cstring>lineEditName</cstring>
+          </property>
          </widget>
         </item>
         <item row="0" column="1">
@@ -56,16 +59,36 @@
           <property name="text">
            <string>Address:</string>
           </property>
+          <property name="buddy">
+           <cstring>spinBoxAddress</cstring>
+          </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QSpinBox" name="spinBoxAddress"/>
+         <widget class="QSpinBox" name="spinBoxAddress">
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="maximum">
+           <number>999</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="buttonSave">
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -99,6 +122,68 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>listWidgetSensors</tabstop>
+  <tabstop>lineEditName</tabstop>
+  <tabstop>spinBoxAddress</tabstop>
+  <tabstop>buttonSave</tabstop>
+  <tabstop>buttonNew</tabstop>
+  <tabstop>buttonRemove</tabstop>
+ </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonSave</sender>
+   <signal>clicked()</signal>
+   <receiver>SensorSettings</receiver>
+   <slot>saveChanges()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>198</x>
+     <y>408</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>193</x>
+     <y>443</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonNew</sender>
+   <signal>clicked()</signal>
+   <receiver>SensorSettings</receiver>
+   <slot>newSensor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>449</x>
+     <y>421</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>448</x>
+     <y>449</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonRemove</sender>
+   <signal>clicked()</signal>
+   <receiver>SensorSettings</receiver>
+   <slot>deleteCurrent()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>513</x>
+     <y>411</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>510</x>
+     <y>447</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>saveChanges()</slot>
+  <slot>newSensor()</slot>
+  <slot>deleteCurrent()</slot>
+ </slots>
 </ui>

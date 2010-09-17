@@ -15,38 +15,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ACTUATORSETTINGS_H
-#define ACTUATORSETTINGS_H
+#include "dcsensor.h"
 
-#include <QWidget>
-
-namespace Ui {
-    class ActuatorSettings;
+DCSensor::DCSensor()
+    : DCModelItem()
+{
 }
 
-class Project;
-class QListWidgetItem;
-class DCActuator;
-
-class ActuatorSettings : public QWidget
+QString DCSensor::value() const
 {
-    Q_OBJECT
+    return m_value;
+}
 
-public:
-    explicit ActuatorSettings(Project * project);
-    ~ActuatorSettings();
+bool DCSensor::initialize()
+{
+    if(address() != -1 && busID() != -1)
+    {
+        QString srcpString = QString("INIT %1 FB %2").arg(busID()).arg(address());
 
-private slots:
-    void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
-    void newActuator();
-    void deleteCurrent();
-    void saveChanges();
+        emit sendSRCPString(srcpString);
 
-private:
-    void showItem(DCActuator *actuator);
+        return true;
+    }
 
-    Ui::ActuatorSettings *ui;
-    Project* m_project;
-};
+    return false;
+}
 
-#endif // ACTUATORSETTINGS_H
+void DCSensor::updateValues(const QString & srcpString)
+{
+    //100 INFO <bus> FB <addr> <value>
+    // only <value> will be send to this slot, rest is stripped out by the server class
+
+    if( srcpString != m_value)
+    {
+        m_value = srcpString;
+        emit stateChanged();
+    }
+}

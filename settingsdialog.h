@@ -24,6 +24,13 @@ namespace Ui {
     class SettingsDialog;
 }
 
+class QListWidgetItem;
+
+class ServerSettings;
+class TrainSettings;
+class ActuatorSettings;
+class SensorSettings;
+
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
@@ -32,8 +39,17 @@ public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
 
+public slots:
+    void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+
 private:
+    void createIcons();
     Ui::SettingsDialog *ui;
+
+    ServerSettings   *m_serverPage;
+    TrainSettings    *m_trainPage;
+    ActuatorSettings *m_actuatorPage;
+    SensorSettings   *m_sensorPage;
 };
 
 #endif // SETTINGSDIALOG_H
