@@ -24,27 +24,26 @@
 #include "dcserver.h"
 #include "project.h"
 #include "projecttreeview.h"
+#include "projectserializer.h"
 
 #include "dcsensor.h"
 #include "dcactuator.h"
 #include "dctrain.h"
 
 #include <QtGui/QSplitter>
+#include <QFileDialog>
+#include <QMessageBox>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow),
-        m_projectView(0)
+        m_projectView(0),
+        m_splitter(0)
 {
     ui->setupUi(this);
 
-    m_projectView = new ProjectTreeView();
-
-    QSplitter *splitter = new QSplitter(parent);
-    splitter->addWidget(m_projectView);
-    splitter->addWidget(ui->graphicsView);
-    setCentralWidget(splitter);
+    showEmptyView();
 }
 
 MainWindow::~MainWindow()
@@ -66,8 +65,6 @@ void MainWindow::showDebugConsole()
 {
     ServerDebugConsole *console = new ServerDebugConsole();
     console->show();
-
-    //server->disconnectSRCP();
 }
 
 void MainWindow::newProject()
@@ -84,67 +81,98 @@ void MainWindow::newProject()
     connect (server, SIGNAL(connectionClosed()), this, SLOT(disconnectServer()));
     connect (server, SIGNAL(connectionEstablished()), this, SLOT(connectedToServer()));
 
-    ui->menu_Server->setEnabled(true);
-    ui->menu_Power->setEnabled(true);
+    showProjectView();
+}
 
-    m_projectView->setProject(m_project);
+void MainWindow::openProject()
+{
+    QString fileName =
+            QFileDialog::getOpenFileName(this, tr("Open DES Project"),
+                                         QDir::currentPath(),
+                                         tr("DES Files (*.xml)"));
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("DES Project Reader"),
+                             tr("Cannot open file %1:\n%2.")
+                             .arg(fileName)
+                             .arg(file.errorString()));
+        return;
+    }
 
 
-    //create some fake devices
-    /*
-    DCSensor *sens = new DCSensor;
-    connect(sens, SIGNAL(initDevice(QString)), m_project->server(), SLOT(sendSRCP(QString)));
-    sens->setBusID(1);
-    sens->setAddress(1);
-    sens->initialize();*/
+    ProjectSerializer serializer;
+    m_project = serializer.loadProject(&file);
+    if(m_project)
+    {
+        statusBar()->showMessage(tr("File opened"), 2000);
+        m_project->setFileName(fileName);
 
-    DCActuator *actuator = new DCActuator();
-    actuator->setBusID(1);
-    actuator->setAddress(1);
-    actuator->setPort(1);
-    actuator->setProtocol(DCActuator::MAERKLIN);
-    m_project->addActuator(actuator);
+        connect (m_project->server(), SIGNAL(connectionClosed()), this, SLOT(disconnectServer()));
+        connect (m_project->server(), SIGNAL(connectionEstablished()), this, SLOT(connectedToServer()));
 
-    DCActuator *actuator2 = new DCActuator();
-    actuator2->setBusID(1);
-    actuator2->setAddress(2);
-    actuator2->setPort(1);
-    actuator2->setProtocol(DCActuator::MAERKLIN);
-    m_project->addActuator(actuator2);
+        showProjectView();
 
-    DCTrain *train = new DCTrain();
-    train->setBusID(1);
-    train->setAddress(1);
-    train->setProtocol(DCTrain::DCC1);
-    train->setDecoderSteps(128);
-    train->setDecoderFunctions(4);
-    m_project->addTrain(train);
-
-    DCTrain *train2 = new DCTrain();
-    train2->setBusID(1);
-    train2->setAddress(2);
-    train2->setProtocol(DCTrain::MM2);
-    train2->setDecoderSteps(27);
-    train2->setDecoderFunctions(2);
-    m_project->addTrain(train2);
+    }
+    else
+    {
+        delete m_project;
+        m_project = 0;
+    }
 }
 
 void MainWindow::saveProject()
 {
-    DCTrain *t = m_project->trains().first();
+    if(m_project->fileName().isEmpty())
+        saveProjectAs();
 
-    t->setSpeed(24);
-    t->setmaxSpeed(100);
-    t->setDriveMode(DCTrain::FORWARD);
+    else
+    {
+        QFile file(m_project->fileName());
+        if (!file.open(QFile::WriteOnly | QFile::Text)) {
+            QMessageBox::warning(this, tr("DES Project Writer"),
+                                 tr("Cannot write file %1:\n%2.")
+                                 .arg(m_project->fileName())
+                                 .arg(file.errorString()));
+            return;
+        }
 
-    t->setFunction(1,true);
-    t->sendValue();
+        ProjectSerializer serializer;
+        if(serializer.saveProject(m_project, &file))
+            statusBar()->showMessage(tr("File saved"), 2000);
+    }
+}
 
-    DCActuator *actuator = new DCActuator();
-    actuator->setBusID(1);
-    actuator->setAddress(3);
-    actuator->setProtocol(DCActuator::MAERKLIN);
-    m_project->addActuator(actuator);
+void MainWindow::saveProjectAs()
+{
+    QString fileName =
+            QFileDialog::getSaveFileName(this, tr("Save DES Project"),
+                                         QDir::currentPath(),
+                                         tr("DES Files (*.xml)"));
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("DES Project Writer"),
+                             tr("Cannot write file %1:\n%2.")
+                             .arg(fileName)
+                             .arg(file.errorString()));
+        return;
+    }
+
+    m_project->setFileName(fileName);
+
+    ProjectSerializer serializer;
+    if(serializer.saveProject(m_project, &file))
+        statusBar()->showMessage(tr("File saved"), 2000);
+}
+
+void MainWindow::closeProject()
+{
+
 }
 
 void MainWindow::connectServer()
@@ -158,7 +186,6 @@ void MainWindow::connectedToServer()
     ui->actionDisconnect->setEnabled(true);
     ui->actionShow_debug_console->setEnabled(true);
     ui->actionServer_information->setEnabled(true);
-    ui->actionSave->setEnabled(true);
 
     m_project->initializeDevices();
 }
@@ -171,4 +198,32 @@ void MainWindow::disconnectServer()
     ui->actionDisconnect->setEnabled(false);
     ui->actionShow_debug_console->setEnabled(false);
     ui->actionServer_information->setEnabled(false);
+}
+
+void MainWindow::showProjectView()
+{
+    if(!m_project)
+        return;
+
+    delete m_projectView;
+    m_projectView = new ProjectTreeView();
+    m_projectView->setProject(m_project);
+
+    ui->menu_Server->setEnabled(true);
+    ui->menu_Power->setEnabled(true);
+    ui->actionSave->setEnabled(true);
+    ui->actionSave_As->setEnabled(true);
+
+    m_splitter = new QSplitter();
+    m_splitter->addWidget(m_projectView);
+    //m_splitter->addWidget(ui->graphicsView);
+    setCentralWidget(m_splitter);
+}
+
+void MainWindow::showEmptyView()
+{
+    QWidget *intro = new QWidget();
+    setCentralWidget(intro);
+    delete m_splitter;
+    delete m_projectView;
 }

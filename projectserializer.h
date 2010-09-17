@@ -15,50 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef PROJECTSERIALIZER_H
+#define PROJECTSERIALIZER_H
 
-#include <QMainWindow>
-
-namespace Ui {
-    class MainWindow;
-}
+#include <QObject>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 
 class Project;
-class ProjectTreeView;
-class QSplitter;
+class QIODevice;
 
-class MainWindow : public QMainWindow
+class ProjectSerializer : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit ProjectSerializer(QObject *parent = 0);
 
-public Q_SLOTS:
-    void showSettings();
-    void showAbout();
-    void showDebugConsole();
+    bool saveProject(Project* project, QIODevice *device);
 
-    void newProject();
-    void openProject();
-    void saveProject();
-    void saveProjectAs();
-    void closeProject();
-
-    void connectServer();
-    void connectedToServer();
-    void disconnectServer();
+    Project* loadProject(QIODevice *device);
 
 private:
-    void showProjectView();
-    void showEmptyView();
+    void readFile();
+    void readProject();
+    void readServer();
+    void readSensors();
+    void readActuators();
+    void readTrains();
 
-    Ui::MainWindow *ui;
+    QXmlStreamWriter writer;
+    QXmlStreamReader reader;
     Project *m_project;
-    ProjectTreeView *m_projectView;
-    QSplitter *m_splitter;
+
 };
 
-#endif // MAINWINDOW_H
+#endif // PROJECTSERIALIZER_H

@@ -26,6 +26,7 @@ class DCTrain;
 class DCActuator;
 class DCSensor;
 class DCAutomaton;
+class QIODevice;
 
 class Project : public QObject
 {

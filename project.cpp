@@ -23,8 +23,15 @@
 #include "dcsensor.h"
 #include "mainwindow.h"
 
+#include <QIODevice>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+
 Project::Project(QObject *parent)
     : QObject(parent)
+    , m_name(tr("default project"))
+    , m_description(tr("default DES-Control project"))
+    , m_filename(QString())
     , m_server(0)
 {
 }
@@ -213,4 +220,3 @@ void Project::initializeDevices()
         //sensor->initialize();
     }
 }
-

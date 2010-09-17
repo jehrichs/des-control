@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     dctrain.cpp \
     dcsensor.cpp \
     dcactuator.cpp \
-    projecttreeview.cpp
+    projecttreeview.cpp \
+    projectserializer.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     dctrain.h \
     dcsensor.h \
     dcactuator.h \
-    projecttreeview.h
+    projecttreeview.h \
+    projectserializer.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \
@@ -47,8 +49,7 @@ FORMS    += mainwindow.ui \
     actuatorsettings.ui \
     sensorsettings.ui \
     serversettings.ui \
-    serverdebugconsole.ui \
-    projectview.ui
+    serverdebugconsole.ui
 
 RESOURCES += \
     desIcons.qrc

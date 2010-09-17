@@ -104,6 +104,10 @@ void ProjectTreeView::updateTreeView()
     QTreeWidgetItem *automataHeader = new QTreeWidgetItem(AutomataHeader);
     automataHeader->setText(0,"Automata");
     insertTopLevelItem(0,automataHeader);
+
+    updateTrains();
+    updateSensors();
+    updateActuators();
 }
 
 void ProjectTreeView::updateTrains()
