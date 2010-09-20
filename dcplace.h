@@ -28,14 +28,17 @@
 
 class DCEvent;
 
-class DCPlace : public QGraphicsItem
+class DCState : public QGraphicsItem
 {
 
 public:
-    explicit DCPlace(QGraphicsItem *parent = 0);
+    DCState();
 
     void setName(const QString & name);
     QString name() const;
+
+    void setID(int id);
+    int id();
 
     void setMarked(bool marked);
     void setInitial(bool initial);
@@ -64,6 +67,7 @@ private:
     void setUpPlace();
 
     QString m_name;
+    int m_id;
     QList<DCEvent*> m_listFrom;
     QList<DCEvent*> m_listTo;
 

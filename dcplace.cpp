@@ -25,10 +25,11 @@
 
 #include <QDebug>
 
-DCPlace::DCPlace(QGraphicsItem *parent)
-    : QGraphicsItem(parent)
+DCState::DCState()
+    : QGraphicsItem(0)
     , m_name(QString())
     , m_marked(false)
+    , m_initial(false)
     , m_circleGap(10.0)
 {
     m_outside = new QGraphicsEllipseItem(this);
@@ -39,18 +40,29 @@ DCPlace::DCPlace(QGraphicsItem *parent)
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 }
 
-void DCPlace::setName(const QString & name)
+void DCState::setName(const QString & name)
 {
     m_name = name;
     setUpPlace();
 }
 
-QString DCPlace::name() const
+QString DCState::name() const
 {
     return m_name;
 }
 
-void DCPlace::setMarked(bool marked)
+
+void DCState::setID(int id)
+{
+    m_id = id;
+}
+
+int DCState::id()
+{
+    return m_id;
+}
+
+void DCState::setMarked(bool marked)
 {
     m_marked = marked;
 
@@ -62,7 +74,7 @@ void DCPlace::setMarked(bool marked)
     setUpPlace();
 }
 
-void DCPlace::setInitial(bool initial)
+void DCState::setInitial(bool initial)
 {
     m_initial = initial;
 
@@ -70,17 +82,17 @@ void DCPlace::setInitial(bool initial)
     setUpPlace();
 }
 
-void DCPlace::addEventFrom(DCEvent * from)
+void DCState::addEventFrom(DCEvent * from)
 {
     m_listFrom.append(from);
 }
 
-void DCPlace::addEventTo(DCEvent *to)
+void DCState::addEventTo(DCEvent *to)
 {
     m_listTo.append(to);
 }
 
-void DCPlace::setUpPlace()
+void DCState::setUpPlace()
 {
     prepareGeometryChange();
 
@@ -105,28 +117,28 @@ void DCPlace::setUpPlace()
     qDebug() << boundingRect() << m_outside->boundingRect();
 }
 
-QPointF DCPlace::centerPoint() const
+QPointF DCState::centerPoint() const
 {
 
     return QPointF(m_insideText->boundingRect().width()/2,
                    m_insideText->boundingRect().height()/2);
 }
-QGraphicsEllipseItem *DCPlace::outside() const
+QGraphicsEllipseItem *DCState::outside() const
 {
     return m_outside;
 }
 
-QRectF DCPlace::boundingRect () const
+QRectF DCState::boundingRect () const
 {
     return m_outside->boundingRect();
 }
 
-void DCPlace::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
+void DCState::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
 
 }
 
-void DCPlace::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+void DCState::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();
     setSelected(true);
@@ -137,7 +149,7 @@ void DCPlace::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     contextMenu.exec(event->screenPos());
 }
 
-QVariant DCPlace::itemChange(GraphicsItemChange change, const QVariant &value)
+QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)
  {
      switch (change) {
      case ItemPositionHasChanged:
@@ -154,13 +166,13 @@ QVariant DCPlace::itemChange(GraphicsItemChange change, const QVariant &value)
      return QGraphicsItem::itemChange(change, value);
  }
 
- void DCPlace::mousePressEvent(QGraphicsSceneMouseEvent *event)
+ void DCState::mousePressEvent(QGraphicsSceneMouseEvent *event)
  {
      update();
      QGraphicsItem::mousePressEvent(event);
  }
 
- void DCPlace::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+ void DCState::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
  {
      update();
      QGraphicsItem::mouseReleaseEvent(event);

@@ -15,45 +15,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DCEVENT_H
-#define DCEVENT_H
+#ifndef IMPORTAUTOMATON_H
+#define IMPORTAUTOMATON_H
 
-#include <QGraphicsItem>
 
-class DCState;
+#include <QObject>
+#include <QXmlStreamReader>
+#include <QList>
 
-class DCEvent : public QGraphicsItem
+class QIODevice;
+class DCAutomaton;
+
+class ImportAutomaton : public QObject
 {
+    Q_OBJECT
 
 public:
-    DCEvent();
+    enum AutomatonFile
+    {
+        DESUMA,
+        SUPREMICA
+    };
 
-    void setName(const QString & name);
-    QString name() const;
+    explicit ImportAutomaton(QObject *parent = 0);
+    ~ImportAutomaton();
 
-    void setPlaceFrom(DCState *from);
-    DCState *from();
-    void setPlaceTo(DCState *to);
-    DCState *to();
-
-    void adjust();
-
-    enum { Type = UserType + 2 };
-    int type() const { return Type; }
-
-protected:
-    QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QList<DCAutomaton*> loadAutomaton(AutomatonFile fileType, QIODevice *device);
 
 private:
-    QString m_name;
-    DCState *m_from;
-    DCState *m_to;
+    QList<DCAutomaton*> loadDesumaFile(QIODevice *device);
+    QList<DCAutomaton*> loadSupremicaFile(QIODevice *device);
 
-    QPointF sourcePoint;
-    QPointF destPoint;
-    qreal arrowSize;
-
+    QXmlStreamReader reader;
+    QList<DCAutomaton*> m_automatonList;
 };
 
-#endif // DCEVENT_H
+#endif // IMPORTAUTOMATON_H

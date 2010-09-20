@@ -35,24 +35,33 @@ DCEvent::DCEvent()
     adjust();
 }
 
-void DCEvent::setPlaceFrom(DCPlace *from)
+void DCEvent::setName(const QString & name)
+{
+    m_name = name;
+}
+
+QString DCEvent::name() const
+{
+    return m_name;
+}
+void DCEvent::setPlaceFrom(DCState *from)
 {
     m_from = from;
     from->addEventFrom(this);
 }
 
-DCPlace *DCEvent::from()
+DCState *DCEvent::from()
 {
     return m_from;
 }
 
-void DCEvent::setPlaceTo(DCPlace *to)
+void DCEvent::setPlaceTo(DCState *to)
 {
     m_to = to;
     to->addEventTo(this);
 }
 
-DCPlace *DCEvent::to()
+DCState *DCEvent::to()
 {
     return m_to;
 }

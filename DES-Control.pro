@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     dcautomaton.cpp \
     dcplace.cpp \
     dcevent.cpp \
-    automatonview.cpp
+    automatonview.cpp \
+    importautomaton.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -50,7 +51,8 @@ HEADERS  += mainwindow.h \
     dcautomaton.h \
     dcplace.h \
     dcevent.h \
-    automatonview.h
+    automatonview.h \
+    importautomaton.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \

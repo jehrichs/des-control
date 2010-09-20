@@ -23,7 +23,7 @@
 
 #include <QString>
 #include <QAction>
-class DCPlace;
+class DCState;
 
 class DCAutomaton : public QGraphicsScene
 {
@@ -47,15 +47,17 @@ public:
     void setAutomatonType(AutomatonType type);
     DCAutomaton::AutomatonType automatonType() const;
 
+    DCState *getStateFromId(int id);
+
 public slots:
     void selectItem();
-    void addPlace();
+    void addState();
     void addEvent();
     void deleteSelected();
     void editSelected();
 
 private:
-    DCPlace *newPlace();
+    DCState *newState();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -67,6 +69,8 @@ private:
     QString m_name;
     Mode m_mode;
     QGraphicsLineItem *m_line;
+
+    QList<DCState *> m_stateList;
 };
 
 #endif // DCAUTOMATON_H

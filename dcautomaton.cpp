@@ -52,25 +52,37 @@ DCAutomaton::AutomatonType DCAutomaton::automatonType() const
     return m_type;
 }
 
+DCState *DCAutomaton::getStateFromId(int id)
+{
+    foreach(DCState* state, m_stateList)
+    {
+        if(state->id() == id)
+            return state;
+    }
+
+    return 0;
+}
+
 void DCAutomaton::selectItem()
 {
     m_mode = MoveItem;
     qDebug() << "select item";
 }
 
-void DCAutomaton::addPlace()
+void DCAutomaton::addState()
 {
     m_mode = InsertPlace;
 }
 
-DCPlace * DCAutomaton::newPlace()
+DCState * DCAutomaton::newState()
 {
-    DCPlace *newPlace = new DCPlace(0);
-    newPlace->setName("ON");
-    newPlace->setMarked(true);
+    DCState *newState = new DCState();
+    newState->setName("ON");
+    newState->setMarked(true);
 
-    addItem(newPlace);
-    return newPlace;
+    addItem(newState);
+    m_stateList.append(newState);
+    return newState;
 
 }
 
@@ -98,7 +110,7 @@ void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     switch (m_mode) {
     case InsertPlace:
         {
-            DCPlace *place = newPlace();
+            DCState *place = newState();
             place->setPos(mouseEvent->scenePos());
         }
         //emit itemInserted(item);
@@ -156,13 +168,13 @@ void DCAutomaton::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         // qDebug() << item->type();
 
         if (startItems.count() > 0 && endItems.count() > 0 &&
-            startItems.last()->type() == DCPlace::Type &&
-            endItems.last()->type() == DCPlace::Type &&
+            startItems.last()->type() == DCState::Type &&
+            endItems.last()->type() == DCState::Type &&
             startItems.last() != endItems.last()) {
-            DCPlace *startItem =
-                    qgraphicsitem_cast<DCPlace *>(startItems.last());
-            DCPlace *endItem =
-                    qgraphicsitem_cast<DCPlace *>(endItems.last());
+            DCState *startItem =
+                    qgraphicsitem_cast<DCState *>(startItems.last());
+            DCState *endItem =
+                    qgraphicsitem_cast<DCState *>(endItems.last());
             DCEvent *event = new DCEvent();
 
             event->setPlaceFrom(startItem);
