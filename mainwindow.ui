@@ -64,6 +64,7 @@
     <addaction name="actionShow_Toolbar"/>
     <addaction name="actionShow_Taskbar"/>
     <addaction name="separator"/>
+    <addaction name="actionProject_Settings"/>
     <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menu_Power">
@@ -85,7 +86,29 @@
     <addaction name="actionAbout_DES_COntrol"/>
     <addaction name="actionAbout_Qt"/>
    </widget>
+   <widget class="QMenu" name="menuAutomata">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>Automata</string>
+    </property>
+    <addaction name="actionImport_Automata"/>
+    <addaction name="actionDelete_Automata"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelect_Item"/>
+    <addaction name="actionAdd_Place"/>
+    <addaction name="actionAdd_Event"/>
+    <addaction name="actionDelete_selected"/>
+    <addaction name="separator"/>
+    <addaction name="actionAc_G"/>
+    <addaction name="actionCoAc_G"/>
+    <addaction name="actionTrim_G"/>
+    <addaction name="actionG1_x_G2"/>
+    <addaction name="actionG1_G2"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuAutomata"/>
    <addaction name="menu_Server"/>
    <addaction name="menu_Power"/>
    <addaction name="menuSettings"/>
@@ -226,6 +249,111 @@
     <string>Open Project</string>
    </property>
   </action>
+  <action name="actionProject_Settings">
+   <property name="text">
+    <string>Project Settings</string>
+   </property>
+  </action>
+  <action name="actionAdd_Place">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Add Place</string>
+   </property>
+  </action>
+  <action name="actionAdd_Event">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Add Event</string>
+   </property>
+  </action>
+  <action name="actionDelete_selected">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Delete Selected</string>
+   </property>
+  </action>
+  <action name="actionCoAc_G">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>CoAc(G)</string>
+   </property>
+  </action>
+  <action name="actionAc_G">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Ac(G)</string>
+   </property>
+  </action>
+  <action name="actionTrim_G">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Trim(G)</string>
+   </property>
+  </action>
+  <action name="actionG1_x_G2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>G1 x G2</string>
+   </property>
+  </action>
+  <action name="actionG1_G2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>G1 || G2</string>
+   </property>
+  </action>
+  <action name="actionImport_Automata">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Import Automata</string>
+   </property>
+  </action>
+  <action name="actionDelete_Automata">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Delete Automata</string>
+   </property>
+  </action>
+  <action name="actionSelect_Item">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Select Item</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
@@ -358,6 +486,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionImport_Automata</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newAutomata()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDelete_Automata</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>deleteAutomata()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showSettings()</slot>
@@ -370,5 +530,7 @@
   <slot>disconnectServer()</slot>
   <slot>saveProjectAs()</slot>
   <slot>openProject()</slot>
+  <slot>newAutomata()</slot>
+  <slot>deleteAutomata()</slot>
  </slots>
 </ui>

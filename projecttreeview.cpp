@@ -21,6 +21,7 @@
 #include "dctrain.h"
 #include "dcactuator.h"
 #include "dcsensor.h"
+#include "dcautomaton.h"
 
 #include "actuatorsettings.h"
 #include "sensorsettings.h"
@@ -72,6 +73,7 @@ void ProjectTreeView::setProject(Project *newProject)
     connect (m_project, SIGNAL(updateTrains()), this, SLOT(updateTrains()));
     connect (m_project, SIGNAL(updateSensors()), this, SLOT(updateSensors()));
     connect (m_project, SIGNAL(updateActuators()), this, SLOT(updateActuators()));
+    connect (m_project, SIGNAL(updateAutomata()), this, SLOT(updateAutomata()));
 
     updateTreeView();
 }
@@ -101,13 +103,14 @@ void ProjectTreeView::updateTreeView()
     hardwareHeader->insertChild(0,hardwareSensorHeader);
 
     //show automata
-    QTreeWidgetItem *automataHeader = new QTreeWidgetItem(AutomataHeader);
+    automataHeader = new QTreeWidgetItem(AutomataHeader);
     automataHeader->setText(0,"Automata");
     insertTopLevelItem(0,automataHeader);
 
     updateTrains();
     updateSensors();
     updateActuators();
+    updateAutomata();
 }
 
 void ProjectTreeView::updateTrains()
@@ -148,12 +151,14 @@ void ProjectTreeView::updateActuators()
 
 void ProjectTreeView::updateAutomata()
 {
+    hardwareActuatorHeader->takeChildren();
 
-}
-
-void ProjectTreeView::updateAutomata(int i)
-{
-    updateAutomata();
+    foreach(DCAutomaton *automaton, m_project->automata())
+    {
+        QTreeWidgetItem *automatonItem = new QTreeWidgetItem(Plant);
+        automatonItem->setText(0,automaton->name());
+        automataHeader->insertChild(0,automatonItem);
+    }
 }
 
 void ProjectTreeView::openHardwareList()
@@ -171,40 +176,40 @@ void ProjectTreeView::openHardwareList()
     {
     case Train:
         {
-        TrainSettings *ts = new TrainSettings(m_project);
-        settingsDialog->layout()->addWidget(ts);
-        settingsDialog->layout()->addWidget(buttonBox);
-        settingsDialog->exec();
+            TrainSettings *ts = new TrainSettings(m_project);
+            settingsDialog->layout()->addWidget(ts);
+            settingsDialog->layout()->addWidget(buttonBox);
+            settingsDialog->exec();
 
-        delete ts;
-    }
+            delete ts;
+        }
         break;
 
     case Sensor:
         {
-        SensorSettings *ss = new SensorSettings(m_project);
-        settingsDialog->layout()->addWidget(ss);
-        settingsDialog->layout()->addWidget(buttonBox);
-        settingsDialog->exec();
+            SensorSettings *ss = new SensorSettings(m_project);
+            settingsDialog->layout()->addWidget(ss);
+            settingsDialog->layout()->addWidget(buttonBox);
+            settingsDialog->exec();
 
-        delete ss;
-    }
+            delete ss;
+        }
         break;
 
     case Actuator:
         {
-        ActuatorSettings *as = new ActuatorSettings(m_project);
-        settingsDialog->layout()->addWidget(as);
-        settingsDialog->layout()->addWidget(buttonBox);
-        settingsDialog->exec();
+            ActuatorSettings *as = new ActuatorSettings(m_project);
+            settingsDialog->layout()->addWidget(as);
+            settingsDialog->layout()->addWidget(buttonBox);
+            settingsDialog->exec();
 
-        delete as;
-    }
+            delete as;
+        }
         break;
 
-//    default:
-//        qDebug() << "wrong hardware dialoge requested";
-//        return;
+        //    default:
+        //        qDebug() << "wrong hardware dialoge requested";
+        //        return;
     }
 
     delete buttonBox;
@@ -226,40 +231,40 @@ void ProjectTreeView::contextMenuEvent(QContextMenuEvent *event)
     {
     case HardwareHeader:
         //skip
-                break;
+        break;
     case AutomataHeader:
-                break;
+        break;
     case TrainHeader:
-                actions.append(m_addTrain);
-                break;
+        actions.append(m_addTrain);
+        break;
     case Train:
-                actions.append(m_addTrain);
-                actions.append(seperator);
-                actions.append(new QAction("Edit Train", this));
-                actions.append(new QAction("Remove Train", this));
-                break;
+        actions.append(m_addTrain);
+        actions.append(seperator);
+        actions.append(new QAction("Edit Train", this));
+        actions.append(new QAction("Remove Train", this));
+        break;
 
     case ActuartorHeader:
-                actions.append(m_addActuator);
-                break;
+        actions.append(m_addActuator);
+        break;
     case Actuator:
-                actions.append(m_addActuator);
-                actions.append(seperator);
-                actions.append(new QAction("Edit Actuator", this));
-                actions.append(new QAction("Remove Actuator", this));
-                break;
+        actions.append(m_addActuator);
+        actions.append(seperator);
+        actions.append(new QAction("Edit Actuator", this));
+        actions.append(new QAction("Remove Actuator", this));
+        break;
     case SensorHeader:
-                actions.append(m_addSensor);
-                break;
+        actions.append(m_addSensor);
+        break;
     case Sensor:
-                actions.append(m_addSensor);
-                actions.append(seperator);
-                actions.append(new QAction("Edit Sensor", this));
-                actions.append(new QAction("Remove Sensor", this));
-                break;
+        actions.append(m_addSensor);
+        actions.append(seperator);
+        actions.append(new QAction("Edit Sensor", this));
+        actions.append(new QAction("Remove Sensor", this));
+        break;
 
     }
 
     if (actions.count() > 0)
-            QMenu::exec(actions, event->globalPos());
+        QMenu::exec(actions, event->globalPos());
 }

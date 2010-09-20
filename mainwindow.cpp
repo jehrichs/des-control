@@ -30,6 +30,9 @@
 #include "dcactuator.h"
 #include "dctrain.h"
 
+#include "dcautomaton.h"
+#include "automatonview.h"
+
 #include <QtGui/QSplitter>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -39,10 +42,13 @@ MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow),
         m_projectView(0),
-        m_splitter(0)
+        m_splitter(0),
+        m_automat(0),
+        m_automatView(0)
 {
     ui->setupUi(this);
 
+    //createToolbar();
     showEmptyView();
 }
 
@@ -200,6 +206,43 @@ void MainWindow::disconnectServer()
     ui->actionServer_information->setEnabled(false);
 }
 
+void MainWindow::newAutomata()
+{
+    DCAutomaton *newAutomaton = new DCAutomaton();
+    m_project->addAutomaton(newAutomaton);
+
+    //automaton created .. open and show it
+    showAutomaton(newAutomaton);
+}
+
+void MainWindow::deleteAutomata()
+{
+
+}
+
+void MainWindow::showAutomaton(DCAutomaton* automaton)
+{
+    // connect toolbar actions with the automaton
+    connect (ui->actionSelect_Item, SIGNAL(triggered()), automaton, SLOT(selectItem()));
+    ui->actionSelect_Item->setEnabled(true);
+    connect (ui->actionAdd_Place, SIGNAL(triggered()), automaton, SLOT(addPlace()));
+    ui->actionAdd_Place->setEnabled(true);
+    connect (ui->actionAdd_Event, SIGNAL(triggered()), automaton, SLOT(addEvent()));
+    ui->actionAdd_Event->setEnabled(true);
+    connect (ui->actionDelete_selected, SIGNAL(triggered()), automaton, SLOT(deleteSelected()));
+    ui->actionDelete_selected->setEnabled(true);
+
+
+    m_autonamtonEdit = new QActionGroup(this);
+    m_autonamtonEdit->addAction(ui->actionSelect_Item);
+    m_autonamtonEdit->addAction(ui->actionAdd_Place);
+    m_autonamtonEdit->addAction(ui->actionAdd_Event);
+    m_autonamtonEdit->setExclusive(true);
+    ui->actionSelect_Item->setChecked(true);
+
+    m_automatView->setScene(automaton);
+}
+
 void MainWindow::showProjectView()
 {
     if(!m_project)
@@ -209,15 +252,21 @@ void MainWindow::showProjectView()
     m_projectView = new ProjectTreeView();
     m_projectView->setProject(m_project);
 
-    ui->menu_Server->setEnabled(true);
-    ui->menu_Power->setEnabled(true);
     ui->actionSave->setEnabled(true);
     ui->actionSave_As->setEnabled(true);
+    ui->menu_Server->setEnabled(true);
+    ui->menu_Power->setEnabled(true);
+    ui->menuAutomata->setEnabled(true);
+    ui->actionImport_Automata->setEnabled(true);
 
     m_splitter = new QSplitter();
     m_splitter->addWidget(m_projectView);
-    //m_splitter->addWidget(ui->graphicsView);
+
+    m_automatView = new AutomatonView();
+    m_splitter->addWidget(m_automatView);
     setCentralWidget(m_splitter);
+    m_splitter->setStretchFactor(0,1);
+    m_splitter->setStretchFactor(1,3);
 }
 
 void MainWindow::showEmptyView()
@@ -226,4 +275,24 @@ void MainWindow::showEmptyView()
     setCentralWidget(intro);
     delete m_splitter;
     delete m_projectView;
+
+    delete m_automat;
+    delete m_automatView;
+
+    ui->menu_Server->setEnabled(false);
+    ui->menu_Power->setEnabled(false);
+    ui->menuAutomata->setEnabled(false);
+    ui->actionSave->setEnabled(false);
+    ui->actionSave_As->setEnabled(false);
 }
+
+void MainWindow::createToolbar()
+{
+    m_automatonToolBar = addToolBar(tr("Automaton"));
+    m_automatonToolBar->addAction(ui->actionImport_Automata);
+    m_automatonToolBar->addSeparator();
+    m_automatonToolBar->addAction(ui->actionSelect_Item);
+    m_automatonToolBar->addAction(ui->actionAdd_Place);
+    m_automatonToolBar->addAction(ui->actionAdd_Event);
+}
+

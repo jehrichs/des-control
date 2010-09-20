@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Actuator Settings</string>
   </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <widget class="QListWidget" name="listWidgetActuators">
@@ -54,6 +57,9 @@
          <width>400</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="locale">
+        <locale language="English" country="UnitedStates"/>
        </property>
        <property name="title">
         <string>Actuator Details</string>

@@ -20,6 +20,8 @@
 
 #include <QMainWindow>
 
+#include "dcautomaton.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -27,6 +29,10 @@ namespace Ui {
 class Project;
 class ProjectTreeView;
 class QSplitter;
+class DCAutomaton;
+class AutomatonView;
+class QToolBar;
+class QActionGroup;
 
 class MainWindow : public QMainWindow
 {
@@ -51,14 +57,25 @@ public Q_SLOTS:
     void connectedToServer();
     void disconnectServer();
 
+    void newAutomata();
+    void deleteAutomata();
+    void showAutomaton(DCAutomaton* automaton);
+
 private:
     void showProjectView();
     void showEmptyView();
+    void createToolbar();
 
     Ui::MainWindow *ui;
     Project *m_project;
     ProjectTreeView *m_projectView;
     QSplitter *m_splitter;
+    DCAutomaton *m_automat;
+    AutomatonView *m_automatView;
+
+
+    QToolBar *m_automatonToolBar;
+    QActionGroup* m_autonamtonEdit;
 };
 
 #endif // MAINWINDOW_H

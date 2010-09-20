@@ -30,13 +30,21 @@ class ProjectTreeView : public QTreeWidget
     enum ItemType
     {
         HardwareHeader = 1,
-        AutomataHeader,
         TrainHeader,
         ActuartorHeader,
         SensorHeader,
         Train,
         Actuator,
-        Sensor
+        Sensor,
+        AutomataHeader,
+        PlantHeader,
+        SpecificationHeader,
+        SupervisorHeader,
+        PropertyHeader,
+        Plant,
+        Specification,
+        Supervisor,
+        Property
     };
 
 public:
@@ -50,7 +58,6 @@ public slots:
     void updateSensors();
     void updateActuators();
     void updateAutomata();
-    void updateAutomata(int i);
 
 protected slots:
     void contextMenuEvent(QContextMenuEvent *event);
@@ -66,12 +73,15 @@ private:
     QTreeWidgetItem *hardwareTrainHeader;
     QTreeWidgetItem *hardwareActuatorHeader;
     QTreeWidgetItem *hardwareSensorHeader;
+    QTreeWidgetItem *automataHeader;
+    QTreeWidgetItem *automataPlantHeader;
+    QTreeWidgetItem *automataSupervisorHeader;
+    QTreeWidgetItem *automataSpecificationHeader;
+    QTreeWidgetItem *automataPropertyHeader;
 
     QAction* m_addTrain;
     QAction* m_addSensor;
     QAction* m_addActuator;
-
-
 };
 
 #endif // PROJECTTREEVIEW_H

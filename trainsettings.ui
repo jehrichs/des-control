@@ -13,12 +13,15 @@
   <property name="windowTitle">
    <string>Train Settings</string>
   </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <widget class="QListWidget" name="listWidgetTrains">
      <property name="maximumSize">
       <size>
-       <width>150</width>
+       <width>200</width>
        <height>16777215</height>
       </size>
      </property>
@@ -33,6 +36,12 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>400</width>
+         <height>0</height>
+        </size>
        </property>
        <property name="title">
         <string>Train Details</string>

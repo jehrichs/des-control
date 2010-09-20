@@ -8,7 +8,8 @@ QT       += core gui network xml
 
 TARGET = DES-Control
 TEMPLATE = app
-
+TRANSLATIONS = descontroltr_en_US.ts\
+               descontroltr_de_DE.ts
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -25,7 +26,11 @@ SOURCES += main.cpp\
     dcsensor.cpp \
     dcactuator.cpp \
     projecttreeview.cpp \
-    projectserializer.cpp
+    projectserializer.cpp \
+    dcautomaton.cpp \
+    dcplace.cpp \
+    dcevent.cpp \
+    automatonview.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
@@ -41,7 +46,11 @@ HEADERS  += mainwindow.h \
     dcsensor.h \
     dcactuator.h \
     projecttreeview.h \
-    projectserializer.h
+    projectserializer.h \
+    dcautomaton.h \
+    dcplace.h \
+    dcevent.h \
+    automatonview.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui \
