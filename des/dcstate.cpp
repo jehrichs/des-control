@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "dcplace.h"
+#include "dcstate.h"
 #include "dcevent.h"
 
 #include <QRectF>

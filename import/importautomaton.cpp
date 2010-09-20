@@ -17,9 +17,9 @@
 
 #include "importautomaton.h"
 
-#include "dcautomaton.h"
-#include "dcplace.h"
-#include "dcevent.h"
+#include "../des/dcautomaton.h"
+#include "../des/dcstate.h"
+#include "../des/dcevent.h"
 
 #include <QDebug>
 

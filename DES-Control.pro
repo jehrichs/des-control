@@ -12,55 +12,55 @@ TRANSLATIONS = descontroltr_en_US.ts\
                descontroltr_de_DE.ts
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    settingsdialog.cpp \
-    trainsettings.cpp \
-    actuatorsettings.cpp \
-    sensorsettings.cpp \
-    serversettings.cpp \
-    serverdebugconsole.cpp \
-    project.cpp \
-    dcserver.cpp \
-    dcmodelitem.cpp \
-    dctrain.cpp \
-    dcsensor.cpp \
-    dcactuator.cpp \
-    projecttreeview.cpp \
-    projectserializer.cpp \
-    dcautomaton.cpp \
-    dcplace.cpp \
-    dcevent.cpp \
-    automatonview.cpp \
-    importautomaton.cpp
+           mainwindow.cpp \
+           settingsdialog.cpp \
+           srcp/trainsettings.cpp \
+           srcp/actuatorsettings.cpp \
+           srcp/sensorsettings.cpp \
+           srcp/serversettings.cpp \
+           srcp/serverdebugconsole.cpp \
+           project.cpp \
+           srcp/dcserver.cpp \
+           srcp/dcmodelitem.cpp \
+           srcp/dctrain.cpp \
+           srcp/dcsensor.cpp \
+           srcp/dcactuator.cpp \
+           projecttreeview.cpp \
+           projectserializer.cpp \
+           des/dcautomaton.cpp \
+           des/dcstate.cpp \
+           des/dcevent.cpp \
+           des/automatonview.cpp \
+           import/importautomaton.cpp
 
 HEADERS  += mainwindow.h \
-    settingsdialog.h \
-    trainsettings.h \
-    actuatorsettings.h \
-    sensorsettings.h \
-    serversettings.h \
-    serverdebugconsole.h \
-    project.h \
-    dcserver.h \
-    dcmodelitem.h \
-    dctrain.h \
-    dcsensor.h \
-    dcactuator.h \
-    projecttreeview.h \
-    projectserializer.h \
-    dcautomaton.h \
-    dcplace.h \
-    dcevent.h \
-    automatonview.h \
-    importautomaton.h
+            settingsdialog.h \
+            srcp/trainsettings.h \
+            srcp/actuatorsettings.h \
+            srcp/sensorsettings.h \
+            srcp/serversettings.h \
+            srcp/serverdebugconsole.h \
+            project.h \
+            srcp/dcserver.h \
+            srcp/dcmodelitem.h \
+            srcp/dctrain.h \
+            srcp/dcsensor.h \
+            srcp/dcactuator.h \
+            projecttreeview.h \
+            projectserializer.h \
+            des/dcautomaton.h \
+            des/dcstate.h \
+            des/dcevent.h \
+            des/automatonview.h \
+            import/importautomaton.h
 
 FORMS    += mainwindow.ui \
-    settingsdialog.ui \
-    trainsettings.ui \
-    actuatorsettings.ui \
-    sensorsettings.ui \
-    serversettings.ui \
-    serverdebugconsole.ui
+            settingsdialog.ui \
+            srcp/trainsettings.ui \
+            srcp/actuatorsettings.ui \
+            srcp/sensorsettings.ui \
+            srcp/serversettings.ui \
+            srcp/serverdebugconsole.ui
 
 RESOURCES += \
     desIcons.qrc
