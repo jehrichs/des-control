@@ -21,6 +21,8 @@
 #include "dctransition.h"
 #include "dcevent.h"
 
+#include "gvgraph.h"
+
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QtGui>
@@ -138,10 +140,38 @@ void DCAutomaton::editSelected()
 
 }
 
+void DCAutomaton::doLayout()
+{
+    GVGraph gvTest("layout1");
+
+    foreach(DCState *state, m_stateList)
+    {
+        gvTest.addNode(QString("%1").arg(state->id()), state->boundingRect().width(), state->boundingRect().height());
+
+        if(state->isInitial())
+            gvTest.setRootNode(QString("%1").arg(state->id()));
+    }
+
+    foreach(DCTransition *transition, m_transitionList)
+    {
+        gvTest.addEdge( QString("%1").arg(transition->sourceState()->id()),
+                        QString("%1").arg(transition->destinationState()->id()));
+    }
+
+    gvTest.applyLayout();
+
+    foreach(GVNode node, gvTest.nodes())
+    {
+        getStateFromId(node.name.toInt())->setCenterPoint(node.centerPos);
+        //qDebug() << node.id << node.centerPos;
+    }
+
+}
+
 void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (mouseEvent->button() != Qt::RightButton)
-        qDebug() << m_stateList.size() << m_transitionList.size() << m_eventList.size();
+    //if (mouseEvent->button() != Qt::RightButton)
+        //qDebug() << m_stateList.size() << m_transitionList.size() << m_eventList.size();
     if (mouseEvent->button() != Qt::LeftButton)
         return;
 

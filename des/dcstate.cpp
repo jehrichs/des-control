@@ -81,6 +81,11 @@ void DCState::setInitial(bool initial)
     setUpPlace();
 }
 
+bool DCState::isInitial() const
+{
+    return m_initial;
+}
+
 void DCState::addTransitionFrom(DCTransition * from)
 {
     m_listFrom.append(from);
@@ -128,6 +133,12 @@ QPointF DCState::center()
 {
     return QPointF(pos().x() + boundingRect().width() / 2,
                    pos().y() + boundingRect().height() / 2);
+}
+
+void DCState::setCenterPoint(const QPoint & point)
+{
+    setPos(point.x() - boundingRect().width() / 2,
+           point.y() - boundingRect().height() / 2);
 }
 
 QPointF DCState::intersectionPoint(QPointF linefrom)

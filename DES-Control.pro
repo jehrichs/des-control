@@ -11,6 +11,8 @@ TEMPLATE = app
 TRANSLATIONS = descontroltr_en_US.ts\
                descontroltr_de_DE.ts
 
+LIBS += -L/usr/lib -lgvc
+
 SOURCES += main.cpp\
            mainwindow.cpp \
            settingsdialog.cpp \
@@ -32,7 +34,8 @@ SOURCES += main.cpp\
            des/dcevent.cpp \
            des/automatonview.cpp \
            import/importautomaton.cpp \
-    des/dctransition.cpp
+    des/dctransition.cpp \
+    des/gvgraph.cpp
 
 HEADERS  += mainwindow.h \
             settingsdialog.h \
@@ -54,7 +57,8 @@ HEADERS  += mainwindow.h \
             des/dcevent.h \
             des/automatonview.h \
             import/importautomaton.h \
-    des/dctransition.h
+    des/dctransition.h \
+    des/gvgraph.h
 
 FORMS    += mainwindow.ui \
             settingsdialog.ui \

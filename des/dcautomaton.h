@@ -57,6 +57,8 @@ public:
     DCState *getStateFromId(int id);
     DCEvent *getEventFromId(int id);
 
+    void doLayout();
+
 public slots:
     void selectItem();
     void addState();

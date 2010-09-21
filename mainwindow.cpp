@@ -59,8 +59,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::showSettings()
 {
-    SettingsDialog setting;
-    setting.exec();
+    m_project->automata().first()->doLayout();
+    //SettingsDialog setting;
+    //setting.exec();
 }
 
 void MainWindow::showAbout()
@@ -69,6 +70,7 @@ void MainWindow::showAbout()
 
 void MainWindow::showDebugConsole()
 {
+    m_project->automata().first()->doLayout();
     ServerDebugConsole *console = new ServerDebugConsole();
     console->show();
 }

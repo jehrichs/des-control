@@ -43,6 +43,7 @@ public:
 
     void setMarked(bool marked);
     void setInitial(bool initial);
+    bool isInitial() const;
 
     void addTransitionFrom(DCTransition * from);
     void addTransitionTo(DCTransition *to);
@@ -51,6 +52,7 @@ public:
     int type() const { return Type; }
 
     QPointF center();
+    void setCenterPoint(const QPoint & point);
     QPointF intersectionPoint(QPointF linefrom);
 
     //QRectF boundingRect () const;
