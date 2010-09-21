@@ -18,10 +18,10 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 
-#include "serversettings.h"
-#include "trainsettings.h"
-#include "actuatorsettings.h"
-#include "sensorsettings.h"
+#include "srcp/serversettings.h"
+#include "srcp/trainsettings.h"
+#include "srcp/actuatorsettings.h"
+#include "srcp/sensorsettings.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent)
     : QDialog(parent)

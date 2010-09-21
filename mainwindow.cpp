@@ -19,19 +19,20 @@
 #include "ui_mainwindow.h"
 
 #include "settingsdialog.h"
-#include "serverdebugconsole.h"
-
-#include "dcserver.h"
 #include "project.h"
 #include "projecttreeview.h"
 #include "projectserializer.h"
 
-#include "dcsensor.h"
-#include "dcactuator.h"
-#include "dctrain.h"
+#include "srcp/serverdebugconsole.h"
+#include "srcp/dcserver.h"
+#include "srcp/dcsensor.h"
+#include "srcp/dcactuator.h"
+#include "srcp/dctrain.h"
 
-#include "dcautomaton.h"
-#include "automatonview.h"
+#include "des/dcautomaton.h"
+#include "des/automatonview.h"
+
+#include "import/importautomaton.h"
 
 #include <QtGui/QSplitter>
 #include <QFileDialog>
@@ -43,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
         ui(new Ui::MainWindow),
         m_projectView(0),
         m_splitter(0),
-        m_automat(0),
         m_automatView(0)
 {
     ui->setupUi(this);
@@ -181,6 +181,46 @@ void MainWindow::closeProject()
 
 }
 
+void MainWindow::importAutomaton()
+{
+    QString fileName =
+            QFileDialog::getOpenFileName(this, tr("Open Automaton"),
+                                         QDir::currentPath(),
+                                         tr("Automaton Files (*.xml)"));
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("DES Automaton Importer"),
+                             tr("Cannot open file %1:\n%2.")
+                             .arg(fileName)
+                             .arg(file.errorString()));
+        return;
+    }
+
+
+    ImportAutomaton importer;
+
+    QList<DCAutomaton*> automatonList = importer.loadAutomaton(ImportAutomaton::SUPREMICA, &file);
+
+    if(!automatonList.isEmpty())
+    {
+        statusBar()->showMessage(tr("Automaton imported"), 2000);
+
+        foreach(DCAutomaton* automaton, automatonList)
+            m_project->addAutomaton(automaton);
+
+        showAutomaton(automatonList.first());
+
+    }
+    else
+    {
+        delete m_project;
+        m_project = 0;
+    }
+}
+
 void MainWindow::connectServer()
 {
     m_project->server()->connectSRCP();
@@ -225,7 +265,7 @@ void MainWindow::showAutomaton(DCAutomaton* automaton)
     // connect toolbar actions with the automaton
     connect (ui->actionSelect_Item, SIGNAL(triggered()), automaton, SLOT(selectItem()));
     ui->actionSelect_Item->setEnabled(true);
-    connect (ui->actionAdd_Place, SIGNAL(triggered()), automaton, SLOT(addPlace()));
+    connect (ui->actionAdd_Place, SIGNAL(triggered()), automaton, SLOT(addState()));
     ui->actionAdd_Place->setEnabled(true);
     connect (ui->actionAdd_Event, SIGNAL(triggered()), automaton, SLOT(addEvent()));
     ui->actionAdd_Event->setEnabled(true);
@@ -255,7 +295,7 @@ void MainWindow::showProjectView()
     ui->actionSave->setEnabled(true);
     ui->actionSave_As->setEnabled(true);
     ui->menu_Server->setEnabled(true);
-    ui->menu_Power->setEnabled(true);
+
     ui->menuAutomata->setEnabled(true);
     ui->actionImport_Automata->setEnabled(true);
 
@@ -276,11 +316,10 @@ void MainWindow::showEmptyView()
     delete m_splitter;
     delete m_projectView;
 
-    delete m_automat;
     delete m_automatView;
 
     ui->menu_Server->setEnabled(false);
-    ui->menu_Power->setEnabled(false);
+
     ui->menuAutomata->setEnabled(false);
     ui->actionSave->setEnabled(false);
     ui->actionSave_As->setEnabled(false);

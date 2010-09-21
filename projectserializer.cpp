@@ -18,10 +18,10 @@
 #include "projectserializer.h"
 
 #include "project.h"
-#include "dcserver.h"
-#include "dctrain.h"
-#include "dcsensor.h"
-#include "dcactuator.h"
+#include "srcp/dcserver.h"
+#include "srcp/dctrain.h"
+#include "srcp/dcsensor.h"
+#include "srcp/dcactuator.h"
 
 #include <QIODevice>
 ProjectSerializer::ProjectSerializer(QObject *parent)

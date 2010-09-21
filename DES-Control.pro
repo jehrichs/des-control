@@ -31,7 +31,8 @@ SOURCES += main.cpp\
            des/dcstate.cpp \
            des/dcevent.cpp \
            des/automatonview.cpp \
-           import/importautomaton.cpp
+           import/importautomaton.cpp \
+    des/dctransition.cpp
 
 HEADERS  += mainwindow.h \
             settingsdialog.h \
@@ -52,7 +53,8 @@ HEADERS  += mainwindow.h \
             des/dcstate.h \
             des/dcevent.h \
             des/automatonview.h \
-            import/importautomaton.h
+            import/importautomaton.h \
+    des/dctransition.h
 
 FORMS    += mainwindow.ui \
             settingsdialog.ui \

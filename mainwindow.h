@@ -20,8 +20,6 @@
 
 #include <QMainWindow>
 
-#include "dcautomaton.h"
-
 namespace Ui {
     class MainWindow;
 }
@@ -53,6 +51,8 @@ public Q_SLOTS:
     void saveProjectAs();
     void closeProject();
 
+    void importAutomaton();
+
     void connectServer();
     void connectedToServer();
     void disconnectServer();
@@ -70,7 +70,6 @@ private:
     Project *m_project;
     ProjectTreeView *m_projectView;
     QSplitter *m_splitter;
-    DCAutomaton *m_automat;
     AutomatonView *m_automatView;
 
 

@@ -18,41 +18,31 @@
 #ifndef DCEVENT_H
 #define DCEVENT_H
 
-#include <QGraphicsItem>
+#include <QObject>
 
-class DCState;
 
-class DCEvent : public QGraphicsItem
+class DCEvent : public QObject
 {
 
 public:
     DCEvent();
 
+    void setId(int id);
+    int id() const;
+
     void setName(const QString & name);
     QString name() const;
 
-    void setPlaceFrom(DCState *from);
-    DCState *from();
-    void setPlaceTo(DCState *to);
-    DCState *to();
+    void setControlable(bool controlable);
 
-    void adjust();
-
-    enum { Type = UserType + 2 };
-    int type() const { return Type; }
-
-protected:
-    QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    bool controlable() const;
 
 private:
+    int m_id;
     QString m_name;
-    DCState *m_from;
-    DCState *m_to;
 
-    QPointF sourcePoint;
-    QPointF destPoint;
-    qreal arrowSize;
+    bool m_controlable;
+
 
 };
 

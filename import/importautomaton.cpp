@@ -19,6 +19,7 @@
 
 #include "../des/dcautomaton.h"
 #include "../des/dcstate.h"
+#include "../des/dctransition.h"
 #include "../des/dcevent.h"
 
 #include <QDebug>
@@ -57,101 +58,129 @@ QList<DCAutomaton*> ImportAutomaton::loadDesumaFile(QIODevice *device)
 QList<DCAutomaton*> ImportAutomaton::loadSupremicaFile(QIODevice *device)
 {
     reader.setDevice(device);
-    QList<DCAutomaton*> automatonList;
+    m_automatonList.clear();
 
     while (reader.readNextStartElement())
     {
-        if (reader.name() == "Automaton")
+        if (reader.name() == "Automata")
         {
-            DCAutomaton* automaton = new DCAutomaton();
-            automaton->setName(reader.attributes().value("name").toString());
-
-            QString type = reader.attributes().value("type").toString();
-            if(type == "Supervisor")
-                automaton->setAutomatonType(DCAutomaton::Supervisor);
-            else if(type == "Plant")
-                automaton->setAutomatonType(DCAutomaton::Plant);
-            else if(type == "Specification")
-                automaton->setAutomatonType(DCAutomaton::Specification);
-            else if(type == "Property")
-                automaton->setAutomatonType(DCAutomaton::Property);
-            else
-                qDebug() << "Error unknown automaton type ::" << type;
-
-
             while (reader.readNextStartElement())
             {
-                if (reader.name() == "Events")
+                if (reader.name() == "Automaton")
                 {
-                }
-                if (reader.name() == "States")
-                {
+                    qDebug() << "read automaton";
+                    DCAutomaton* automaton = new DCAutomaton();
+                    automaton->setName(reader.attributes().value("name").toString());
+
+                    QString type = reader.attributes().value("type").toString();
+                    if(type == "Supervisor")
+                        automaton->setAutomatonType(DCAutomaton::Supervisor);
+                    else if(type == "Plant")
+                        automaton->setAutomatonType(DCAutomaton::Plant);
+                    else if(type == "Specification")
+                        automaton->setAutomatonType(DCAutomaton::Specification);
+                    else if(type == "Property")
+                        automaton->setAutomatonType(DCAutomaton::Property);
+                    else
+                        qDebug() << "Error unknown automaton type ::" << type;
+
                     while (reader.readNextStartElement())
                     {
-                        if (reader.name() == "Event")
+                        if (reader.name() == "Events")
                         {
-                            DCState* newState = new DCState();
-
-                            newState->setName(reader.attributes().value("name").toString());
-                            newState->setID(reader.attributes().value("id").toString().toInt());
-
-                            if(reader.attributes().value("initial").toString() == "true")
-                                newState->setInitial(true);
-                            if(reader.attributes().value("accepting").toString() == "true")
-                                newState->setMarked(true);
+                            addSupEvent(automaton);
+                        }
+                        else if (reader.name() == "States")
+                        {
+                            addSupState(automaton);
+                        }
+                        else if (reader.name() == "Transitions")
+                        {
+                            addSupTransition(automaton);
                         }
                         else
                             reader.skipCurrentElement();
                     }
 
+                    m_automatonList.append(automaton);
                 }
-                if (reader.name() == "Transitions")
-                {
-                    while (reader.readNextStartElement())
-                    {
-                        if (reader.name() == "Transition")
-                        {
-                            DCEvent* newEvent = new DCEvent();
-
-                            newEvent->setPlaceFrom(automaton->getStateFromId(reader.attributes().value("source").toString().toInt()));
-                            newEvent->setPlaceTo(automaton->getStateFromId(reader.attributes().value("dest").toString().toInt()));
-
-                            //                            if(reader.attributes().value("initial").toString() == "true")
-                            //                                newState->setInitial(true);
-                            //                            if(reader.attributes().value("accepting").toString() == "true")
-                            //                                newState->setMarked(true);
-                        }
-                        else
-                            reader.skipCurrentElement();
-                    }
-                }
+                else
+                    reader.skipCurrentElement();
             }
-
-            automatonList.append(automaton);
         }
         else
             reader.skipCurrentElement();
-
     }
 
-    return automatonList;
+
+    qDebug() << "listsize" << m_automatonList.size();
+    return m_automatonList;
 }
 
+void ImportAutomaton::addSupEvent(DCAutomaton* automaton)
+{
+    qDebug() << "Events" << reader.name();
+    reader.readNext();
+    while(reader.name() != "Events")
+    {
+        if(reader.readNext() == QXmlStreamReader::StartElement)
+        {
+            DCEvent* newevent = new DCEvent();
 
-/*
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<Automata name="Untitled" major="0" minor="9">
-<Automaton name="S4" type="Supervisor">
-        <Events>
-                <Event id="0" label="a" controllable="false"/>
-                <Event id="1" label="b" controllable="false"/>
-                <Event id="2" label="c" controllable="false"/>
-                <Event id="3" label="d"/>
-                <Event id="4" label="e" controllable="false"/>
-                <Event id="5" label="f"/>
-                <Event id="6" label="g" controllable="false"/>
-                <Event id="7" label="h" controllable="false"/>
-        </Events>
-</Automaton>
-</Automata>
-*/
+            newevent->setName(reader.attributes().value("label").toString());
+            newevent->setId(reader.attributes().value("id").toString().toInt());
+
+            if(reader.attributes().value("controlable").toString() == "true")
+                newevent->setControlable(true);
+
+            automaton->addEvent(newevent);
+        }
+    }
+    qDebug() << "Events end " << reader.name();
+    //reader.skipCurrentElement();
+}
+
+void ImportAutomaton::addSupState(DCAutomaton* automaton)
+{
+    qDebug() << "States" << reader.name();
+    reader.readNext();
+    while(reader.name() != "States")
+    {
+        if(reader.readNext() == QXmlStreamReader::StartElement)
+        {
+            DCState* newState = new DCState();
+
+            newState->setName(reader.attributes().value("name").toString());
+            newState->setID(reader.attributes().value("id").toString().toInt());
+
+            if(reader.attributes().value("initial").toString() == "true")
+                newState->setInitial(true);
+
+            if(reader.attributes().value("accepting").toString() == "true")
+                newState->setMarked(true);
+
+            automaton->addState(newState);
+        }
+    }
+}
+
+void ImportAutomaton::addSupTransition(DCAutomaton* automaton)
+{
+    qDebug() << "Transitions" << reader.name();
+    reader.readNext();
+    while(reader.name() != "Transitions")
+    {
+        if(reader.readNext() == QXmlStreamReader::StartElement)
+        {
+            DCTransition* newTransition = new DCTransition();
+
+            newTransition->setStates(automaton->getStateFromId(reader.attributes().value("source").toString().toInt()),
+                                     automaton->getStateFromId(reader.attributes().value("dest").toString().toInt()));
+
+            newTransition->setEvent(automaton->getEventFromId(reader.attributes().value("event").toString().toInt()));
+
+            automaton->addTransition(newTransition);
+        }
+    }
+}
+

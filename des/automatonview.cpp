@@ -26,6 +26,7 @@ AutomatonView::AutomatonView(QWidget *parent)
 
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
+    setAlignment(Qt::AlignLeft | Qt::AlignTop);
 }
 
 void AutomatonView::wheelEvent(QWheelEvent *event)
@@ -41,7 +42,7 @@ void AutomatonView::scaleView(qreal scaleFactor)
 
     scale(scaleFactor, scaleFactor);
 }
-void AutomatonView::drawBackground(QPainter *painter, const QRectF &rect)
- {
-     Q_UNUSED(rect);
- }
+//void AutomatonView::drawBackground(QPainter *painter, const QRectF &rect)
+// {
+//     Q_UNUSED(rect);
+// }

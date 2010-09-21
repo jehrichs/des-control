@@ -25,10 +25,11 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsSimpleTextItem>
 #include <QAction>
+#include <QPointF>
 
-class DCEvent;
+class DCTransition;
 
-class DCState : public QGraphicsItem
+class DCState : public QGraphicsEllipseItem
 {
 
 public:
@@ -43,17 +44,17 @@ public:
     void setMarked(bool marked);
     void setInitial(bool initial);
 
-    void addEventFrom(DCEvent * from);
-    void addEventTo(DCEvent *to);
-
-    QPointF centerPoint() const;
-    QGraphicsEllipseItem *outside() const;
+    void addTransitionFrom(DCTransition * from);
+    void addTransitionTo(DCTransition *to);
 
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 
-    QRectF boundingRect () const;
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+    QPointF center();
+    QPointF intersectionPoint(QPointF linefrom);
+
+    //QRectF boundingRect () const;
+    //void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
@@ -68,14 +69,13 @@ private:
 
     QString m_name;
     int m_id;
-    QList<DCEvent*> m_listFrom;
-    QList<DCEvent*> m_listTo;
+    QList<DCTransition*> m_listFrom;
+    QList<DCTransition*> m_listTo;
 
     bool m_marked;
     bool m_initial;
 
-    QGraphicsEllipseItem *m_outside;
-    QGraphicsEllipseItem *m_inside;
+    QGraphicsEllipseItem *m_markedCircle;
     QGraphicsSimpleTextItem *m_insideText;
 
     qreal m_circleGap;

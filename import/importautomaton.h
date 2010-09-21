@@ -46,6 +46,10 @@ private:
     QList<DCAutomaton*> loadDesumaFile(QIODevice *device);
     QList<DCAutomaton*> loadSupremicaFile(QIODevice *device);
 
+    void addSupEvent(DCAutomaton* automaton);
+    void addSupState(DCAutomaton* automaton);
+    void addSupTransition(DCAutomaton* automaton);
+
     QXmlStreamReader reader;
     QList<DCAutomaton*> m_automatonList;
 };

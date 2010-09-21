@@ -17,11 +17,11 @@
 
 #include "project.h"
 
-#include "dcserver.h"
-#include "dctrain.h"
-#include "dcactuator.h"
-#include "dcsensor.h"
-#include "mainwindow.h"
+#include "srcp/dcserver.h"
+#include "srcp/dctrain.h"
+#include "srcp/dcactuator.h"
+#include "srcp/dcsensor.h"
+// #include "mainwindow.h"
 
 #include <QIODevice>
 #include <QXmlStreamWriter>

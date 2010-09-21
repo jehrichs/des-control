@@ -18,14 +18,14 @@
 #include "projecttreeview.h"
 
 #include "project.h"
-#include "dctrain.h"
-#include "dcactuator.h"
-#include "dcsensor.h"
-#include "dcautomaton.h"
+#include "srcp/dctrain.h"
+#include "srcp/dcactuator.h"
+#include "srcp/dcsensor.h"
+#include "des/dcautomaton.h"
 
-#include "actuatorsettings.h"
-#include "sensorsettings.h"
-#include "trainsettings.h"
+#include "srcp/actuatorsettings.h"
+#include "srcp/sensorsettings.h"
+#include "srcp/trainsettings.h"
 
 #include <QTreeWidgetItem>
 #include <QMenu>

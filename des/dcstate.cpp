@@ -16,7 +16,7 @@
  */
 
 #include "dcstate.h"
-#include "dcevent.h"
+#include "dctransition.h"
 
 #include <QRectF>
 #include <QGraphicsScene>
@@ -26,18 +26,29 @@
 #include <QDebug>
 
 DCState::DCState()
-    : QGraphicsItem(0)
+    : QGraphicsEllipseItem(0)
     , m_name(QString())
     , m_marked(false)
     , m_initial(false)
     , m_circleGap(10.0)
 {
-    m_outside = new QGraphicsEllipseItem(this);
     m_insideText =  new QGraphicsSimpleTextItem(this);
 
+    setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    setRect(0,0,40,40);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+}
+
+void DCState::setID(int id)
+{
+    m_id = id;
+}
+
+int DCState::id()
+{
+    return m_id;
 }
 
 void DCState::setName(const QString & name)
@@ -51,25 +62,14 @@ QString DCState::name() const
     return m_name;
 }
 
-
-void DCState::setID(int id)
-{
-    m_id = id;
-}
-
-int DCState::id()
-{
-    return m_id;
-}
-
 void DCState::setMarked(bool marked)
 {
     m_marked = marked;
 
     if(m_marked)
-        m_inside = new QGraphicsEllipseItem(this);
+        m_markedCircle = new QGraphicsEllipseItem(this);
     else
-        delete m_inside;
+        delete m_markedCircle;
 
     setUpPlace();
 }
@@ -78,16 +78,15 @@ void DCState::setInitial(bool initial)
 {
     m_initial = initial;
 
-
     setUpPlace();
 }
 
-void DCState::addEventFrom(DCEvent * from)
+void DCState::addTransitionFrom(DCTransition * from)
 {
     m_listFrom.append(from);
 }
 
-void DCState::addEventTo(DCEvent *to)
+void DCState::addTransitionTo(DCTransition *to)
 {
     m_listTo.append(to);
 }
@@ -97,43 +96,41 @@ void DCState::setUpPlace()
     prepareGeometryChange();
 
     m_insideText->setText(m_name);
-    m_insideText->setPos( pos() );
+    m_insideText->setPos( m_circleGap, m_circleGap );
 
     QRectF circleRect = m_insideText->boundingRect();
 
-    circleRect.setX( m_insideText->boundingRect().x() - m_insideText->boundingRect().x()/ 2 - m_circleGap);
-    circleRect.setY( m_insideText->boundingRect().y() - m_insideText->boundingRect().y()/ 2 - m_circleGap);
-    circleRect.setWidth( m_insideText->boundingRect().width() + m_circleGap*2 );
-    circleRect.setHeight(m_insideText->boundingRect().height() + m_circleGap*2 );
+    circleRect.setX( 0);
+    circleRect.setY( 0);
+    circleRect.setWidth ( m_insideText->boundingRect().width() + m_circleGap*2 );
+    circleRect.setHeight( m_insideText->boundingRect().height() + m_circleGap*2 );
 
-    m_outside->setRect(circleRect);
+    setRect(circleRect);
 
     if(m_marked)
     {
-        m_inside->setRect(circleRect.x() + 2, circleRect.y() + 2,
-                          circleRect.width() - 4, circleRect.height() - 4);
+        m_markedCircle->setRect(circleRect.x() + 4, circleRect.y() + 4,
+                                circleRect.width() - 8, circleRect.height() - 8);
     }
-
-    qDebug() << boundingRect() << m_outside->boundingRect();
 }
 
-QPointF DCState::centerPoint() const
+//QRectF DCState::boundingRect () const
+//{
+//    return QRectF(0,0,40,40);
+//}
+
+//void DCState::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
+//{
+//    //painter->fillRect(boundingRect(),Qt::blue);
+//}
+
+QPointF DCState::center()
 {
-
-    return QPointF(m_insideText->boundingRect().width()/2,
-                   m_insideText->boundingRect().height()/2);
-}
-QGraphicsEllipseItem *DCState::outside() const
-{
-    return m_outside;
+    return QPointF(pos().x() + boundingRect().width() / 2,
+                   pos().y() + boundingRect().height() / 2);
 }
 
-QRectF DCState::boundingRect () const
-{
-    return m_outside->boundingRect();
-}
-
-void DCState::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
+QPointF DCState::intersectionPoint(QPointF linefrom)
 {
 
 }
@@ -153,11 +150,10 @@ QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)
  {
      switch (change) {
      case ItemPositionHasChanged:
-         foreach (DCEvent *eventEdge, m_listFrom)
-             eventEdge->adjust();
-         foreach (DCEvent *eventEdge, m_listTo)
-             eventEdge->adjust();
-         //graph->itemMoved();
+         foreach (DCTransition *edge, m_listFrom)
+             edge->updatePosition();
+         foreach (DCTransition *edge, m_listTo)
+             edge->updatePosition();
          break;
      default:
          break;

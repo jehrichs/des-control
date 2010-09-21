@@ -23,11 +23,14 @@
 
 #include <QString>
 #include <QAction>
+
 class DCState;
+class DCTransition;
+class DCEvent;
 
 class DCAutomaton : public QGraphicsScene
 {
-   Q_OBJECT
+    Q_OBJECT
 public:
     enum Mode { InsertPlace, InsertEvent, InsertText, MoveItem };
 
@@ -47,7 +50,12 @@ public:
     void setAutomatonType(AutomatonType type);
     DCAutomaton::AutomatonType automatonType() const;
 
+    void addState(DCState* newState);
+    void addTransition(DCTransition *newtransition);
+    void addEvent(DCEvent *newEvent);
+
     DCState *getStateFromId(int id);
+    DCEvent *getEventFromId(int id);
 
 public slots:
     void selectItem();
@@ -64,6 +72,8 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
 
+    //void drawBackground ( QPainter * painter, const QRectF & rect );
+
 private:
     AutomatonType m_type;
     QString m_name;
@@ -71,6 +81,8 @@ private:
     QGraphicsLineItem *m_line;
 
     QList<DCState *> m_stateList;
+    QList<DCTransition *> m_transitionList;
+    QList<DCEvent *> m_eventList;
 };
 
 #endif // DCAUTOMATON_H

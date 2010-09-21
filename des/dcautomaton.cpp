@@ -17,12 +17,14 @@
 
 #include "dcautomaton.h"
 
-#include "dcplace.h"
+#include "dcstate.h"
+#include "dctransition.h"
 #include "dcevent.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QtGui>
+#include <QPen>
 #include <QDebug>
 
 DCAutomaton::DCAutomaton(QObject *parent)
@@ -30,6 +32,7 @@ DCAutomaton::DCAutomaton(QObject *parent)
     , m_type(Plant)
     , m_name("Automata")
 {
+    setSceneRect ( 0, 0, 1000, 1000 );
 }
 
 void DCAutomaton::setName(const QString & name)
@@ -52,12 +55,45 @@ DCAutomaton::AutomatonType DCAutomaton::automatonType() const
     return m_type;
 }
 
+void DCAutomaton::addState(DCState* newState)
+{
+
+    addItem(newState);
+    newState->setPos(50,50);
+    m_stateList.append(newState);
+}
+
+void DCAutomaton::addTransition(DCTransition *newtransition)
+{
+
+    addItem(newtransition);
+    m_transitionList.append(newtransition);
+}
+
+void DCAutomaton::addEvent(DCEvent *newEvent)
+{
+
+    //addItem(newEvent);
+    m_eventList.append(newEvent);
+}
+
 DCState *DCAutomaton::getStateFromId(int id)
 {
     foreach(DCState* state, m_stateList)
     {
         if(state->id() == id)
             return state;
+    }
+
+    return 0;
+}
+
+DCEvent *DCAutomaton::getEventFromId(int id)
+{
+    foreach(DCEvent* event, m_eventList)
+    {
+        if(event->id() == id)
+            return event;
     }
 
     return 0;
@@ -104,6 +140,8 @@ void DCAutomaton::editSelected()
 
 void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+    if (mouseEvent->button() != Qt::RightButton)
+        qDebug() << m_stateList.size() << m_transitionList.size() << m_eventList.size();
     if (mouseEvent->button() != Qt::LeftButton)
         return;
 
@@ -175,17 +213,40 @@ void DCAutomaton::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     qgraphicsitem_cast<DCState *>(startItems.last());
             DCState *endItem =
                     qgraphicsitem_cast<DCState *>(endItems.last());
-            DCEvent *event = new DCEvent();
+            DCTransition *transition = new DCTransition();
 
-            event->setPlaceFrom(startItem);
-            event->setPlaceTo(endItem);
+            transition->setStates(startItem, endItem);
 
-            qDebug() << startItem->pos() << endItem->pos();
-
-            event->adjust();
-            addItem(event);
+            transition->updatePosition();
+            addItem(transition);
         }
     }
     m_line = 0;
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
+
+//void DCAutomaton::drawBackground ( QPainter * painter, const QRectF & rect )
+//{
+
+//    QPen pen;
+//    pen.setStyle(Qt::DashLine);
+//    pen.setWidth(1);
+//    pen.setBrush(Qt::green);
+
+//    painter->setPen(pen);
+
+//    painter->drawRect(sceneRect());
+
+//    pen.setBrush(Qt::gray);
+//    painter->setPen(pen);
+
+//    for(int i=0; i <= sceneRect().width(); i +=10)
+//    {
+//        painter->drawLine(i, 0, i, sceneRect().height());
+//    }
+
+//    for(int j=0; j <= sceneRect().height(); j +=10)
+//    {
+//        painter->drawLine(0, j, sceneRect().width(), j);
+//    }
+//}
