@@ -27,6 +27,8 @@ AutomatonView::AutomatonView(QWidget *parent)
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
     setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    setDragMode(QGraphicsView::ScrollHandDrag);
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 }
 
 void AutomatonView::wheelEvent(QWheelEvent *event)

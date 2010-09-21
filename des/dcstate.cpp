@@ -33,15 +33,18 @@ DCState::DCState()
     , m_circleGap(10.0)
 {
     m_insideText =  new QGraphicsSimpleTextItem(this);
+    m_insideText->setZValue(5);
+    setZValue(10);
 
     setPen(QPen(Qt::black, 1, Qt::SolidLine));
     setRect(0,0,40,40);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+    setAcceptsHoverEvents(true);
 
-    m_insideText->setFlag(QGraphicsItem::ItemIsMovable, true);
-    m_insideText->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    m_insideText->setFlag(QGraphicsItem::ItemIsMovable, false);
+    m_insideText->setFlag(QGraphicsItem::ItemIsSelectable, false);
 }
 
 void DCState::setID(int id)
@@ -183,12 +186,23 @@ QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)
 
  void DCState::mousePressEvent(QGraphicsSceneMouseEvent *event)
  {
-     //update();
+     qDebug() << "state mouse press";
+     update();
      QGraphicsItem::mousePressEvent(event);
  }
 
  void DCState::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
  {
-     //update();
+     update();
      QGraphicsItem::mouseReleaseEvent(event);
  }
+
+// void DCState::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+// {
+//     if (event->modifiers() & Qt::ShiftModifier) {
+//         setPos(event->pos());
+//         update();
+//         return;
+//     }
+//     QGraphicsItem::mouseMoveEvent(event);
+// }

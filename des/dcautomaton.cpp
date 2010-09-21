@@ -185,6 +185,7 @@ void DCAutomaton::doLayout()
         m_transitionList.at(edge.id)->setPath(edge.path);
     }
 
+    setSceneRect(gvTest.boundingRect());
     //update(sceneRect());
 
 }
@@ -226,6 +227,8 @@ void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     default:
         ;
     }
+
+    QGraphicsScene::mousePressEvent(mouseEvent);
 }
 
 void DCAutomaton::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -236,6 +239,7 @@ void DCAutomaton::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     } else if (m_mode == MoveItem) {
         QGraphicsScene::mouseMoveEvent(mouseEvent);
     }
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 void DCAutomaton::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)

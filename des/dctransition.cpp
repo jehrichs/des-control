@@ -105,7 +105,7 @@ void DCTransition::updatePosition()
     path.moveTo(m_source->center());
     path.lineTo(m_destination->center());
 
-    //setPath(path);
+    setPath(path);
     //QLineF line(m_source->center(), m_destination->center());
     //setLine(line);
 

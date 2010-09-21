@@ -26,8 +26,9 @@ const qreal GVGraph::DotDefaultDPI=72.0;
 
 GVGraph::GVGraph(QString name) :
         _context(gvContext()),
-        _graph(_agopen(name, AGRAPHSTRICT)) // Strict directed graph, see libgraph doc
+        _graph(_agopen(name, AGDIGRAPHSTRICT)) // Strict directed graph, see libgraph doc
         //AGDIGRAPHSTRICT
+        //AGRAPHSTRICT
 {
     //Set graph attributes
     _agset(_graph, "overlap", "prism");
