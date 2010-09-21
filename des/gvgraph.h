@@ -44,6 +44,7 @@ struct GVNode
 /// A struct containing the information for a GVGraph's edge
 struct GVEdge
 {
+    int id;
     /// The source and target nodes of the edge
     QString source;
     QString target;
@@ -121,7 +122,7 @@ public:
     void setRootNode(const QString& name);
 
     /// Add and remove edges
-    void addEdge(const QString& source, const QString& target);
+    void addEdge(int id, const QString& source, const QString& target);
 
     void applyLayout();
     QRectF boundingRect() const;

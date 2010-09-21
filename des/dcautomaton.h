@@ -56,6 +56,7 @@ public:
 
     DCState *getStateFromId(int id);
     DCEvent *getEventFromId(int id);
+    DCTransition *getTransitionFromId(int id);
 
     void doLayout();
 

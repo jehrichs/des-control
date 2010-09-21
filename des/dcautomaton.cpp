@@ -101,6 +101,17 @@ DCEvent *DCAutomaton::getEventFromId(int id)
     return 0;
 }
 
+DCTransition *DCAutomaton::getTransitionFromId(int id)
+{
+    foreach(DCTransition* transition, m_transitionList)
+    {
+        if(transition->id() == id)
+            return transition;
+    }
+
+    return 0;
+}
+
 void DCAutomaton::selectItem()
 {
     m_mode = MoveItem;
@@ -146,16 +157,20 @@ void DCAutomaton::doLayout()
 
     foreach(DCState *state, m_stateList)
     {
-        gvTest.addNode(QString("%1").arg(state->id()), state->boundingRect().width(), state->boundingRect().height());
+        gvTest.addNode(QString("%1").arg(state->id()), state->ellipseBounds().width(), state->ellipseBounds().height());
 
         if(state->isInitial())
             gvTest.setRootNode(QString("%1").arg(state->id()));
     }
 
+    int i = 0;
     foreach(DCTransition *transition, m_transitionList)
     {
-        gvTest.addEdge( QString("%1").arg(transition->sourceState()->id()),
+        gvTest.addEdge( i,
+                        QString("%1").arg(transition->sourceState()->id()),
                         QString("%1").arg(transition->destinationState()->id()));
+
+        i++;
     }
 
     gvTest.applyLayout();
@@ -163,8 +178,14 @@ void DCAutomaton::doLayout()
     foreach(GVNode node, gvTest.nodes())
     {
         getStateFromId(node.name.toInt())->setCenterPoint(node.centerPos);
-        //qDebug() << node.id << node.centerPos;
     }
+
+    foreach(GVEdge edge, gvTest.edges())
+    {
+        m_transitionList.at(edge.id)->setPath(edge.path);
+    }
+
+    //update(sceneRect());
 
 }
 

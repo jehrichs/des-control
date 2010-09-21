@@ -32,14 +32,18 @@ GVGraph::GVGraph(QString name) :
     //Set graph attributes
     _agset(_graph, "overlap", "prism");
     _agset(_graph, "splines", "true");
-    _agset(_graph, "pad", "0,2");
+    //_agset(_graph, "pad", "0,2");
     _agset(_graph, "dpi", "96,0");
-    _agset(_graph, "nodesep", "0,4");
-    _agset(_graph, "rankdir", "LR");
+    //_agset(_graph, "nodesep", "0,4");
+    //_agset(_graph, "rankdir", "LR");
 
     //Set default attributes for the future nodes
     _agnodeattr(_graph, "fixedsize", "false");
     _agnodeattr(_graph, "regular", "false");
+    _agedgeattr(_graph, "headclip", "true");
+    _agedgeattr(_graph, "tailclip", "true");
+    _agedgeattr(_graph, "arrowhead", "normal");
+    _agedgeattr(_graph, "arrowtail", "none");
 }
 
 GVGraph::~GVGraph()
@@ -70,21 +74,26 @@ void GVGraph::setRootNode(const QString& name)
         _agset(_graph, "root", name);
 }
 
-void GVGraph::addEdge(const QString &source, const QString &target)
+void GVGraph::addEdge(int id, const QString &source, const QString &target)
 {
     if(_nodes.contains(source) && _nodes.contains(target))
     {
         QPair<QString, QString> key(source, target);
         if(!_edges.contains(key))
-            _edges.insert(key, agedge(_graph, _nodes[source], _nodes[target]));
+        {
+            Agedge_t* edge = agedge(_graph, _nodes[source], _nodes[target]);
+            _edges.insert(key, edge);
+
+            _agset(edge, "label", QString("%1").arg(id));
+        }
     }
 }
 
 void GVGraph::applyLayout()
 {
     gvFreeLayout(_context, _graph);
-    //_gvLayout(_context, _graph, "dot");
-    _gvLayout(_context, _graph, "neato");
+    _gvLayout(_context, _graph, "dot");
+    //_gvLayout(_context, _graph, "neato");
     //_gvLayout(_context, _graph, "circo");
 }
 
@@ -137,6 +146,7 @@ QList<GVEdge> GVGraph::edges() const
         //Fill the source and target node names
         object.source=edge->tail->name;
         object.target=edge->head->name;
+        object.id = _agget(edge, "label", "-1").toInt();
 
         //Calculate the path from the spline (only one spline, as the graph is strict. If it
         //wasn't, we would have to iterate over the first list too)

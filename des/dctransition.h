@@ -18,7 +18,7 @@
 #ifndef DCTRANSITION_H
 #define DCTRANSITION_H
 
-#include <QGraphicsLineItem>
+#include <QGraphicsPathItem>
 #include <QRectF>
 #include <QPainterPath>
 
@@ -29,7 +29,7 @@ class QPainterPath;
 class DCEvent;
 class DCState;
 
-class DCTransition : public QGraphicsLineItem
+class DCTransition : public QGraphicsPathItem
 {
 public:
     DCTransition();

@@ -39,6 +39,9 @@ DCState::DCState()
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+
+    m_insideText->setFlag(QGraphicsItem::ItemIsMovable, true);
+    m_insideText->setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
 
 void DCState::setID(int id)
@@ -141,6 +144,11 @@ void DCState::setCenterPoint(const QPoint & point)
            point.y() - boundingRect().height() / 2);
 }
 
+QSizeF DCState::ellipseBounds()
+{
+    return QSizeF(rect().width(), rect().height());
+}
+
 QPointF DCState::intersectionPoint(QPointF linefrom)
 {
 
@@ -175,12 +183,12 @@ QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)
 
  void DCState::mousePressEvent(QGraphicsSceneMouseEvent *event)
  {
-     update();
+     //update();
      QGraphicsItem::mousePressEvent(event);
  }
 
  void DCState::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
  {
-     update();
+     //update();
      QGraphicsItem::mouseReleaseEvent(event);
  }

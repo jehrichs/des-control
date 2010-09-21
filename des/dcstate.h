@@ -52,6 +52,7 @@ public:
     int type() const { return Type; }
 
     QPointF center();
+    QSizeF ellipseBounds();
     void setCenterPoint(const QPoint & point);
     QPointF intersectionPoint(QPointF linefrom);
 

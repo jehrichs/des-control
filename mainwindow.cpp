@@ -213,6 +213,7 @@ void MainWindow::importAutomaton()
         foreach(DCAutomaton* automaton, automatonList)
             m_project->addAutomaton(automaton);
 
+        automatonList.first()->doLayout();
         showAutomaton(automatonList.first());
 
     }
