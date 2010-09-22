@@ -15,54 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "dcevent.h"
+#include "srcpevent.h"
 
-#include <QDebug>
-
-DCEvent::DCEvent()
-    : m_id(-1)
-    , m_controlable(false)
-    , m_active(false)
+SRCPEvent::SRCPEvent(QObject *parent) :
+    QObject(parent)
 {
-
-}
-
-void DCEvent::setId(int id)
-{
-    m_id = id;
-}
-
-int DCEvent::id() const
-{
-    return m_id;
-}
-
-void DCEvent::setName(const QString & name)
-{
-    m_name = name;
-}
-
-QString DCEvent::name() const
-{
-    return m_name;
-}
-
-void DCEvent::setControlable(bool controlable)
-{
-    m_controlable = controlable;
-}
-
-bool DCEvent::controlable() const
-{
-    return m_controlable;
-}
-
-bool DCEvent::isActive()
-{
-    return m_active;
-}
-
-bool DCEvent::setActive(bool active)
-{
-    m_active = active;
 }

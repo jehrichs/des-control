@@ -19,6 +19,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "des/dccontroller.h"
 
 namespace Ui {
     class MainWindow;
@@ -61,6 +62,8 @@ public Q_SLOTS:
     void deleteAutomata();
     void showAutomaton(DCAutomaton* automaton);
 
+    void createController(DCController::ControlMode mode);
+
 private:
     void showProjectView();
     void showEmptyView();
@@ -72,9 +75,9 @@ private:
     QSplitter *m_splitter;
     AutomatonView *m_automatView;
 
-
     QToolBar *m_automatonToolBar;
     QActionGroup* m_autonamtonEdit;
+    DCController *m_controler;
 };
 
 #endif // MAINWINDOW_H

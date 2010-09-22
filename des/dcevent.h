@@ -37,11 +37,16 @@ public:
 
     bool controlable() const;
 
+    bool isActive();
+    bool setActive(bool active);
+
 private:
     int m_id;
     QString m_name;
 
     bool m_controlable;
+
+    bool m_active;
 
 
 };

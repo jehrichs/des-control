@@ -15,54 +15,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "dcevent.h"
+#ifndef DCCONTROLLER_H
+#define DCCONTROLLER_H
 
-#include <QDebug>
+#include <QObject>
 
-DCEvent::DCEvent()
-    : m_id(-1)
-    , m_controlable(false)
-    , m_active(false)
+class QTimer;
+class DCAutomaton;
+class DCState;
+
+class DCController : public QObject
 {
+    Q_OBJECT
+public:
+    enum ControlMode { Simulation, Live };
 
-}
+    explicit DCController(QObject *parent = 0);
 
-void DCEvent::setId(int id)
-{
-    m_id = id;
-}
+    void setMode(ControlMode mode);
+    DCController::ControlMode mode() const;
 
-int DCEvent::id() const
-{
-    return m_id;
-}
+    void setAutomaton(DCAutomaton* automaton);
 
-void DCEvent::setName(const QString & name)
-{
-    m_name = name;
-}
+public slots:
+    void startController();
+    void stopController();
+    void pauseController(bool paused);
 
-QString DCEvent::name() const
-{
-    return m_name;
-}
+private slots:
+    void updateDES();
 
-void DCEvent::setControlable(bool controlable)
-{
-    m_controlable = controlable;
-}
+private:
+    ControlMode m_mode;
+    QTimer *m_cycleTimer;
+    DCAutomaton* m_automaton;
+    DCState* m_initialState;
+    DCState* m_currentState;
+};
 
-bool DCEvent::controlable() const
-{
-    return m_controlable;
-}
-
-bool DCEvent::isActive()
-{
-    return m_active;
-}
-
-bool DCEvent::setActive(bool active)
-{
-    m_active = active;
-}
+#endif // DCCONTROLLER_H

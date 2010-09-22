@@ -18,6 +18,7 @@
 #include "gvgraph.h"
 
 #include <QStringList>
+#include <QDebug>
 
 /*! Dot uses a 72 DPI value for converting it's position coordinates from points to pixels
     while we display at 96 DPI on most operating systems. */
@@ -39,12 +40,17 @@ GVGraph::GVGraph(QString name) :
     //_agset(_graph, "rankdir", "LR");
 
     //Set default attributes for the future nodes
-    _agnodeattr(_graph, "fixedsize", "false");
+    _agnodeattr(_graph, "fixedsize", "true");
     _agnodeattr(_graph, "regular", "false");
-    _agedgeattr(_graph, "headclip", "true");
-    _agedgeattr(_graph, "tailclip", "true");
-    _agedgeattr(_graph, "arrowhead", "normal");
+    _agnodeattr(_graph, "fontsize", "1");
+    _agedgeattr(_graph, "headclip", "false");
+    _agedgeattr(_graph, "tailclip", "false");
+    _agedgeattr(_graph, "arrowhead", "none");
     _agedgeattr(_graph, "arrowtail", "none");
+
+    QFont font = QFont();
+    _agedgeattr(_graph, "fontname", font.family());
+    _agedgeattr(_graph, "fontsize", QString("%1").arg(font.pointSizeF()));
 }
 
 GVGraph::~GVGraph()
@@ -58,15 +64,34 @@ void GVGraph::addNode(const QString& name, qreal width, qreal height)
 {
     if(!_nodes.contains(name)) {
 
-    //_agset
-    _nodes.insert(name, _agnode(_graph, name));
+        //_agset
+        _nodes.insert(name, _agnode(_graph, name));
 
-    QString nodePtsHeight = QString("%1").arg(height/_agget(_graph, "dpi", "96,0").toDouble());
-    QString nodePtsWidth = QString("%1").arg(width/_agget(_graph, "dpi", "96,0").toDouble());
-    //GV uses , instead of . for the separator in floats
-    _agset(_nodes.value(name), "height", nodePtsHeight.replace('.', ","));
-    _agset(_nodes.value(name), "width", nodePtsWidth.replace('.', ","));
+        QString nodePtsHeight = QString("%1").arg(height/_agget(_graph, "dpi", "96,0").toDouble());
+        QString nodePtsWidth = QString("%1").arg(width/_agget(_graph, "dpi", "96,0").toDouble());
+        //GV uses , instead of . for the separator in floats
+        _agset(_nodes.value(name), "height", nodePtsHeight.replace('.', ","));
+        _agset(_nodes.value(name), "width", nodePtsWidth.replace('.', ","));
+    }
 }
+
+void GVGraph::addNode(const QString& name, qreal width, qreal height, qreal x, qreal y)
+{
+    if(!_nodes.contains(name)) {
+
+        //_agset
+        _nodes.insert(name, _agnode(_graph, name));
+
+        QString nodePtsHeight = QString("%1").arg(height/_agget(_graph, "dpi", "96,0").toDouble());
+        QString nodePtsWidth = QString("%1").arg(width/_agget(_graph, "dpi", "96,0").toDouble());
+        //GV uses , instead of . for the separator in floats
+        _agset(_nodes.value(name), "height", nodePtsHeight.replace('.', ","));
+        _agset(_nodes.value(name), "width", nodePtsWidth.replace('.', ","));
+
+
+        QString position = QString("%1,%2!").arg(x/_agget(_graph, "dpi", "96,0").toDouble()).arg(y/_agget(_graph, "dpi", "96,0").toDouble());
+        _agset(_nodes.value(name), "pos", position.replace('.', ","));
+    }
 }
 
 void GVGraph::setRootNode(const QString& name)
@@ -148,6 +173,8 @@ QList<GVEdge> GVGraph::edges() const
         object.source=edge->tail->name;
         object.target=edge->head->name;
         object.id = _agget(edge, "label", "-1").toInt();
+        object.labelPos.setX(edge->u.label->p.x*(dpi/DotDefaultDPI));
+        object.labelPos.setY(edge->u.label->p.y*(dpi/DotDefaultDPI));
 
         //Calculate the path from the spline (only one spline, as the graph is strict. If it
         //wasn't, we would have to iterate over the first list too)
@@ -177,8 +204,12 @@ QList<GVEdge> GVGraph::edges() const
 
             //If there is an ending point, draw a line to it
             if(edge->u.spl->list->eflag)
-                object.path.lineTo(edge->u.spl->list->ep.x*(dpi/DotDefaultDPI),
-                                   (_graph->u.bb.UR.y - edge->u.spl->list->ep.y)*(dpi/DotDefaultDPI));
+            {
+                object.path.setElementPositionAt(object.path.elementCount()-1, edge->u.spl->list->ep.x*(dpi/DotDefaultDPI),
+                                                                       (_graph->u.bb.UR.y - edge->u.spl->list->ep.y)*(dpi/DotDefaultDPI));
+                //object.path.lineTo(edge->u.spl->list->ep.x*(dpi/DotDefaultDPI),
+                //                   (_graph->u.bb.UR.y - edge->u.spl->list->ep.y)*(dpi/DotDefaultDPI));
+            }
         }
 
         list << object;

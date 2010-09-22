@@ -59,6 +59,11 @@ public slots:
     void updateActuators();
     void updateAutomata();
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void startDrag(Qt::DropActions supportedActions);
+
 protected slots:
     void contextMenuEvent(QContextMenuEvent *event);
 

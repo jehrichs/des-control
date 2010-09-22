@@ -51,6 +51,8 @@ struct GVEdge
 
     /// Path of the edge's line
     QPainterPath path;
+
+    QPointF labelPos;
 };
 
 /// An object containing a libgraph graph and its associated nodes and edges
@@ -118,6 +120,7 @@ public:
 
     /// Add and remove nodes
     void addNode(const QString& name, qreal width, qreal height);
+    void addNode(const QString& name, qreal width, qreal height, qreal x, qreal y);
 
     void setRootNode(const QString& name);
 

@@ -268,3 +268,58 @@ void ProjectTreeView::contextMenuEvent(QContextMenuEvent *event)
     if (actions.count() > 0)
         QMenu::exec(actions, event->globalPos());
 }
+
+void ProjectTreeView::dragEnterEvent(QDragEnterEvent *event)
+{
+
+}
+
+void ProjectTreeView::dragMoveEvent(QDragMoveEvent *event)
+{
+
+}
+
+void ProjectTreeView::startDrag(Qt::DropActions supportedActions)
+{
+    Q_UNUSED(supportedActions);
+
+    QTreeWidgetItem *item = currentItem();
+
+    QString mimeType;
+
+    switch(item->type())
+    {
+    case Train:
+        mimeType = QString("hardware/x-train");
+        break;
+    case Actuator:
+        mimeType = QString("hardware/x-actuator");
+        break;
+    case Sensor:
+        mimeType = QString("hardware/x-sensor");
+        break;
+    default:
+        return;
+    }
+
+    /*
+    QByteArray itemData;
+    QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+
+    QPixmap pixmap = qVariantValue<QPixmap>(item->data(Qt::UserRole));
+    QPoint location = item->data(Qt::UserRole+1).toPoint();
+
+    dataStream << pixmap << location;
+
+    QMimeData *mimeData = new QMimeData;
+    mimeData->setData("hardware/x-sensor", itemData);
+
+    QDrag *drag = new QDrag(this);
+    drag->setMimeData(mimeData);
+    drag->setHotSpot(QPoint(pixmap.width()/2, pixmap.height()/2));
+    drag->setPixmap(pixmap);
+
+    if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
+        qDebug() << "lets drag";
+        */
+}

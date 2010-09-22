@@ -17,6 +17,7 @@
 
 #include "dcstate.h"
 #include "dctransition.h"
+#include "dcevent.h"
 
 #include <QRectF>
 #include <QGraphicsScene>
@@ -30,24 +31,22 @@ DCState::DCState()
     , m_name(QString())
     , m_marked(false)
     , m_initial(false)
+    , m_isHovered(false)
     , m_circleGap(10.0)
+    , m_isActive(false)
 {
     m_insideText =  new QGraphicsSimpleTextItem(this);
-    m_insideText->setZValue(5);
+    m_insideText->setZValue(11);
     setZValue(10);
 
-    setPen(QPen(Qt::black, 1, Qt::SolidLine));
     setRect(0,0,40,40);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     setAcceptsHoverEvents(true);
-
-    m_insideText->setFlag(QGraphicsItem::ItemIsMovable, false);
-    m_insideText->setFlag(QGraphicsItem::ItemIsSelectable, false);
 }
 
-void DCState::setID(int id)
+void DCState::setId(int id)
 {
     m_id = id;
 }
@@ -80,6 +79,11 @@ void DCState::setMarked(bool marked)
     setUpPlace();
 }
 
+bool DCState::marked() const
+{
+    return m_marked;
+}
+
 void DCState::setInitial(bool initial)
 {
     m_initial = initial;
@@ -100,6 +104,17 @@ void DCState::addTransitionFrom(DCTransition * from)
 void DCState::addTransitionTo(DCTransition *to)
 {
     m_listTo.append(to);
+}
+
+QList<DCTransition*> DCState::outgoingTransitions()
+{
+    return m_listFrom;
+}
+
+void DCState::setActive(bool active)
+{
+    m_isActive = active;
+    update();
 }
 
 void DCState::setUpPlace()
@@ -125,26 +140,16 @@ void DCState::setUpPlace()
     }
 }
 
-//QRectF DCState::boundingRect () const
-//{
-//    return QRectF(0,0,40,40);
-//}
-
-//void DCState::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
-//{
-//    //painter->fillRect(boundingRect(),Qt::blue);
-//}
-
 QPointF DCState::center()
 {
-    return QPointF(pos().x() + boundingRect().width() / 2,
-                   pos().y() + boundingRect().height() / 2);
+    return QPointF(pos().x() + ellipseBounds().width() / 2,
+                   pos().y() + ellipseBounds().height() / 2);
 }
 
 void DCState::setCenterPoint(const QPoint & point)
 {
-    setPos(point.x() - boundingRect().width() / 2,
-           point.y() - boundingRect().height() / 2);
+    setPos(point.x() - ellipseBounds().width() / 2,
+           point.y() - ellipseBounds().height() / 2);
 }
 
 QSizeF DCState::ellipseBounds()
@@ -152,13 +157,60 @@ QSizeF DCState::ellipseBounds()
     return QSizeF(rect().width(), rect().height());
 }
 
-QPointF DCState::intersectionPoint(QPointF linefrom)
+QRectF DCState::boundingRect () const
+{
+    QRectF rect = QGraphicsEllipseItem::boundingRect();
+    return rect.adjusted(-10,-10,10,10);
+}
+
+void DCState::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
 
+    if(isSelected())
+    {
+        QPen selectPen(Qt::red, 5, Qt::SolidLine);
+        painter->setPen(selectPen);
+        painter->drawEllipse(rect());
+    }
+    if(m_isHovered)
+    {
+        QPen selectPen(Qt::blue, 5, Qt::SolidLine);
+        painter->setPen(selectPen);
+        painter->drawEllipse(rect());
+    }
+
+    QColor lineColor;
+    QColor fillColor;
+    if(m_isActive)
+    {
+        lineColor = QColor(Qt::green);
+        fillColor = QColor(Qt::green);
+    }
+    else
+    {
+        lineColor = QColor(Qt::black);
+        fillColor = QColor(Qt::white);
+    }
+
+    QPen pen(lineColor, 1, Qt::SolidLine);
+    QBrush brush(fillColor);
+
+    painter->setPen(pen);
+    painter->setBrush(brush);
+
+    painter->drawEllipse(rect());
+
+    //QBrush debug(Qt::transparent);
+    //painter->setBrush(debug);
+    //painter->drawRect(boundingRect());
 }
 
 void DCState::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
+    m_listFrom.first()->event()->setActive(!m_listFrom.first()->event()->isActive());
+
+    qDebug() << m_listFrom.first()->event()->name() << m_listFrom.first()->isActive();
+
     scene()->clearSelection();
     setSelected(true);
 
@@ -169,33 +221,20 @@ void DCState::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 }
 
 QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)
- {
-     switch (change) {
-     case ItemPositionHasChanged:
-         foreach (DCTransition *edge, m_listFrom)
-             edge->updatePosition();
-         foreach (DCTransition *edge, m_listTo)
-             edge->updatePosition();
-         break;
-     default:
-         break;
-     };
+{
+    switch (change) {
+    case ItemPositionHasChanged:
+        foreach (DCTransition *edge, m_listFrom)
+            edge->updatePosition();
+        foreach (DCTransition *edge, m_listTo)
+            edge->updatePosition();
+        break;
+    default:
+        break;
+    };
 
-     return QGraphicsItem::itemChange(change, value);
- }
-
- void DCState::mousePressEvent(QGraphicsSceneMouseEvent *event)
- {
-     qDebug() << "state mouse press";
-     update();
-     QGraphicsItem::mousePressEvent(event);
- }
-
- void DCState::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
- {
-     update();
-     QGraphicsItem::mouseReleaseEvent(event);
- }
+    return QGraphicsItem::itemChange(change, value);
+}
 
 // void DCState::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 // {
@@ -206,3 +245,15 @@ QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)
 //     }
 //     QGraphicsItem::mouseMoveEvent(event);
 // }
+
+void DCState::hoverEnterEvent ( QGraphicsSceneHoverEvent * event )
+{
+    m_isHovered = true;
+    update();
+}
+
+void DCState::hoverLeaveEvent ( QGraphicsSceneHoverEvent * event )
+{
+    m_isHovered = false;
+    update();
+}

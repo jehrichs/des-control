@@ -30,9 +30,14 @@ DCTransition::DCTransition()
     : QGraphicsPathItem(0)
     , m_eventText(0)
 {
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    m_eventText = new QGraphicsTextItem(this);
+    m_eventText->hide();
+    m_eventText->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    m_eventText->setFlag(QGraphicsItem::ItemIsMovable, true);
 
-    setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsMovable, true);
+    setZValue(5);
 }
 
 void DCTransition::setId(int id)
@@ -48,8 +53,9 @@ int DCTransition::id() const
 void DCTransition::setEvent(DCEvent *event)
 {
     m_event = event;
-    //m_eventText = new QGraphicsTextItem(this);
-    //m_eventText->setPlainText(m_event->name());
+    m_eventText->setPlainText(m_event->name());
+    m_eventText->show();
+    automaticLabelPosition();
 }
 
 DCEvent* DCTransition::event() const
@@ -83,11 +89,6 @@ QRectF DCTransition::boundingRect() const
 {
     qreal extra = (pen().width() + 20) / 2.0;
 
-    //return QRectF(line().p1(), QSizeF(line().p2().x() - line().p1().x(),
-    //                                  line().p2().y() - line().p1().y()))
-    //.normalized()
-    //.adjusted(-extra, -extra, extra, extra);
-
     return QGraphicsPathItem::boundingRect().adjusted(-extra, -extra, extra, extra);
 }
 
@@ -100,15 +101,50 @@ QPainterPath DCTransition::shape() const
 
 void DCTransition::updatePosition()
 {
-    QPainterPath path;
+    QPainterPath original = path();
 
-    path.moveTo(m_source->center());
-    path.lineTo(m_destination->center());
+    if(!original.isEmpty())
+    {
+        original.setElementPositionAt(0, m_source->center().x(), m_source->center().y());
+        original.setElementPositionAt(original.elementCount()-1, m_destination->center().x(), m_destination->center().y());
+    }
 
-    setPath(path);
-    //QLineF line(m_source->center(), m_destination->center());
-    //setLine(line);
+    setPath(original);
+}
 
+void DCTransition::setLabelPosition(const QPointF & pos)
+{
+    m_eventText->setPos(pos);
+}
+
+void DCTransition::automaticLabelPosition()
+{
+    QLineF arrowLine(m_source->center(), m_destination->center());
+
+    QPointF labelPos = path().pointAtPercent(0.5);
+
+    qreal angle = arrowLine.angle();
+    if(angle > 180.0 && angle < 360.0 )
+        labelPos.rx() -= 5 + m_eventText->boundingRect().width();
+    else
+        labelPos.rx() += 5;
+    m_eventText->setPos(labelPos);
+}
+
+void DCTransition::pathToLine()
+{
+    QPainterPath newPath;
+    arrowHead.clear();
+    newPath.moveTo(m_source->center());
+    newPath.lineTo(m_destination->center());
+
+    setPath(newPath);
+
+    update();
+}
+
+void DCTransition::pathToBezier()
+{
 
 }
 
@@ -117,118 +153,96 @@ void DCTransition::paint(QPainter *painter, const QStyleOptionGraphicsItem *,QWi
     if (m_source->collidesWithItem(m_destination))
         return;
 
+    if(isSelected())
+    {
+        painter->setPen(QPen(Qt::red, 3));
+        painter->setBrush(QBrush(Qt::NoBrush));
+        painter->drawPath(path());
 
-    QPen myPen = pen();
-    myPen.setColor(Qt::black);
+        for(int i=1; i<path().elementCount(); i++)
+        {
+            if(path().elementAt(i).type == QPainterPath::CurveToDataElement)
+            {
+                painter->drawEllipse(path().elementAt(i).x,path().elementAt(i).y,5,5);
+            }
+        }
+    }
+
+    createArrow();
+
+    painter->setPen(QPen(Qt::black, 1));
+    painter->setBrush(Qt::NoBrush);
+    painter->drawPath(path());
+
+    painter->setPen(QPen(Qt::black, 2));
+    painter->setBrush(Qt::black);
+
+    painter->drawPolygon(arrowHead);
+}
+
+void DCTransition::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->pos();
+    event->lastPos();
+
+    qreal dx = event->lastPos().x() - event->pos().x();
+    qreal dy = event->lastPos().y() - event->pos().y();
+
+    QPainterPath original = path();
+
+    for(int i=1; i< original.elementCount() -1; i++)
+    {
+        if(original.elementAt(i).type == QPainterPath::CurveToDataElement)
+        {
+            original.setElementPositionAt(i, original.elementAt(i).x - dx,
+                                          original.elementAt(i).y - dy);
+        }
+    }
+
+    setPath(original);
+
+    //QGraphicsItem::mouseMoveEvent(event);
+}
+
+void DCTransition::createArrow()
+{
     qreal arrowSize = 10;
-    painter->setPen(myPen);
-    //painter->setBrush(Qt::black);
 
-//    QLineF centerLineDestination(m_source->center(), m_destination->center());
-//    QPolygonF endPolygonDest = m_destination->shape().toFillPolygon();
-
-//    QPointF pd1 = endPolygonDest.first() + m_destination->pos();
-//    QPointF pd2;
-//    QPointF intersectPointDestination;
-//    QLineF polyLineDest;
-//    for (int i = 1; i < endPolygonDest.count(); ++i) {
-//        pd2 = endPolygonDest.at(i) + m_destination->pos();
-//        polyLineDest = QLineF(pd1, pd2);
-//        QLineF::IntersectType intersectType =
-//                polyLineDest.intersect(centerLineDestination, &intersectPointDestination);
-//        if (intersectType == QLineF::BoundedIntersection)
-//            break;
-//        pd1 = pd2;
-//    }
-
-//    QLineF centerLineSource( m_destination->center(), m_source->center());
-//    QPolygonF endPolygonSource = m_source->shape().toFillPolygon();
-
-//    QPointF ps1 = endPolygonSource.first() + m_source->pos();
-//    QPointF ps2;
-//    QPointF intersectPointSource;
-//    QLineF polyLineSource;
-//    for (int i = 1; i < endPolygonSource.count(); ++i) {
-//        ps2 = endPolygonSource.at(i) + m_source->pos();
-//        polyLineSource = QLineF(ps1, ps2);
-//        QLineF::IntersectType intersectType =
-//                polyLineSource.intersect(centerLineSource, &intersectPointSource);
-//        if (intersectType == QLineF::BoundedIntersection)
-//            break;
-//        ps1 = ps2;
-//    }
-
-//    QPainterPath ppath;
-//    ppath.moveTo(intersectPointDestination);
-//    ppath.lineTo(intersectPointSource);
-
-
-    QPainterPath pathOriginal = path();
-
-    //pathOriginal.moveTo(m_source->center());
-    //pathOriginal.lineTo(m_destination->center());
-    //QPainterPath pp2;
-    //QPainterPath pp3;
-
-    QPainterPath source = m_source->shape();
-    source.translate(m_source->pos());
+    //find arrow position
+    QPainterPath original = path();
     QPainterPath dest = m_destination->shape();
     dest.translate(m_destination->pos());
 
-    QPainterPath pp2 = pathOriginal.subtracted(source);
-    QPainterPath pp3 = pp2.subtracted(dest);
+    QPainterPath destClip = original.intersected(dest);
 
-    //if(pathOriginal.intersects(source))
-    //    qDebug() << "intersection" << pathOriginal << pp2 << pp3;
-    //else
-     //   qDebug() << "no intresection";
-    //pp3 = pp2.subtracted(m_destination->shape());
-
-    //setLine(QLineF(intersectPointDestination, intersectPointSource));
-
-    //double angle = ::acos(line().dx() / line().length());
-    //if (line().dy() >= 0)
-    //    angle = (Pi * 2) - angle;
-
-    //path.controlPointRect()
-
-    //QPointF arrowP1 = line().p1() + QPointF(sin(angle + Pi / 3) * arrowSize,
-     //                                       cos(angle + Pi / 3) * arrowSize);
-    //QPointF arrowP2 = line().p1() + QPointF(sin(angle + Pi - Pi / 3) * arrowSize,
-    //                                        cos(angle + Pi - Pi / 3) * arrowSize);
-
-    //arrowHead.clear();
-    //arrowHead << line().p1() << arrowP1 << arrowP2;
-
-    //painter->setPen(QPen(Qt::black, 2));
-
-
-
-
-    painter->drawPath(path());
-
-    //painter->drawLine(line());
-
-    /*
-    painter->drawPolygon(arrowHead);
-
-    if (isSelected()) {
-        painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
-        QLineF myLine = line();
-        myLine.translate(0, 4.0);
-        painter->drawLine(myLine);
-        myLine.translate(0,-8.0);
-        painter->drawLine(myLine);
-    }
-
-    if(m_event)
+    if(destClip.isEmpty())
     {
-        m_eventText->setPos(line().pointAt(0.5));
-        //QPointF textPos = line().pointAt(0.5);
-        //textPos.rx() +=2;
-        //textPos.ry() +=2;
-        //painter->drawText(textPos, m_event->name());
+        int last = original.elementCount()-1;
+        original.lineTo(original.elementAt(last).x-1, original.elementAt(last).y-1);
+
+        dest = m_destination->shape();
+        dest.translate(m_destination->pos());
+
+        destClip = original.intersected(dest);
     }
-    */
+
+    if(!destClip.isEmpty())
+    {
+        QPointF arrowPosition1( destClip.elementAt(0).x, destClip.elementAt(0).y);
+        QPointF arrowPosition2( destClip.elementAt(1).x, destClip.elementAt(1).y);
+        QLineF arrowLine = QLineF(arrowPosition1, arrowPosition2);
+
+        double angle = ::acos(arrowLine.dx() / arrowLine.length());
+        if (arrowLine.dy() >= 0)
+            angle = (Pi * 2) - angle;
+
+        QPointF arrowP1 = arrowLine.p1() - QPointF(sin(angle + Pi / 3) * arrowSize,
+                                                   cos(angle + Pi / 3) * arrowSize);
+        QPointF arrowP2 = arrowLine.p1() - QPointF(sin(angle + Pi - Pi / 3) * arrowSize,
+                                                   cos(angle + Pi - Pi / 3) * arrowSize);
+
+        arrowHead.clear();
+        arrowHead << arrowLine.p1() << arrowP1 << arrowP2;
+    }
 
 }

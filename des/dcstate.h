@@ -35,18 +35,24 @@ class DCState : public QGraphicsEllipseItem
 public:
     DCState();
 
+    void setId(int id);
+    int id();
+
     void setName(const QString & name);
     QString name() const;
 
-    void setID(int id);
-    int id();
-
     void setMarked(bool marked);
+    bool marked() const;
+
     void setInitial(bool initial);
     bool isInitial() const;
 
     void addTransitionFrom(DCTransition * from);
     void addTransitionTo(DCTransition *to);
+
+    QList<DCTransition*> outgoingTransitions();
+
+    void setActive(bool active);
 
     enum { Type = UserType + 1 };
     int type() const { return Type; }
@@ -54,25 +60,24 @@ public:
     QPointF center();
     QSizeF ellipseBounds();
     void setCenterPoint(const QPoint & point);
-    QPointF intersectionPoint(QPointF linefrom);
 
-    //QRectF boundingRect () const;
-    //void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+    QRectF boundingRect () const;
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     //void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void hoverEnterEvent ( QGraphicsSceneHoverEvent * event );
+    void hoverLeaveEvent ( QGraphicsSceneHoverEvent * event );
 
 private:
     void createActions();
     void setUpPlace();
 
-    QString m_name;
     int m_id;
+    QString m_name;
     QList<DCTransition*> m_listFrom;
     QList<DCTransition*> m_listTo;
 
@@ -81,11 +86,13 @@ private:
 
     QGraphicsEllipseItem *m_markedCircle;
     QGraphicsSimpleTextItem *m_insideText;
+    bool m_isHovered;
 
     qreal m_circleGap;
-
     QAction *m_editPlace;
     QAction *m_deletePlace;
+
+    bool m_isActive;
 };
 
 #endif // DCPLACE_H

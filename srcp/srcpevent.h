@@ -15,54 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "dcevent.h"
+#ifndef SRCPEVENT_H
+#define SRCPEVENT_H
 
-#include <QDebug>
+#include <QObject>
 
-DCEvent::DCEvent()
-    : m_id(-1)
-    , m_controlable(false)
-    , m_active(false)
+class SRCPEvent : public QObject
 {
+    Q_OBJECT
+public:
+    explicit SRCPEvent(QObject *parent = 0);
 
-}
+signals:
 
-void DCEvent::setId(int id)
-{
-    m_id = id;
-}
 
-int DCEvent::id() const
-{
-    return m_id;
-}
+public slots:
 
-void DCEvent::setName(const QString & name)
-{
-    m_name = name;
-}
+};
 
-QString DCEvent::name() const
-{
-    return m_name;
-}
-
-void DCEvent::setControlable(bool controlable)
-{
-    m_controlable = controlable;
-}
-
-bool DCEvent::controlable() const
-{
-    return m_controlable;
-}
-
-bool DCEvent::isActive()
-{
-    return m_active;
-}
-
-bool DCEvent::setActive(bool active)
-{
-    m_active = active;
-}
+#endif // SRCPEVENT_H

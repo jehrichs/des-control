@@ -39,6 +39,8 @@ public:
 
     void setEvent(DCEvent *event);
     DCEvent* event() const;
+    void setLabelPosition(const QPointF & pos);
+    void automaticLabelPosition();
 
     void setStates(DCState* from, DCState *to);
     DCState* sourceState() const;
@@ -46,16 +48,24 @@ public:
 
     void updatePosition();
 
-    enum { Type = UserType + 10 };
-    int type() const { return Type; }
+    bool isEventActive();
+
+    void pathToLine();
+    void pathToBezier();
 
     QPainterPath shape() const;
+
+    enum { Type = UserType + 10 };
+    int type() const { return Type; }
 
 protected:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,QWidget *widget = 0);
 
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 private:
+    void createArrow();
+
     int m_id;
     DCEvent *m_event;
     DCState* m_source;

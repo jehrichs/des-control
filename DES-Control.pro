@@ -35,7 +35,9 @@ SOURCES += main.cpp\
            des/automatonview.cpp \
            import/importautomaton.cpp \
     des/dctransition.cpp \
-    des/gvgraph.cpp
+    des/gvgraph.cpp \
+    srcp/srcpevent.cpp \
+    des/dccontroller.cpp
 
 HEADERS  += mainwindow.h \
             settingsdialog.h \
@@ -58,7 +60,9 @@ HEADERS  += mainwindow.h \
             des/automatonview.h \
             import/importautomaton.h \
     des/dctransition.h \
-    des/gvgraph.h
+    des/gvgraph.h \
+    srcp/srcpevent.h \
+    des/dccontroller.h
 
 FORMS    += mainwindow.ui \
             settingsdialog.ui \

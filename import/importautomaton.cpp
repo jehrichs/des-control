@@ -68,7 +68,6 @@ QList<DCAutomaton*> ImportAutomaton::loadSupremicaFile(QIODevice *device)
             {
                 if (reader.name() == "Automaton")
                 {
-                    qDebug() << "read automaton";
                     DCAutomaton* automaton = new DCAutomaton();
                     automaton->setName(reader.attributes().value("name").toString());
 
@@ -112,14 +111,11 @@ QList<DCAutomaton*> ImportAutomaton::loadSupremicaFile(QIODevice *device)
             reader.skipCurrentElement();
     }
 
-
-    qDebug() << "listsize" << m_automatonList.size();
     return m_automatonList;
 }
 
 void ImportAutomaton::addSupEvent(DCAutomaton* automaton)
 {
-    qDebug() << "Events" << reader.name();
     reader.readNext();
     while(reader.name() != "Events")
     {
@@ -136,13 +132,11 @@ void ImportAutomaton::addSupEvent(DCAutomaton* automaton)
             automaton->addEvent(newevent);
         }
     }
-    qDebug() << "Events end " << reader.name();
-    //reader.skipCurrentElement();
+
 }
 
 void ImportAutomaton::addSupState(DCAutomaton* automaton)
 {
-    qDebug() << "States" << reader.name();
     reader.readNext();
     while(reader.name() != "States")
     {
@@ -151,7 +145,7 @@ void ImportAutomaton::addSupState(DCAutomaton* automaton)
             DCState* newState = new DCState();
 
             newState->setName(reader.attributes().value("name").toString());
-            newState->setID(reader.attributes().value("id").toString().toInt());
+            newState->setId(reader.attributes().value("id").toString().toInt());
 
             if(reader.attributes().value("initial").toString() == "true")
                 newState->setInitial(true);
@@ -166,7 +160,6 @@ void ImportAutomaton::addSupState(DCAutomaton* automaton)
 
 void ImportAutomaton::addSupTransition(DCAutomaton* automaton)
 {
-    qDebug() << "Transitions" << reader.name();
     reader.readNext();
     while(reader.name() != "Transitions")
     {

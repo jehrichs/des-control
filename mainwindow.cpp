@@ -75,6 +75,14 @@ void MainWindow::showDebugConsole()
     console->show();
 }
 
+void MainWindow::createController(DCController::ControlMode mode)
+{
+    m_controler = new DCController();
+    m_controler->setMode(mode);
+    m_controler->setAutomaton(m_project->automata().first());
+    m_project->automata().first()->setSceneMode(DCAutomaton::Simulate);
+}
+
 void MainWindow::newProject()
 {
     m_project = new Project(this);
@@ -226,7 +234,12 @@ void MainWindow::importAutomaton()
 
 void MainWindow::connectServer()
 {
-    m_project->server()->connectSRCP();
+    //m_project->automata().first()->lineLayout();
+    //m_project->server()->connectSRCP();
+
+    createController(DCController::Simulation);
+
+    m_controler->startController();
 }
 
 void MainWindow::connectedToServer()

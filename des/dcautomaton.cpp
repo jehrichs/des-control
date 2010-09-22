@@ -31,10 +31,35 @@
 
 DCAutomaton::DCAutomaton(QObject *parent)
     : QGraphicsScene(parent)
+    , m_sceneMode(Edit)
     , m_type(Plant)
     , m_name("Automata")
 {
     setSceneRect ( 0, 0, 1000, 1000 );
+}
+
+
+void DCAutomaton::setSceneMode(SceneMode mode)
+{
+    m_sceneMode = mode;
+
+    switch(m_sceneMode)
+    {
+    case Edit:
+        setBackgroundBrush(Qt::white);
+        break;
+    case Run:
+        setBackgroundBrush(Qt::lightGray);
+        break;
+    case Simulate:
+        setBackgroundBrush(Qt::lightGray);
+        break;
+    }
+}
+
+DCAutomaton::SceneMode DCAutomaton::sceneMode()
+{
+    return m_sceneMode;
 }
 
 void DCAutomaton::setName(const QString & name)
@@ -74,8 +99,6 @@ void DCAutomaton::addTransition(DCTransition *newtransition)
 
 void DCAutomaton::addEvent(DCEvent *newEvent)
 {
-
-    //addItem(newEvent);
     m_eventList.append(newEvent);
 }
 
@@ -112,10 +135,18 @@ DCTransition *DCAutomaton::getTransitionFromId(int id)
     return 0;
 }
 
+DCState *DCAutomaton::getInitialState()
+{
+    foreach(DCState* state, m_stateList)
+    {
+        if(state->isInitial())
+            return state;
+    }
+}
+
 void DCAutomaton::selectItem()
 {
     m_mode = MoveItem;
-    qDebug() << "select item";
 }
 
 void DCAutomaton::addState()
@@ -183,11 +214,27 @@ void DCAutomaton::doLayout()
     foreach(GVEdge edge, gvTest.edges())
     {
         m_transitionList.at(edge.id)->setPath(edge.path);
+        m_transitionList.at(edge.id)->automaticLabelPosition();
     }
 
-    setSceneRect(gvTest.boundingRect());
-    //update(sceneRect());
+    setSceneRect(gvTest.boundingRect().adjusted(-100,-100,100,100));
 
+}
+
+void DCAutomaton::lineLayout()
+{
+    foreach(DCTransition *transition, m_transitionList)
+    {
+        transition->pathToLine();
+    }
+}
+
+void DCAutomaton::bezierLayout()
+{
+    foreach(DCTransition *transition, m_transitionList)
+    {
+        transition->pathToBezier();
+    }
 }
 
 void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -195,6 +242,9 @@ void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     //if (mouseEvent->button() != Qt::RightButton)
         //qDebug() << m_stateList.size() << m_transitionList.size() << m_eventList.size();
     if (mouseEvent->button() != Qt::LeftButton)
+        return;
+
+    if(m_mode != Edit)
         return;
 
     switch (m_mode) {
