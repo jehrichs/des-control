@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>601</width>
-    <height>397</height>
+    <width>797</width>
+    <height>527</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>601</width>
+     <width>797</width>
      <height>21</height>
     </rect>
    </property>
@@ -30,30 +30,52 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionNew"/>
-    <addaction name="actionOpen_Project"/>
+    <widget class="QMenu" name="menuImport">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Import</string>
+     </property>
+     <addaction name="actImportHardware"/>
+     <addaction name="actImportAutomaton"/>
+    </widget>
+    <widget class="QMenu" name="menuExport">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Export</string>
+     </property>
+     <addaction name="actExportHardwareSettings"/>
+    </widget>
+    <addaction name="actNewProject"/>
+    <addaction name="actOpenProject"/>
     <addaction name="separator"/>
-    <addaction name="actionSave"/>
-    <addaction name="actionSave_As"/>
-    <addaction name="actionClose_Project"/>
+    <addaction name="actSaveProject"/>
+    <addaction name="actSaveProjectAs"/>
+    <addaction name="actCloseProject"/>
     <addaction name="separator"/>
-    <addaction name="actionExit"/>
+    <addaction name="menuImport"/>
+    <addaction name="menuExport"/>
+    <addaction name="separator"/>
+    <addaction name="actQuit"/>
    </widget>
-   <widget class="QMenu" name="menu_Server">
+   <widget class="QMenu" name="menuServer">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="title">
      <string>S&amp;erver</string>
     </property>
-    <addaction name="actionConnect_to_Server"/>
-    <addaction name="actionDisconnect"/>
-    <addaction name="actionSystem_Power_On"/>
+    <addaction name="actConnectToServer"/>
+    <addaction name="actDisconnectFromServer"/>
+    <addaction name="actToggleSystemPower"/>
     <addaction name="separator"/>
-    <addaction name="actionShow_debug_console"/>
-    <addaction name="actionServer_information"/>
+    <addaction name="actShowDebugConsole"/>
+    <addaction name="actServerInformation"/>
     <addaction name="separator"/>
-    <addaction name="actionServer_Settings"/>
+    <addaction name="actServerSettings"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="tearOffEnabled">
@@ -62,51 +84,77 @@
     <property name="title">
      <string>&amp;Settings</string>
     </property>
-    <addaction name="actionShow_Toolbar"/>
-    <addaction name="actionShow_Taskbar"/>
+    <widget class="QMenu" name="menuToggleToolBars">
+     <property name="title">
+      <string>Toggle ToolBars</string>
+     </property>
+    </widget>
+    <addaction name="menuToggleToolBars"/>
+    <addaction name="actToggleStatusBar"/>
     <addaction name="separator"/>
-    <addaction name="actionProject_Settings"/>
-    <addaction name="actionSettings"/>
+    <addaction name="actShowProjectSettings"/>
+    <addaction name="actShowSettings"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionHandbook"/>
+    <addaction name="actHandbook"/>
     <addaction name="separator"/>
-    <addaction name="actionAbout_DES_COntrol"/>
-    <addaction name="actionAbout_Qt"/>
+    <addaction name="actAboutDESControl"/>
+    <addaction name="actAboutQt"/>
    </widget>
    <widget class="QMenu" name="menuAutomata">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="title">
-     <string>Automata</string>
+     <string>Automaton</string>
     </property>
     <widget class="QMenu" name="menuMode">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Set Mode</string>
      </property>
-     <addaction name="actionRun_Automata_2"/>
-     <addaction name="actionEdit_Automata_2"/>
+     <addaction name="actEditAutomaton"/>
+     <addaction name="separator"/>
+     <addaction name="actSimulateAutomaton"/>
+     <addaction name="actRunAutomaton"/>
     </widget>
-    <addaction name="actionImport_Automata"/>
-    <addaction name="actionDelete_Automata"/>
+    <addaction name="actNewAutomaton"/>
+    <addaction name="actDeleteAutomaton"/>
     <addaction name="menuMode"/>
     <addaction name="separator"/>
-    <addaction name="actionSelect_Item"/>
-    <addaction name="actionAdd_Place"/>
-    <addaction name="actionAdd_Event"/>
-    <addaction name="actionDelete_selected"/>
+    <addaction name="actSelectItem"/>
+    <addaction name="actAddState"/>
+    <addaction name="actAddTransition"/>
+    <addaction name="actDeleteSelected"/>
+    <addaction name="separator"/>
+    <addaction name="actAddEvent"/>
+   </widget>
+   <widget class="QMenu" name="menuHardware">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>Hardware</string>
+    </property>
+    <addaction name="actHardwareSettings"/>
+    <addaction name="actTestHardwareEvents"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuAutomata"/>
-   <addaction name="menu_Server"/>
+   <addaction name="menuHardware"/>
+   <addaction name="menuServer"/>
    <addaction name="menuSettings"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle">
+    <string>Main</string>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -115,163 +163,233 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionServer_Settings">
+  <widget class="QToolBar" name="controllerToolBar">
+   <property name="windowTitle">
+    <string>Controller</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QToolBar" name="automatonToolBar">
+   <property name="windowTitle">
+    <string>Automaton</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="actServerSettings">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Server Settings</string>
    </property>
   </action>
-  <action name="actionConnect_to_Server">
+  <action name="actConnectToServer">
    <property name="enabled">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/network-connect.png</normaloff>:/icons/network-connect.png</iconset>
    </property>
    <property name="text">
     <string>Connect</string>
    </property>
   </action>
-  <action name="actionShow_debug_console">
+  <action name="actShowDebugConsole">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/utilities-terminal.png</normaloff>:/icons/utilities-terminal.png</iconset>
    </property>
    <property name="text">
     <string>Show debug console</string>
    </property>
   </action>
-  <action name="actionDisconnect">
+  <action name="actDisconnectFromServer">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/network-disconnect.png</normaloff>:/icons/network-disconnect.png</iconset>
+   </property>
    <property name="text">
     <string>Disconnect</string>
    </property>
   </action>
-  <action name="actionServer_information">
+  <action name="actServerInformation">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Server Information</string>
    </property>
   </action>
-  <action name="actionSystem_power_On">
+  <action name="actToggleStatusBar">
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="text">
-    <string>System power On</string>
-   </property>
-  </action>
-  <action name="actionSystem_Power_off">
-   <property name="checkable">
+   <property name="checked">
     <bool>true</bool>
    </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
-    <string>System Power Off</string>
+    <string>Show Statusbar</string>
    </property>
   </action>
-  <action name="actionShow_Toolbar">
-   <property name="text">
-    <string>Show Toolbar</string>
+  <action name="actShowSettings">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/configure.png</normaloff>:/icons/configure.png</iconset>
    </property>
-  </action>
-  <action name="actionShow_Taskbar">
-   <property name="text">
-    <string>Show Taskbar</string>
-   </property>
-  </action>
-  <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
    </property>
   </action>
-  <action name="actionAbout_DES_Control">
+  <action name="actNewProject">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/document-new.png</normaloff>:/icons/document-new.png</iconset>
+   </property>
    <property name="text">
-    <string>about DES-Control</string>
+    <string>New Project</string>
    </property>
   </action>
-  <action name="actionConfig">
-   <property name="text">
-    <string>config</string>
-   </property>
-  </action>
-  <action name="actionNew">
-   <property name="text">
-    <string>New</string>
-   </property>
-  </action>
-  <action name="actionSave">
+  <action name="actSaveProject">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/document-save.png</normaloff>:/icons/document-save.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
    </property>
   </action>
-  <action name="actionExit">
+  <action name="actQuit">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/application-exit.png</normaloff>:/icons/application-exit.png</iconset>
+   </property>
    <property name="text">
-    <string>Exit</string>
+    <string>Quit</string>
    </property>
   </action>
-  <action name="actionAbout_DES_COntrol">
+  <action name="actAboutDESControl">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/help-about.png</normaloff>:/icons/help-about.png</iconset>
+   </property>
    <property name="text">
     <string>About DES-Control</string>
    </property>
   </action>
-  <action name="actionAbout_Qt">
+  <action name="actAboutQt">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/help-about.png</normaloff>:/icons/help-about.png</iconset>
+   </property>
    <property name="text">
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actionHandbook">
+  <action name="actHandbook">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/help-contents.png</normaloff>:/icons/help-contents.png</iconset>
+   </property>
    <property name="text">
     <string>Handbook</string>
    </property>
   </action>
-  <action name="actionSave_As">
+  <action name="actSaveProjectAs">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/document-save-as.png</normaloff>:/icons/document-save-as.png</iconset>
    </property>
    <property name="text">
     <string>Save As</string>
    </property>
   </action>
-  <action name="actionClose_Project">
+  <action name="actCloseProject">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/document-close.png</normaloff>:/icons/document-close.png</iconset>
+   </property>
    <property name="text">
     <string>Close Project</string>
    </property>
   </action>
-  <action name="actionOpen_Project">
+  <action name="actOpenProject">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/document-open.png</normaloff>:/icons/document-open.png</iconset>
+   </property>
    <property name="text">
     <string>Open Project</string>
    </property>
   </action>
-  <action name="actionProject_Settings">
+  <action name="actShowProjectSettings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/configure.png</normaloff>:/icons/configure.png</iconset>
+   </property>
    <property name="text">
     <string>Project Settings</string>
    </property>
   </action>
-  <action name="actionAdd_Place">
+  <action name="actAddState">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/draw-ellipse.png</normaloff>:/icons/draw-ellipse.png</iconset>
+   </property>
    <property name="text">
-    <string>Add Place</string>
+    <string>Add State</string>
    </property>
   </action>
-  <action name="actionAdd_Event">
+  <action name="actAddTransition">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/draw-bezier-curves.png</normaloff>:/icons/draw-bezier-curves.png</iconset>
+   </property>
    <property name="text">
-    <string>Add Event</string>
+    <string>Add Transition</string>
    </property>
   </action>
-  <action name="actionDelete_selected">
+  <action name="actDeleteSelected">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -279,23 +397,19 @@
     <string>Delete Selected</string>
    </property>
   </action>
-  <action name="actionImport_Automata">
+  <action name="actDeleteAutomaton">
    <property name="enabled">
     <bool>false</bool>
    </property>
-   <property name="text">
-    <string>Import Automata</string>
-   </property>
-  </action>
-  <action name="actionDelete_Automata">
-   <property name="enabled">
-    <bool>false</bool>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/vcs_remove.png</normaloff>:/icons/vcs_remove.png</iconset>
    </property>
    <property name="text">
     <string>Delete Automata</string>
    </property>
   </action>
-  <action name="actionSelect_Item">
+  <action name="actSelectItem">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -305,114 +419,117 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/edit-select.png</normaloff>:/icons/edit-select.png</iconset>
+   </property>
    <property name="text">
     <string>Select Item</string>
    </property>
   </action>
-  <action name="actionEdit_Automata">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Edit</string>
-   </property>
-  </action>
-  <action name="actionRun_Automata">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Run</string>
-   </property>
-  </action>
-  <action name="actionSystem_Power_On">
+  <action name="actToggleSystemPower">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>System Power On</string>
    </property>
   </action>
-  <action name="actionRun_Automata_2">
+  <action name="actRunAutomaton">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/arrow-right.png</normaloff>:/icons/arrow-right.png</iconset>
+   </property>
    <property name="text">
-    <string>Run Automata</string>
+    <string>Run Automaton</string>
    </property>
   </action>
-  <action name="actionEdit_Automata_2">
+  <action name="actEditAutomaton">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/document-edit.png</normaloff>:/icons/document-edit.png</iconset>
+   </property>
    <property name="text">
-    <string>Edit Automata</string>
+    <string>Edit Automaton</string>
+   </property>
+  </action>
+  <action name="actImportHardware">
+   <property name="text">
+    <string>Import Hardware</string>
+   </property>
+  </action>
+  <action name="actImportAutomaton">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/vcs_update.png</normaloff>:/icons/vcs_update.png</iconset>
+   </property>
+   <property name="text">
+    <string>Import Automata</string>
+   </property>
+  </action>
+  <action name="actExportHardwareSettings">
+   <property name="text">
+    <string>Export Hardware Settings</string>
+   </property>
+  </action>
+  <action name="actNewAutomaton">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/vcs_add.png</normaloff>:/icons/vcs_add.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Automaton</string>
+   </property>
+  </action>
+  <action name="actSimulateAutomaton">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Simulate Automaton</string>
+   </property>
+  </action>
+  <action name="actAddEvent">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Add Event</string>
+   </property>
+  </action>
+  <action name="actHardwareSettings">
+   <property name="text">
+    <string>Hardware Settings</string>
+   </property>
+  </action>
+  <action name="actTestHardwareEvents">
+   <property name="text">
+    <string>Test Hardware Events</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="oxygen.qrc"/>
+ </resources>
  <connections>
   <connection>
-   <sender>actionSettings</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>showSettings()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>300</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionShow_debug_console</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>showDebugConsole()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>300</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionConnect_to_Server</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>connectServer()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>300</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionDisconnect</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>disconnectServer()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>300</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionNew</sender>
+   <sender>actNewProject</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>newProject()</slot>
@@ -428,39 +545,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionSave</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>saveProject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>300</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSave_As</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>saveProjectAs()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>300</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionOpen_Project</sender>
+   <sender>actOpenProject</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>openProject()</slot>
@@ -476,10 +561,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionDelete_Automata</sender>
+   <sender>actSaveProject</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>deleteAutomata()</slot>
+   <slot>saveProject()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -492,7 +577,39 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionImport_Automata</sender>
+   <sender>actSaveProjectAs</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveProjectAs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actCloseProject</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>closeProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actImportAutomaton</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>importAutomaton()</slot>
@@ -507,20 +624,232 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actImportHardware</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>importHardware()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actExportHardwareSettings</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportHardware()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actNewAutomaton</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newAutomaton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actDeleteAutomaton</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>deleteAutomaton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actConnectToServer</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>connectToServer()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actDisconnectFromServer</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>disconnectFromServer()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actToggleStatusBar</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>toggleStatusBar()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actShowProjectSettings</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showProjectSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actShowSettings</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actHandbook</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showHandbook()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actAboutDESControl</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>aboutDES()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>showSettings()</slot>
-  <slot>showDebugConsole()</slot>
-  <slot>showAbout()</slot>
-  <slot>connectServer()</slot>
   <slot>newProject()</slot>
-  <slot>saveProject()</slot>
-  <slot>closeProject()</slot>
-  <slot>disconnectServer()</slot>
-  <slot>saveProjectAs()</slot>
   <slot>openProject()</slot>
-  <slot>newAutomata()</slot>
-  <slot>deleteAutomata()</slot>
+  <slot>saveProject()</slot>
+  <slot>saveProjectAs()</slot>
+  <slot>importHardware()</slot>
   <slot>importAutomaton()</slot>
+  <slot>exportHardware()</slot>
+  <slot>quitApp()</slot>
+  <slot>newAutomaton()</slot>
+  <slot>deleteAutomaton()</slot>
+  <slot>editAutomaton()</slot>
+  <slot>simulateAutomaton()</slot>
+  <slot>runAutomaton()</slot>
+  <slot>selectItem()</slot>
+  <slot>addState()</slot>
+  <slot>addTransition()</slot>
+  <slot>deleteSelected()</slot>
+  <slot>addEvent()</slot>
+  <slot>connectToServer()</slot>
+  <slot>disconnectFromServer()</slot>
+  <slot>toggleSystemPower()</slot>
+  <slot>showDebugConsole()</slot>
+  <slot>showServerInfo()</slot>
+  <slot>showServerInformation()</slot>
+  <slot>showServerSettings()</slot>
+  <slot>toggleToolBar()</slot>
+  <slot>toggleStatusBar()</slot>
+  <slot>showProjectSettings()</slot>
+  <slot>showSettings()</slot>
+  <slot>showHandbook()</slot>
+  <slot>aboutDES()</slot>
+  <slot>aboutqt()</slot>
+  <slot>closeProject()</slot>
  </slots>
 </ui>

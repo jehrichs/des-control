@@ -32,7 +32,7 @@ class Project : public QObject
 {
     Q_OBJECT
 public:
-    explicit Project(QObject *parent = 0);
+    Project();
 
     void setName(const QString& name);
     QString name() const;
@@ -62,6 +62,7 @@ public:
     void removeSensor(const QString & sensorName);
 
     void addAutomaton(DCAutomaton* newAutomaton);
+    void removeAutomaton(DCAutomaton* automaton);
     QList<DCAutomaton*> automata() const;
 
     void initializeDevices();
@@ -84,7 +85,6 @@ private:
     QList<DCActuator*> m_actuators;
     QList<DCSensor*> m_sensors;
     QList<DCAutomaton*> m_automata;
-
 };
 
 #endif // PROJECT_H

@@ -20,7 +20,9 @@
 
 #include "settingsdialog.h"
 #include "project.h"
-#include "projecttreeview.h"
+#include "projectwidget.h"
+#include "des/automatonwidget.h"
+#include "automatontreewidget.h"
 #include "projectserializer.h"
 
 #include "srcp/serverdebugconsole.h"
@@ -34,59 +36,89 @@
 
 #include "import/importautomaton.h"
 
+#include "projectwidget.h"
+
+#include <QCloseEvent>
 #include <QtGui/QSplitter>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSettings>
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget *parent) :
-        QMainWindow(parent),
-        ui(new Ui::MainWindow),
-        m_projectView(0),
-        m_splitter(0),
-        m_automatView(0)
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , m_project(0)
+    , m_splitter(0)
+    , m_projectWidget(0)
+    , m_automatonWidget(0)
+    , m_autonamtonEdit(0)
+    , m_autonamtonMode()
+    , m_unsavedChanges(false)
 {
     ui->setupUi(this);
 
-    //createToolbar();
+    createActions();
+    createToolBars();
+
     showEmptyView();
+
+    readSettings();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_projectWidget;
+    delete m_automatonWidget;
+    delete m_project;
+    delete m_autonamtonEdit;
+    delete m_autonamtonMode;
 }
 
-void MainWindow::showSettings()
+void MainWindow::writeSettings()
 {
-    m_project->automata().first()->doLayout();
-    //SettingsDialog setting;
-    //setting.exec();
+    QSettings settings;
+
+    settings.beginGroup("MainWindow");
+    settings.setValue("size", size());
+    settings.setValue("pos", pos());
+    settings.setValue("mainToolBar", ui->mainToolBar->isVisible());
+    settings.setValue("automatonToolBar", ui->automatonToolBar->isVisible());
+    settings.setValue("controllerToolBar", ui->controllerToolBar->isVisible());
+    settings.setValue("statusbar", ui->statusBar->isVisible());
+    settings.endGroup();
 }
 
-void MainWindow::showAbout()
+void MainWindow::readSettings()
 {
-}
+    QSettings settings;
 
-void MainWindow::showDebugConsole()
-{
-    m_project->automata().first()->doLayout();
-    ServerDebugConsole *console = new ServerDebugConsole();
-    console->show();
-}
+    settings.beginGroup("MainWindow");
+    resize(settings.value("size", QSize(800, 600)).toSize());
+    move(settings.value("pos", QPoint(200, 200)).toPoint());
 
-void MainWindow::createController(DCController::ControlMode mode)
-{
-    m_controler = new DCController();
-    m_controler->setMode(mode);
-    m_controler->setAutomaton(m_project->automata().first());
-    m_project->automata().first()->setSceneMode(DCAutomaton::Simulate);
+    ui->mainToolBar->setVisible(settings.value("mainToolBar", true).toBool());
+    ui->automatonToolBar->setVisible(settings.value("automatonToolBar", true).toBool());
+    ui->controllerToolBar->setVisible(settings.value("controllerToolBar", true).toBool());
+    ui->statusBar->setVisible(settings.value("statusbar", true).toBool());
+    ui->actToggleStatusBar->setChecked(settings.value("statusbar", true).toBool());
+
+    settings.endGroup();
 }
 
 void MainWindow::newProject()
 {
-    m_project = new Project(this);
+    if(m_project)
+    {
+        if(!closeProject())
+            return;
+    }
+
+    //TODO show project wizard
+    m_project = new Project();
     m_project->setName("Test Project");
+    connect (m_project, SIGNAL(projectChanged()), this, SLOT(unsavedChanges()));
 
     DCServer *server = new DCServer();
     server->setHost("127.0.0.1");
@@ -94,14 +126,29 @@ void MainWindow::newProject()
 
     m_project->setServer(server);
 
-    connect (server, SIGNAL(connectionClosed()), this, SLOT(disconnectServer()));
+    connect (server, SIGNAL(connectionClosed()), this, SLOT(disconnectedFromServer()));
     connect (server, SIGNAL(connectionEstablished()), this, SLOT(connectedToServer()));
 
     showProjectView();
+    m_unsavedChanges = false;
+
+    ui->actSaveProject->setEnabled(true);
+    ui->actSaveProjectAs->setEnabled(true);
+    ui->actCloseProject->setEnabled(true);
+    ui->menuImport->setEnabled(true);
+    ui->menuExport->setEnabled(true);
+    ui->menuAutomata->setEnabled(true);
+    ui->menuHardware->setEnabled(true);
+    ui->menuServer->setEnabled(true);
+    ui->actShowProjectSettings->setEnabled(true);
 }
 
 void MainWindow::openProject()
 {
+    if(m_project)
+        if(!closeProject())
+            return;
+
     QString fileName =
             QFileDialog::getOpenFileName(this, tr("Open DES Project"),
                                          QDir::currentPath(),
@@ -118,19 +165,29 @@ void MainWindow::openProject()
         return;
     }
 
-
     ProjectSerializer serializer;
     m_project = serializer.loadProject(&file);
     if(m_project)
     {
-        statusBar()->showMessage(tr("File opened"), 2000);
+        statusBar()->showMessage(tr("Project opened"), 2000);
         m_project->setFileName(fileName);
+        connect (m_project, SIGNAL(projectChanged()), this, SLOT(unsavedChanges()));
 
-        connect (m_project->server(), SIGNAL(connectionClosed()), this, SLOT(disconnectServer()));
-        connect (m_project->server(), SIGNAL(connectionEstablished()), this, SLOT(connectedToServer()));
+        connect (m_project->server(), SIGNAL(connectionClosed()), this, SLOT(connectedToServer()));
+        connect (m_project->server(), SIGNAL(connectionEstablished()), this, SLOT(disconnectFromServer()));
 
         showProjectView();
+        m_unsavedChanges = false;
 
+        ui->actSaveProject->setEnabled(true);
+        ui->actSaveProjectAs->setEnabled(true);
+        ui->actCloseProject->setEnabled(true);
+        ui->menuImport->setEnabled(true);
+        ui->menuExport->setEnabled(true);
+        ui->menuAutomata->setEnabled(true);
+        ui->menuHardware->setEnabled(true);
+        ui->menuServer->setEnabled(true);
+        ui->actShowProjectSettings->setEnabled(true);
     }
     else
     {
@@ -157,7 +214,9 @@ void MainWindow::saveProject()
 
         ProjectSerializer serializer;
         if(serializer.saveProject(m_project, &file))
-            statusBar()->showMessage(tr("File saved"), 2000);
+            statusBar()->showMessage(tr("Project saved"), 2000);
+
+        m_unsavedChanges = false;
     }
 }
 
@@ -183,10 +242,57 @@ void MainWindow::saveProjectAs()
 
     ProjectSerializer serializer;
     if(serializer.saveProject(m_project, &file))
-        statusBar()->showMessage(tr("File saved"), 2000);
+        statusBar()->showMessage(tr("Project saved"), 2000);
+
+    m_unsavedChanges = false;
 }
 
-void MainWindow::closeProject()
+bool MainWindow::closeProject()
+{
+    if(m_unsavedChanges)
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("The project has been modified."));
+        msgBox.setInformativeText(tr("Do you want to save your changes?"));
+        msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Save);
+        int ret = msgBox.exec();
+
+        switch (ret) {
+        case QMessageBox::Save:
+            saveProject();
+            break;
+        case QMessageBox::Discard:
+            // do nothing, don't sav and close project further down
+            break;
+        case QMessageBox::Cancel:
+            // skip project closing
+            return false;
+            break;
+        default:
+            return false;
+            break;
+        }
+    }
+
+    showEmptyView();
+    delete m_project;
+    m_project = 0;
+
+    ui->actSaveProject->setEnabled(false);
+    ui->actSaveProjectAs->setEnabled(false);
+    ui->actCloseProject->setEnabled(false);
+    ui->menuImport->setEnabled(false);
+    ui->menuExport->setEnabled(false);
+    ui->menuAutomata->setEnabled(false);
+    ui->menuHardware->setEnabled(false);
+    ui->menuServer->setEnabled(false);
+    ui->actShowProjectSettings->setEnabled(false);
+
+    return true;
+}
+
+void MainWindow::importHardware()
 {
 
 }
@@ -194,9 +300,9 @@ void MainWindow::closeProject()
 void MainWindow::importAutomaton()
 {
     QString fileName =
-            QFileDialog::getOpenFileName(this, tr("Open Automaton"),
+            QFileDialog::getOpenFileName(this, tr("Import Automaton"),
                                          QDir::currentPath(),
-                                         tr("Automaton Files (*.xml)"));
+                                         tr("Automaton Files (*.xml *.fsm)"));
     if (fileName.isEmpty())
         return;
 
@@ -209,7 +315,6 @@ void MainWindow::importAutomaton()
         return;
     }
 
-
     ImportAutomaton importer;
 
     QList<DCAutomaton*> automatonList = importer.loadAutomaton(ImportAutomaton::SUPREMICA, &file);
@@ -219,84 +324,111 @@ void MainWindow::importAutomaton()
         statusBar()->showMessage(tr("Automaton imported"), 2000);
 
         foreach(DCAutomaton* automaton, automatonList)
+        {
             m_project->addAutomaton(automaton);
+        }
 
         automatonList.first()->doLayout();
-        showAutomaton(automatonList.first());
+        //TODO m_automatonView->openAutomaton(automatonList.first());
 
     }
     else
     {
-        delete m_project;
-        m_project = 0;
+        QMessageBox::critical(this, tr("Could not import Automaton"), tr("Importer failed") );
     }
 }
 
-void MainWindow::connectServer()
+void MainWindow::exportHardware()
 {
-    //m_project->automata().first()->lineLayout();
-    //m_project->server()->connectSRCP();
 
-    createController(DCController::Simulation);
-
-    m_controler->startController();
 }
 
-void MainWindow::connectedToServer()
+void MainWindow::newAutomaton()
 {
-    ui->actionConnect_to_Server->setEnabled(false);
-    ui->actionDisconnect->setEnabled(true);
-    ui->actionShow_debug_console->setEnabled(true);
-    ui->actionServer_information->setEnabled(true);
-
-    m_project->initializeDevices();
-}
-
-void MainWindow::disconnectServer()
-{
-    m_project->server()->disconnectSRCP();
-
-    ui->actionConnect_to_Server->setEnabled(true);
-    ui->actionDisconnect->setEnabled(false);
-    ui->actionShow_debug_console->setEnabled(false);
-    ui->actionServer_information->setEnabled(false);
-}
-
-void MainWindow::newAutomata()
-{
+    //TODO show automata wizzard
     DCAutomaton *newAutomaton = new DCAutomaton();
     m_project->addAutomaton(newAutomaton);
 
     //automaton created .. open and show it
-    showAutomaton(newAutomaton);
+    //TODO m_automatonView->openAutomaton(newAutomaton);
 }
 
-void MainWindow::deleteAutomata()
+void MainWindow::deleteAutomaton()
+{
+    //TODO DCAutomaton *delAutomaton = m_automatonView->currentAutomaton();
+    //TODO m_automatonView->closeActualTab();
+
+    //TODO m_project->removeAutomaton(delAutomaton);
+}
+
+void MainWindow::editAutomation()
+{
+    //m_automatonView->setAutomatonMode->Edit
+}
+
+void MainWindow::runAutomaton()
+{
+    //m_automatonView->setAutomatonMode->Edit
+}
+
+void MainWindow::simulateAutomaton()
+{
+    //m_automatonView->setAutomatonMode->Edit
+}
+
+void MainWindow::connectToServer()
+{
+    m_project->server()->connectSRCP();
+}
+
+void MainWindow::connectedToServer()
+{
+    m_project->initializeDevices();
+    ui->actDisconnectFromServer->setEnabled(true);
+    ui->actToggleSystemPower->setEnabled(true);
+    statusBar()->showMessage(tr("Connection to SRCP Server established"), 2000);
+}
+
+void MainWindow::disconnectFromServer()
+{
+    m_project->server()->disconnectSRCP();
+}
+
+void MainWindow::disconnectedFromServer()
+{
+    ui->actDisconnectFromServer->setEnabled(false);
+    ui->actToggleSystemPower->setEnabled(false);
+    statusBar()->showMessage(tr("Connection to SRCP Server lost"), 2000);
+}
+
+void MainWindow::toggleStatusBar()
+{
+    if(ui->statusBar->isVisible())
+        ui->statusBar->hide();
+    else
+        ui->statusBar->show();
+}
+
+void MainWindow::showProjectSettings()
 {
 
 }
 
-void MainWindow::showAutomaton(DCAutomaton* automaton)
+void MainWindow::showSettings()
 {
-    // connect toolbar actions with the automaton
-    connect (ui->actionSelect_Item, SIGNAL(triggered()), automaton, SLOT(selectItem()));
-    ui->actionSelect_Item->setEnabled(true);
-    connect (ui->actionAdd_Place, SIGNAL(triggered()), automaton, SLOT(addState()));
-    ui->actionAdd_Place->setEnabled(true);
-    connect (ui->actionAdd_Event, SIGNAL(triggered()), automaton, SLOT(addEvent()));
-    ui->actionAdd_Event->setEnabled(true);
-    connect (ui->actionDelete_selected, SIGNAL(triggered()), automaton, SLOT(deleteSelected()));
-    ui->actionDelete_selected->setEnabled(true);
+    SettingsDialog setting;
+    setting.exec();
+}
 
+void MainWindow::showHandbook()
+{
 
-    m_autonamtonEdit = new QActionGroup(this);
-    m_autonamtonEdit->addAction(ui->actionSelect_Item);
-    m_autonamtonEdit->addAction(ui->actionAdd_Place);
-    m_autonamtonEdit->addAction(ui->actionAdd_Event);
-    m_autonamtonEdit->setExclusive(true);
-    ui->actionSelect_Item->setChecked(true);
+}
 
-    m_automatView->setScene(automaton);
+void MainWindow::aboutDES()
+{
+    QMessageBox::about(this, tr("About DES COntrol"),
+                       tr("Visualisation and controller implementation of DES Automaton\nHardware connection via srcp server to Märklin trains and switches.\n\nAuthor: Jörg Ehrichs"));
 }
 
 void MainWindow::showProjectView()
@@ -304,50 +436,99 @@ void MainWindow::showProjectView()
     if(!m_project)
         return;
 
-    delete m_projectView;
-    m_projectView = new ProjectTreeView();
-    m_projectView->setProject(m_project);
+    delete m_projectWidget;
+    m_projectWidget = new ProjectWidget();
+    m_projectWidget->setProject(m_project);
 
-    ui->actionSave->setEnabled(true);
-    ui->actionSave_As->setEnabled(true);
-    ui->menu_Server->setEnabled(true);
-
-    ui->menuAutomata->setEnabled(true);
-    ui->actionImport_Automata->setEnabled(true);
-
+    delete m_splitter;
     m_splitter = new QSplitter();
-    m_splitter->addWidget(m_projectView);
+    m_splitter->addWidget(m_projectWidget);
 
-    m_automatView = new AutomatonView();
-    m_splitter->addWidget(m_automatView);
+    m_automatonWidget = new AutomatonWidget();
+    m_splitter->addWidget(m_automatonWidget);
     setCentralWidget(m_splitter);
     m_splitter->setStretchFactor(0,1);
-    m_splitter->setStretchFactor(1,3);
+    m_splitter->setStretchFactor(1,2);
+
+    connect(m_projectWidget->automatonList(), SIGNAL(openAutomaton(DCAutomaton*)),
+            m_automatonWidget, SLOT(openAutomaton(DCAutomaton*)));
 }
 
 void MainWindow::showEmptyView()
 {
     QWidget *intro = new QWidget();
     setCentralWidget(intro);
+    delete m_projectWidget;
+    m_projectWidget = 0;
+    delete m_automatonWidget;
+    m_automatonWidget = 0;
     delete m_splitter;
-    delete m_projectView;
-
-    delete m_automatView;
-
-    ui->menu_Server->setEnabled(false);
-
-    ui->menuAutomata->setEnabled(false);
-    ui->actionSave->setEnabled(false);
-    ui->actionSave_As->setEnabled(false);
+    m_splitter = 0;
 }
 
-void MainWindow::createToolbar()
+void MainWindow::createActions()
 {
-    m_automatonToolBar = addToolBar(tr("Automaton"));
-    m_automatonToolBar->addAction(ui->actionImport_Automata);
-    m_automatonToolBar->addSeparator();
-    m_automatonToolBar->addAction(ui->actionSelect_Item);
-    m_automatonToolBar->addAction(ui->actionAdd_Place);
-    m_automatonToolBar->addAction(ui->actionAdd_Event);
+    m_autonamtonEdit = new QActionGroup(this);
+    m_autonamtonEdit->setExclusive(true);
+    m_autonamtonEdit->addAction(ui->actSelectItem);
+    m_autonamtonEdit->addAction(ui->actAddState);
+    m_autonamtonEdit->addAction(ui->actAddTransition);
+    ui->actSelectItem->setChecked(true);
+
+    m_autonamtonMode = new QActionGroup(this);
+    m_autonamtonMode->setExclusive(true);
+    m_autonamtonMode->addAction(ui->actEditAutomaton);
+    m_autonamtonMode->addAction(ui->actRunAutomaton);
+    m_autonamtonMode->addAction(ui->actSimulateAutomaton);
+    ui->actEditAutomaton->setChecked(true);
+
+    ui->menuToggleToolBars->addAction(ui->mainToolBar->toggleViewAction());
+    ui->menuToggleToolBars->addAction(ui->automatonToolBar->toggleViewAction());
+    ui->menuToggleToolBars->addAction(ui->controllerToolBar->toggleViewAction());
+
+    connect(ui->actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
+void MainWindow::createToolBars()
+{
+    ui->mainToolBar->addAction(ui->actNewProject);
+    ui->mainToolBar->addAction(ui->actSaveProject);
+    ui->mainToolBar->addAction(ui->actCloseProject);
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addAction(ui->actImportAutomaton);
+    ui->mainToolBar->addAction(ui->actImportHardware);
+
+    ui->automatonToolBar->addAction(ui->actNewAutomaton);
+    ui->automatonToolBar->addAction(ui->actDeleteAutomaton);
+    ui->automatonToolBar->addSeparator();
+    ui->automatonToolBar->addAction(ui->actSelectItem);
+    ui->automatonToolBar->addAction(ui->actAddState);
+    ui->automatonToolBar->addAction(ui->actAddTransition);
+    ui->automatonToolBar->addAction(ui->actAddEvent);
+    ui->automatonToolBar->addAction(ui->actDeleteSelected);
+    //ui->automatonToolBar->addSeparator();
+
+    ui->controllerToolBar->addAction(ui->actEditAutomaton);
+    ui->controllerToolBar->addAction(ui->actRunAutomaton);
+    ui->controllerToolBar->addAction(ui->actSimulateAutomaton);
+
+    //ui->automatonToolBar->addAction(ui->actSimulateAutomaton);
+}
+
+void MainWindow::unsavedChanges()
+{
+    m_unsavedChanges = true;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(closeProject())
+    {
+        writeSettings();
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+    }
+}

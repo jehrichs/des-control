@@ -27,7 +27,6 @@ SOURCES += main.cpp\
            srcp/dctrain.cpp \
            srcp/dcsensor.cpp \
            srcp/dcactuator.cpp \
-           projecttreeview.cpp \
            projectserializer.cpp \
            des/dcautomaton.cpp \
            des/dcstate.cpp \
@@ -37,7 +36,12 @@ SOURCES += main.cpp\
     des/dctransition.cpp \
     des/gvgraph.cpp \
     srcp/srcpevent.cpp \
-    des/dccontroller.cpp
+    des/dccontroller.cpp \
+    projectwidget.cpp \
+    des/automatonwidget.cpp \
+    automatontreewidget.cpp \
+    hardwaretreewidget.cpp \
+    srcp/hardwaresettings.cpp
 
 HEADERS  += mainwindow.h \
             settingsdialog.h \
@@ -52,7 +56,6 @@ HEADERS  += mainwindow.h \
             srcp/dctrain.h \
             srcp/dcsensor.h \
             srcp/dcactuator.h \
-            projecttreeview.h \
             projectserializer.h \
             des/dcautomaton.h \
             des/dcstate.h \
@@ -62,7 +65,12 @@ HEADERS  += mainwindow.h \
     des/dctransition.h \
     des/gvgraph.h \
     srcp/srcpevent.h \
-    des/dccontroller.h
+    des/dccontroller.h \
+    projectwidget.h \
+    des/automatonwidget.h \
+    automatontreewidget.h \
+    hardwaretreewidget.h \
+    srcp/hardwaresettings.h
 
 FORMS    += mainwindow.ui \
             settingsdialog.ui \
@@ -70,7 +78,11 @@ FORMS    += mainwindow.ui \
             srcp/actuatorsettings.ui \
             srcp/sensorsettings.ui \
             srcp/serversettings.ui \
-            srcp/serverdebugconsole.ui
+            srcp/serverdebugconsole.ui \
+    projectwidget.ui \
+    des/automatonwidget.ui \
+    srcp/hardwaresettings.ui
 
 RESOURCES += \
-    desIcons.qrc
+    desIcons.qrc \
+    oxygen.qrc

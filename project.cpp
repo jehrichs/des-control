@@ -27,8 +27,8 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
-Project::Project(QObject *parent)
-    : QObject(parent)
+Project::Project()
+    : QObject(0)
     , m_name(tr("default project"))
     , m_description(tr("default DES-Control project"))
     , m_filename(QString())
@@ -50,6 +50,7 @@ QString Project::name() const
 void Project::setDescription(const QString& description)
 {
     m_description = description;
+
     emit projectChanged();
 }
 
@@ -195,6 +196,15 @@ void Project::removeSensor(const QString & sensorName)
 void Project::addAutomaton(DCAutomaton* newAutomaton)
 {
     m_automata.append(newAutomaton);
+    emit projectChanged();
+    emit updateAutomata();
+}
+
+void Project::removeAutomaton(DCAutomaton* automaton)
+{
+    m_automata.removeAll(automaton);
+    delete automaton;
+
     emit projectChanged();
     emit updateAutomata();
 }

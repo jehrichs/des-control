@@ -15,21 +15,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtGui/QApplication>
-#include "mainwindow.h"
+#ifndef AUTOMATONTREEWIDGET_H
+#define AUTOMATONTREEWIDGET_H
 
-int main(int argc, char *argv[])
+#include <QTreeWidget>
+
+class Project;
+class DCAutomaton;
+
+class AutomatonTreeWidget : public QTreeWidget
 {
-    //Q_INIT_RESOURCE(application);
+    Q_OBJECT
+public:
+    enum ItemType
+    {
+        Automaton = 1,
+        State,
+        Transition,
+        Event
+    };
 
-    QApplication app(argc, argv);
+    explicit AutomatonTreeWidget(QWidget *parent = 0);
 
-    QCoreApplication::setOrganizationName("Uni Bremen IAE");
-    QCoreApplication::setOrganizationDomain("uni-bremen.de");
-    QCoreApplication::setApplicationName("DES-Control");
+    void setProject(Project *newProject);
 
-    MainWindow mainWin;
-    mainWin.show();
+signals:
+    void openAutomaton(DCAutomaton *automaton);
 
-    return app.exec();
-}
+public slots:
+    void updateView();
+
+    void openAutomaton( QTreeWidgetItem * item, int column );
+private:
+    Project *m_project;
+};
+
+#endif // AUTOMATONTREEWIDGET_H

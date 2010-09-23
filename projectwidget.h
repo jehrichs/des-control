@@ -15,21 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtGui/QApplication>
-#include "mainwindow.h"
+#ifndef PROJECTWIDGET_H
+#define PROJECTWIDGET_H
 
-int main(int argc, char *argv[])
-{
-    //Q_INIT_RESOURCE(application);
+#include <QWidget>
 
-    QApplication app(argc, argv);
-
-    QCoreApplication::setOrganizationName("Uni Bremen IAE");
-    QCoreApplication::setOrganizationDomain("uni-bremen.de");
-    QCoreApplication::setApplicationName("DES-Control");
-
-    MainWindow mainWin;
-    mainWin.show();
-
-    return app.exec();
+namespace Ui {
+    class ProjectWidget;
 }
+
+class Project;
+class AutomatonTreeWidget;
+
+class ProjectWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit ProjectWidget(QWidget *parent = 0);
+    ~ProjectWidget();
+
+    void setProject(Project *newProject);
+
+    AutomatonTreeWidget* automatonList() const;
+private:
+    Ui::ProjectWidget *ui;
+
+    Project *m_project;
+};
+
+#endif // PROJECTWIDGET_H

@@ -19,19 +19,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "des/dccontroller.h"
 
 namespace Ui {
     class MainWindow;
 }
 
 class Project;
-class ProjectTreeView;
 class QSplitter;
-class DCAutomaton;
-class AutomatonView;
-class QToolBar;
+class ProjectWidget;
+class AutomatonWidget;
 class QActionGroup;
+class QCloseEvent;
 
 class MainWindow : public QMainWindow
 {
@@ -41,43 +39,60 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-public Q_SLOTS:
-    void showSettings();
-    void showAbout();
-    void showDebugConsole();
+    void writeSettings();
+    void readSettings();
 
+public Q_SLOTS:
     void newProject();
     void openProject();
     void saveProject();
     void saveProjectAs();
-    void closeProject();
+    bool closeProject();
 
+    void importHardware();
     void importAutomaton();
+    void exportHardware();
 
-    void connectServer();
+    void newAutomaton();
+    void deleteAutomaton();
+    void editAutomation();
+    void runAutomaton();
+    void simulateAutomaton();
+
+    void connectToServer();
     void connectedToServer();
-    void disconnectServer();
+    void disconnectFromServer();
+    void disconnectedFromServer();
 
-    void newAutomata();
-    void deleteAutomata();
-    void showAutomaton(DCAutomaton* automaton);
+    void toggleStatusBar();
+    void showProjectSettings();
+    void showSettings();
 
-    void createController(DCController::ControlMode mode);
+    void showHandbook();
+    void aboutDES();
+
+    void unsavedChanges();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private:
+    void createActions();
+    void createToolBars();
+
     void showProjectView();
     void showEmptyView();
-    void createToolbar();
 
     Ui::MainWindow *ui;
     Project *m_project;
-    ProjectTreeView *m_projectView;
     QSplitter *m_splitter;
-    AutomatonView *m_automatView;
+    ProjectWidget *m_projectWidget;
+    AutomatonWidget *m_automatonWidget;
 
-    QToolBar *m_automatonToolBar;
     QActionGroup* m_autonamtonEdit;
-    DCController *m_controler;
+    QActionGroup* m_autonamtonMode;
+
+    bool m_unsavedChanges;
 };
 
 #endif // MAINWINDOW_H

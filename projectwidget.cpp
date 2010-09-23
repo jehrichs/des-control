@@ -15,21 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtGui/QApplication>
-#include "mainwindow.h"
+#include "projectwidget.h"
+#include "ui_projectwidget.h"
 
-int main(int argc, char *argv[])
+ProjectWidget::ProjectWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::ProjectWidget)
+    , m_project(0)
 {
-    //Q_INIT_RESOURCE(application);
+    ui->setupUi(this);
+}
 
-    QApplication app(argc, argv);
+ProjectWidget::~ProjectWidget()
+{
+    delete ui;
+}
 
-    QCoreApplication::setOrganizationName("Uni Bremen IAE");
-    QCoreApplication::setOrganizationDomain("uni-bremen.de");
-    QCoreApplication::setApplicationName("DES-Control");
+void ProjectWidget::setProject(Project *newProject)
+{
+    m_project = newProject;
 
-    MainWindow mainWin;
-    mainWin.show();
+    ui->treeAutomata->setProject(m_project);
+    ui->treeHardware->setProject(m_project);
+}
 
-    return app.exec();
+AutomatonTreeWidget* ProjectWidget::automatonList() const
+{
+    return ui->treeAutomata;
 }

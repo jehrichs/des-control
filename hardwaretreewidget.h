@@ -15,78 +15,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PROJECTTREEVIEW_H
-#define PROJECTTREEVIEW_H
+#ifndef HARDWARETREEWIDGET_H
+#define HARDWARETREEWIDGET_H
 
 #include <QTreeWidget>
 
 class Project;
 class QTreeWidgetItem;
 
-class ProjectTreeView : public QTreeWidget
+class HardwareTreeWidget : public QTreeWidget
 {
     Q_OBJECT
-
+public:
     enum ItemType
     {
-        HardwareHeader = 1,
-        TrainHeader,
+        TrainHeader = 1,
         ActuartorHeader,
         SensorHeader,
         Train,
         Actuator,
-        Sensor,
-        AutomataHeader,
-        PlantHeader,
-        SpecificationHeader,
-        SupervisorHeader,
-        PropertyHeader,
-        Plant,
-        Specification,
-        Supervisor,
-        Property
+        Sensor
     };
 
-public:
-    explicit ProjectTreeView(QWidget *parent = 0);
+    explicit HardwareTreeWidget(QWidget *parent = 0);
 
     void setProject(Project *newProject);
 
 public slots:
-    void updateTreeView();
+    void updateView();
     void updateTrains();
     void updateSensors();
     void updateActuators();
-    void updateAutomata();
 
-protected:
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void startDrag(Qt::DropActions supportedActions);
-
-protected slots:
-    void contextMenuEvent(QContextMenuEvent *event);
-
-private slots:
-    void openHardwareList();
+    void openConfig( QTreeWidgetItem * item, int column );
 
 private:
-    void createActions();
-
     Project *m_project;
 
     QTreeWidgetItem *hardwareTrainHeader;
     QTreeWidgetItem *hardwareActuatorHeader;
     QTreeWidgetItem *hardwareSensorHeader;
-    QTreeWidgetItem *automataHeader;
-    QTreeWidgetItem *automataPlantHeader;
-    QTreeWidgetItem *automataSupervisorHeader;
-    QTreeWidgetItem *automataSpecificationHeader;
-    QTreeWidgetItem *automataPropertyHeader;
-
-    QAction* m_addTrain;
-    QAction* m_addSensor;
-    QAction* m_addActuator;
 };
 
-#endif // PROJECTTREEVIEW_H
+#endif // HARDWARETREEWIDGET_H

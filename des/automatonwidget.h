@@ -15,21 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtGui/QApplication>
-#include "mainwindow.h"
+#ifndef AUTOMATONWIDGET_H
+#define AUTOMATONWIDGET_H
 
-int main(int argc, char *argv[])
-{
-    //Q_INIT_RESOURCE(application);
+#include <QWidget>
 
-    QApplication app(argc, argv);
-
-    QCoreApplication::setOrganizationName("Uni Bremen IAE");
-    QCoreApplication::setOrganizationDomain("uni-bremen.de");
-    QCoreApplication::setApplicationName("DES-Control");
-
-    MainWindow mainWin;
-    mainWin.show();
-
-    return app.exec();
+namespace Ui {
+    class AutomatonWidget;
 }
+
+class DCAutomaton;
+
+class AutomatonWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit AutomatonWidget(QWidget *parent = 0);
+    ~AutomatonWidget();
+
+    DCAutomaton * currentAutomaton() const;
+
+public slots:
+    void openAutomaton(DCAutomaton* automaton);
+    void removeAutomaton(DCAutomaton* automaton);
+    void closeTab(int index);
+
+private:
+    Ui::AutomatonWidget *ui;
+};
+
+#endif // AUTOMATONWIDGET_H

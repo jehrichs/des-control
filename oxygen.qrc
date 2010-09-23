@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/application-exit.png</file>
+        <file>icons/application-x-smb-server.png</file>
+        <file>icons/arrow-right.png</file>
+        <file>icons/configure.png</file>
+        <file>icons/document-close.png</file>
+        <file>icons/document-new.png</file>
+        <file>icons/document-save-as.png</file>
+        <file>icons/document-save.png</file>
+        <file>icons/edit-redo.png</file>
+        <file>icons/edit-undo.png</file>
+        <file>icons/list-add.png</file>
+        <file>icons/list-remove.png</file>
+        <file>icons/media-playback-pause.png</file>
+        <file>icons/media-playback-start.png</file>
+        <file>icons/media-playback-stop.png</file>
+        <file>icons/tools-wizard.png</file>
+        <file>icons/zoom-fit-height.png</file>
+        <file>icons/zoom-fit-width.png</file>
+        <file>icons/zoom-in.png</file>
+        <file>icons/zoom-original.png</file>
+        <file>icons/zoom-out.png</file>
+        <file>icons/code-class.png</file>
+        <file>icons/draw-bezier-curves.png</file>
+        <file>icons/draw-ellipse.png</file>
+        <file>icons/edit-delete-shred.png</file>
+        <file>icons/help-about.png</file>
+        <file>icons/vcs_add.png</file>
+        <file>icons/vcs_remove.png</file>
+        <file>icons/vcs_status.png</file>
+        <file>icons/vcs_update.png</file>
+        <file>icons/document-edit.png</file>
+        <file>icons/network-connect.png</file>
+        <file>icons/network-disconnect.png</file>
+        <file>icons/document-open.png</file>
+        <file>icons/edit-select.png</file>
+        <file>icons/utilities-terminal.png</file>
+        <file>icons/help-contents.png</file>
+    </qresource>
+</RCC>
