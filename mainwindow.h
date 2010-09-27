@@ -25,6 +25,7 @@ namespace Ui {
 }
 
 class Project;
+class DCController;
 class QSplitter;
 class ProjectWidget;
 class AutomatonWidget;
@@ -55,7 +56,7 @@ public Q_SLOTS:
 
     void newAutomaton();
     void deleteAutomaton();
-    void editAutomation();
+    void editAutomaton();
     void runAutomaton();
     void simulateAutomaton();
 
@@ -73,6 +74,9 @@ public Q_SLOTS:
 
     void unsavedChanges();
 
+    void noAutomatonVisible();
+    void someAutomataVisible();
+
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -85,12 +89,14 @@ private:
 
     Ui::MainWindow *ui;
     Project *m_project;
+    DCController * m_controller;
     QSplitter *m_splitter;
     ProjectWidget *m_projectWidget;
     AutomatonWidget *m_automatonWidget;
 
     QActionGroup* m_autonamtonEdit;
     QActionGroup* m_autonamtonMode;
+    QActionGroup* m_controllerState;
 
     bool m_unsavedChanges;
 };

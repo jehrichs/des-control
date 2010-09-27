@@ -59,7 +59,10 @@ void AutomatonWidget::openAutomaton(DCAutomaton* automaton)
 {
     int index = ui->tabWidget->indexOf(ui->tabEmpty);
     if(index != -1)
+    {
         ui->tabWidget->removeTab(index);
+        emit firstAutomatonOpend();
+    }
 
     AutomatonView *newView = new AutomatonView();
     newView->setScene(automaton);
@@ -81,5 +84,6 @@ void AutomatonWidget::closeTab(int index)
     if(ui->tabWidget->count() == 0)
     {
         ui->tabWidget->addTab(ui->tabEmpty, tr("empty automaton"));
+        emit lastAutomatonClosed();
     }
 }

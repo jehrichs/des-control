@@ -111,21 +111,9 @@
     <property name="title">
      <string>Automaton</string>
     </property>
-    <widget class="QMenu" name="menuMode">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="title">
-      <string>Set Mode</string>
-     </property>
-     <addaction name="actEditAutomaton"/>
-     <addaction name="separator"/>
-     <addaction name="actSimulateAutomaton"/>
-     <addaction name="actRunAutomaton"/>
-    </widget>
     <addaction name="actNewAutomaton"/>
     <addaction name="actDeleteAutomaton"/>
-    <addaction name="menuMode"/>
+    <addaction name="actEditAutomaton"/>
     <addaction name="separator"/>
     <addaction name="actSelectItem"/>
     <addaction name="actAddState"/>
@@ -144,8 +132,23 @@
     <addaction name="actHardwareSettings"/>
     <addaction name="actTestHardwareEvents"/>
    </widget>
+   <widget class="QMenu" name="menuController">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>Controller</string>
+    </property>
+    <addaction name="actRunSimulation"/>
+    <addaction name="actRunwithHardware"/>
+    <addaction name="separator"/>
+    <addaction name="actStartController"/>
+    <addaction name="actPauseController"/>
+    <addaction name="actStopController"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menuAutomata"/>
+   <addaction name="menuController"/>
    <addaction name="menuHardware"/>
    <addaction name="menuServer"/>
    <addaction name="menuSettings"/>
@@ -393,6 +396,10 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/edit-delete-shred.png</normaloff>:/icons/edit-delete-shred.png</iconset>
+   </property>
    <property name="text">
     <string>Delete Selected</string>
    </property>
@@ -442,9 +449,12 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="oxygen.qrc">
-     <normaloff>:/icons/arrow-right.png</normaloff>:/icons/arrow-right.png</iconset>
+     <normaloff>:/icons/system-run.png</normaloff>:/icons/system-run.png</iconset>
    </property>
    <property name="text">
     <string>Run Automaton</string>
@@ -455,7 +465,10 @@
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="oxygen.qrc">
@@ -466,11 +479,17 @@
    </property>
   </action>
   <action name="actImportHardware">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Import Hardware</string>
    </property>
   </action>
   <action name="actImportAutomaton">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="oxygen.qrc">
      <normaloff>:/icons/vcs_update.png</normaloff>:/icons/vcs_update.png</iconset>
@@ -480,13 +499,16 @@
    </property>
   </action>
   <action name="actExportHardwareSettings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Export Hardware Settings</string>
    </property>
   </action>
   <action name="actNewAutomaton">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="oxygen.qrc">
@@ -500,6 +522,13 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/run-build.png</normaloff>:/icons/run-build.png</iconset>
+   </property>
    <property name="text">
     <string>Simulate Automaton</string>
    </property>
@@ -507,6 +536,10 @@
   <action name="actAddEvent">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/code-class.png</normaloff>:/icons/code-class.png</iconset>
    </property>
    <property name="text">
     <string>Add Event</string>
@@ -520,6 +553,84 @@
   <action name="actTestHardwareEvents">
    <property name="text">
     <string>Test Hardware Events</string>
+   </property>
+  </action>
+  <action name="actRunSimulation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/run-build.png</normaloff>:/icons/run-build.png</iconset>
+   </property>
+   <property name="text">
+    <string>Run Simulation</string>
+   </property>
+  </action>
+  <action name="actRunwithHardware">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/system-run.png</normaloff>:/icons/system-run.png</iconset>
+   </property>
+   <property name="text">
+    <string>Run with Hardware</string>
+   </property>
+  </action>
+  <action name="actStartController">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/media-playback-start.png</normaloff>:/icons/media-playback-start.png</iconset>
+   </property>
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </action>
+  <action name="actPauseController">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/media-playback-pause.png</normaloff>:/icons/media-playback-pause.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actStopController">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/media-playback-stop.png</normaloff>:/icons/media-playback-stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
    </property>
   </action>
  </widget>
@@ -813,6 +924,54 @@
     <hint type="destinationlabel">
      <x>300</x>
      <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actRunwithHardware</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>runAutomaton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actEditAutomaton</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>editAutomaton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actRunSimulation</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>simulateAutomaton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>263</y>
     </hint>
    </hints>
   </connection>

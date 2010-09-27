@@ -37,5 +37,7 @@
         <file>icons/edit-select.png</file>
         <file>icons/utilities-terminal.png</file>
         <file>icons/help-contents.png</file>
+        <file>icons/run-build.png</file>
+        <file>icons/system-run.png</file>
     </qresource>
 </RCC>

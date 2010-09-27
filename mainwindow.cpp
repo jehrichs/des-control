@@ -33,6 +33,7 @@
 
 #include "des/dcautomaton.h"
 #include "des/automatonview.h"
+#include "des/dccontroller.h"
 
 #include "import/importautomaton.h"
 
@@ -49,11 +50,13 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_project(0)
+    , m_controller(new DCController())
     , m_splitter(0)
     , m_projectWidget(0)
     , m_automatonWidget(0)
     , m_autonamtonEdit(0)
-    , m_autonamtonMode()
+    , m_autonamtonMode(0)
+    , m_controllerState(0)
     , m_unsavedChanges(false)
 {
     ui->setupUi(this);
@@ -121,7 +124,7 @@ void MainWindow::newProject()
     connect (m_project, SIGNAL(projectChanged()), this, SLOT(unsavedChanges()));
 
     DCServer *server = new DCServer();
-    server->setHost("127.0.0.1");
+    server->setHost("192.168.0.10");
     server->setPort("4303");
 
     m_project->setServer(server);
@@ -136,11 +139,15 @@ void MainWindow::newProject()
     ui->actSaveProjectAs->setEnabled(true);
     ui->actCloseProject->setEnabled(true);
     ui->menuImport->setEnabled(true);
+    ui->actImportAutomaton->setEnabled(true);
+    ui->actImportHardware->setEnabled(true);
+    ui->actExportHardwareSettings->setEnabled(true);
     ui->menuExport->setEnabled(true);
     ui->menuAutomata->setEnabled(true);
     ui->menuHardware->setEnabled(true);
     ui->menuServer->setEnabled(true);
     ui->actShowProjectSettings->setEnabled(true);
+    ui->actNewAutomaton->setEnabled(true);
 }
 
 void MainWindow::openProject()
@@ -183,11 +190,15 @@ void MainWindow::openProject()
         ui->actSaveProjectAs->setEnabled(true);
         ui->actCloseProject->setEnabled(true);
         ui->menuImport->setEnabled(true);
+        ui->actImportAutomaton->setEnabled(true);
+        ui->actImportHardware->setEnabled(true);
+        ui->actExportHardwareSettings->setEnabled(true);
         ui->menuExport->setEnabled(true);
         ui->menuAutomata->setEnabled(true);
         ui->menuHardware->setEnabled(true);
         ui->menuServer->setEnabled(true);
         ui->actShowProjectSettings->setEnabled(true);
+        ui->actNewAutomaton->setEnabled(true);
     }
     else
     {
@@ -283,11 +294,15 @@ bool MainWindow::closeProject()
     ui->actSaveProjectAs->setEnabled(false);
     ui->actCloseProject->setEnabled(false);
     ui->menuImport->setEnabled(false);
+    ui->actImportAutomaton->setEnabled(false);
+    ui->actImportHardware->setEnabled(false);
+    ui->actExportHardwareSettings->setEnabled(false);
     ui->menuExport->setEnabled(false);
     ui->menuAutomata->setEnabled(false);
     ui->menuHardware->setEnabled(false);
     ui->menuServer->setEnabled(false);
     ui->actShowProjectSettings->setEnabled(false);
+    ui->actNewAutomaton->setEnabled(false);
 
     return true;
 }
@@ -329,7 +344,7 @@ void MainWindow::importAutomaton()
         }
 
         automatonList.first()->doLayout();
-        //TODO m_automatonView->openAutomaton(automatonList.first());
+        m_automatonWidget->openAutomaton(automatonList.first());
 
     }
     else
@@ -361,19 +376,54 @@ void MainWindow::deleteAutomaton()
     //TODO m_project->removeAutomaton(delAutomaton);
 }
 
-void MainWindow::editAutomation()
+void MainWindow::editAutomaton()
 {
-    //m_automatonView->setAutomatonMode->Edit
+    m_controller->stopController();
+
+    if(m_automatonWidget->currentAutomaton())
+        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Edit);
+    else
+        return;
 }
 
 void MainWindow::runAutomaton()
 {
-    //m_automatonView->setAutomatonMode->Edit
+
+    m_controller->stopController();
+
+    if(m_automatonWidget->currentAutomaton())
+    {
+        m_controller->setAutomaton(m_automatonWidget->currentAutomaton());
+
+        m_controller->setMode(DCController::Live);
+
+        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Run);
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("DES Controller"),
+                             tr("No Automaton selected for the controller.\n\n Please open one Automaton first"));
+    }
 }
 
 void MainWindow::simulateAutomaton()
 {
-    //m_automatonView->setAutomatonMode->Edit
+
+    m_controller->stopController();
+
+    if(m_automatonWidget->currentAutomaton())
+    {
+        m_controller->setAutomaton(m_automatonWidget->currentAutomaton());
+
+        m_controller->setMode(DCController::Simulation);
+
+        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Simulate);
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("DES Controller"),
+                             tr("No Automaton selected for the controller.\n\n Please open one Automaton first"));
+    }
 }
 
 void MainWindow::connectToServer()
@@ -427,7 +477,7 @@ void MainWindow::showHandbook()
 
 void MainWindow::aboutDES()
 {
-    QMessageBox::about(this, tr("About DES COntrol"),
+    QMessageBox::about(this, tr("About DES Control"),
                        tr("Visualisation and controller implementation of DES Automaton\nHardware connection via srcp server to Märklin trains and switches.\n\nAuthor: Jörg Ehrichs"));
 }
 
@@ -452,6 +502,9 @@ void MainWindow::showProjectView()
 
     connect(m_projectWidget->automatonList(), SIGNAL(openAutomaton(DCAutomaton*)),
             m_automatonWidget, SLOT(openAutomaton(DCAutomaton*)));
+
+    connect(m_automatonWidget, SIGNAL(firstAutomatonOpend()), this, SLOT(someAutomataVisible()));
+    connect(m_automatonWidget, SIGNAL(lastAutomatonClosed()), this, SLOT(noAutomatonVisible()));
 }
 
 void MainWindow::showEmptyView()
@@ -478,15 +531,27 @@ void MainWindow::createActions()
     m_autonamtonMode = new QActionGroup(this);
     m_autonamtonMode->setExclusive(true);
     m_autonamtonMode->addAction(ui->actEditAutomaton);
-    m_autonamtonMode->addAction(ui->actRunAutomaton);
-    m_autonamtonMode->addAction(ui->actSimulateAutomaton);
+    m_autonamtonMode->addAction(ui->actRunSimulation);
+    m_autonamtonMode->addAction(ui->actRunwithHardware);
     ui->actEditAutomaton->setChecked(true);
+
+    m_controllerState= new QActionGroup(this);
+    m_controllerState->setExclusive(true);
+    m_controllerState->addAction(ui->actStartController);
+    m_controllerState->addAction(ui->actStopController);
+    m_controllerState->addAction(ui->actPauseController);
+    ui->actStopController->setChecked(true);
+
 
     ui->menuToggleToolBars->addAction(ui->mainToolBar->toggleViewAction());
     ui->menuToggleToolBars->addAction(ui->automatonToolBar->toggleViewAction());
     ui->menuToggleToolBars->addAction(ui->controllerToolBar->toggleViewAction());
 
     connect(ui->actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+    connect(ui->actStartController, SIGNAL(triggered()), m_controller, SLOT(startController()));
+    connect(ui->actStopController, SIGNAL(triggered()), m_controller, SLOT(stopController()));
+    connect(ui->actPauseController, SIGNAL(triggered()), m_controller, SLOT(pauseController()));
 }
 
 void MainWindow::createToolBars()
@@ -506,13 +571,14 @@ void MainWindow::createToolBars()
     ui->automatonToolBar->addAction(ui->actAddTransition);
     ui->automatonToolBar->addAction(ui->actAddEvent);
     ui->automatonToolBar->addAction(ui->actDeleteSelected);
-    //ui->automatonToolBar->addSeparator();
 
     ui->controllerToolBar->addAction(ui->actEditAutomaton);
-    ui->controllerToolBar->addAction(ui->actRunAutomaton);
-    ui->controllerToolBar->addAction(ui->actSimulateAutomaton);
-
-    //ui->automatonToolBar->addAction(ui->actSimulateAutomaton);
+    ui->controllerToolBar->addAction(ui->actRunSimulation);
+    ui->controllerToolBar->addAction(ui->actRunwithHardware);
+    ui->controllerToolBar->addSeparator();
+    ui->controllerToolBar->addAction(ui->actStartController);
+    ui->controllerToolBar->addAction(ui->actStopController);
+    ui->controllerToolBar->addAction(ui->actPauseController);
 }
 
 void MainWindow::unsavedChanges()
@@ -532,3 +598,37 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
+
+void MainWindow::noAutomatonVisible()
+{
+    m_controller->stopController();
+    delete m_controller;
+    m_controller = 0;
+
+    ui->menuController->setEnabled(false);
+    ui->actEditAutomaton->setEnabled(false);
+    ui->actRunwithHardware->setEnabled(false);
+    ui->actRunSimulation->setEnabled(false);
+    ui->actStartController->setEnabled(false);
+    ui->actStopController->setEnabled(false);
+    ui->actPauseController->setEnabled(false);
+}
+
+void MainWindow::someAutomataVisible()
+{
+    ui->menuController->setEnabled(true);
+    ui->actEditAutomaton->setEnabled(true);
+    ui->actRunwithHardware->setEnabled(true);
+    ui->actRunSimulation->setEnabled(true);
+    ui->actStartController->setEnabled(true);
+    ui->actStopController->setEnabled(true);
+    ui->actPauseController->setEnabled(true);
+
+    delete m_controller;
+    m_controller = new DCController();
+    connect(ui->actStartController, SIGNAL(triggered()), m_controller, SLOT(startController()));
+    connect(ui->actStopController, SIGNAL(triggered()), m_controller, SLOT(stopController()));
+    connect(ui->actPauseController, SIGNAL(triggered()), m_controller, SLOT(pauseController()));
+}
+
+

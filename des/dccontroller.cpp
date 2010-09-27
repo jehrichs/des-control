@@ -52,6 +52,11 @@ void DCController::setAutomaton(DCAutomaton* automaton)
     //m_currentState = m_initialState;
 }
 
+DCAutomaton* DCController::automaton() const
+{
+    return m_automaton;
+}
+
 void DCController::startController()
 {
     m_cycleTimer->start(100);
@@ -72,7 +77,7 @@ void DCController::pauseController(bool paused)
 
 void DCController::updateDES()
 {
-    //if no current state exist, we started, soset current = initial
+    //if no current state exist, we started, set current = initial
     if(!m_currentState)
     {
         m_currentState = m_initialState;

@@ -36,6 +36,7 @@ public:
     DCController::ControlMode mode() const;
 
     void setAutomaton(DCAutomaton* automaton);
+    DCAutomaton* automaton() const;
 
 public slots:
     void startController();

@@ -33,7 +33,7 @@ AutomatonView::AutomatonView(QWidget *parent)
 
 void AutomatonView::wheelEvent(QWheelEvent *event)
 {
-    scaleView(pow((double)2, -event->delta() / 140.0));
+    scaleView(pow((double)2, -event->delta() / 400.0));
 }
 
 void AutomatonView::scaleView(qreal scaleFactor)
@@ -44,7 +44,3 @@ void AutomatonView::scaleView(qreal scaleFactor)
 
     scale(scaleFactor, scaleFactor);
 }
-//void AutomatonView::drawBackground(QPainter *painter, const QRectF &rect)
-// {
-//     Q_UNUSED(rect);
-// }

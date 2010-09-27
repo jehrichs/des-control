@@ -11,7 +11,16 @@ TEMPLATE = app
 TRANSLATIONS = descontroltr_en_US.ts\
                descontroltr_de_DE.ts
 
-LIBS += -L/usr/lib -lgvc
+unix:LIBS += -L/usr/lib -lgvc
+
+win32:INCLUDEPATH += C:\Programme\Graphviz2.26.3\include
+win32:LIBS += \C:\Programme\Graphviz2.26.3\lib\gvc.lib
+win32:LIBS += \C:\Programme\Graphviz2.26.3\lib\cgraph.lib
+win32:LIBS += \C:\Programme\Graphviz2.26.3\lib\graph.lib
+win32:LIBS += \C:\Programme\Graphviz2.26.3\lib\cdt.lib
+win32:LIBS += \C:\Programme\Graphviz2.26.3\lib\Pathplan.lib
+win32:CONFIG -= exceptions
+win32:CONFIG += static
 
 SOURCES += main.cpp\
            mainwindow.cpp \

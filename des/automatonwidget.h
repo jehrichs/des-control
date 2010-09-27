@@ -36,6 +36,10 @@ public:
 
     DCAutomaton * currentAutomaton() const;
 
+signals:
+    void lastAutomatonClosed();
+    void firstAutomatonOpend();
+
 public slots:
     void openAutomaton(DCAutomaton* automaton);
     void removeAutomaton(DCAutomaton* automaton);
