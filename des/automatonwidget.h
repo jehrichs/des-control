@@ -20,11 +20,11 @@
 
 #include <QWidget>
 
+#include "dcautomaton.h"
+
 namespace Ui {
     class AutomatonWidget;
 }
-
-class DCAutomaton;
 
 class AutomatonWidget : public QWidget
 {
@@ -39,11 +39,12 @@ public:
 signals:
     void lastAutomatonClosed();
     void firstAutomatonOpend();
+    void switchOpendAutomaton(DCAutomaton::SceneMode);
 
 public slots:
     void openAutomaton(DCAutomaton* automaton);
-    void removeAutomaton(DCAutomaton* automaton);
     void closeTab(int index);
+    void openAutomatonChanged(int index);
 
 private:
     Ui::AutomatonWidget *ui;

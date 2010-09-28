@@ -36,15 +36,17 @@ public:
     explicit TrainSettings(Project * project);
     ~TrainSettings();
 
+public slots:
+    void saveChanges();
 
 private slots:
     void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
     void newTrain();
     void deleteCurrent();
-    void saveChanges();
 
 private:
     void showItem(DCTrain *train);
+
     Ui::TrainSettings *ui;
     Project* m_project;
 };

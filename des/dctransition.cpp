@@ -20,7 +20,7 @@
 #include "dcstate.h"
 #include "dcevent.h"
 
-#include <QtGui>
+#include <QGraphicsSceneMouseEvent>
 #include <QPen>
 #include <math.h>
 

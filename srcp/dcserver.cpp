@@ -16,10 +16,11 @@
  */
 
 #include "dcserver.h"
-#include <QtNetwork>
+//#include <QtNetwork>
 #include <QTcpSocket>
 #include <QAbstractSocket>
 #include <QMessageBox>
+#include <QDateTime>
 
 #include <QDebug>
 

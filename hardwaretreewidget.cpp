@@ -22,7 +22,7 @@
 #include "srcp/dcsensor.h"
 #include "srcp/dcactuator.h"
 
-#include "srcp/hardwaresettings.h"
+#include "settingsdialog.h"
 
 #include <QTreeWidgetItem>
 
@@ -88,7 +88,7 @@ void HardwareTreeWidget::updateSensors()
 
     foreach(DCSensor *sensor, m_project->sensors())
     {
-        QTreeWidgetItem *sensorItem = new QTreeWidgetItem(Actuator);
+        QTreeWidgetItem *sensorItem = new QTreeWidgetItem(Sensor);
         sensorItem->setText(0,sensor->name());
         hardwareSensorHeader->insertChild(0,sensorItem);
     }
@@ -100,7 +100,7 @@ void HardwareTreeWidget::updateActuators()
 
     foreach(DCActuator *actuator, m_project->actuators())
     {
-        QTreeWidgetItem *actuatorItem = new QTreeWidgetItem(Sensor);
+        QTreeWidgetItem *actuatorItem = new QTreeWidgetItem(Actuator);
         actuatorItem->setText(0,actuator->name());
         hardwareActuatorHeader->insertChild(0,actuatorItem);
     }
@@ -108,10 +108,17 @@ void HardwareTreeWidget::updateActuators()
 
 void HardwareTreeWidget::openConfig( QTreeWidgetItem * item, int column )
 {
-    HardwareSettings hwSettings(m_project);
 
-    hwSettings.showPage(item->type());
-    hwSettings.selectItem();
+    Q_UNUSED(column);
+
+    SettingsDialog hwSettings(m_project);
+
+    if(item->type() == TrainHeader || item->type() == Train )
+        hwSettings.showPage(SettingsDialog::Train);
+    if(item->type() == SensorHeader || item->type() == Sensor )
+        hwSettings.showPage(SettingsDialog::Sensor);
+    if(item->type() == ActuartorHeader || item->type() == Actuator )
+        hwSettings.showPage(SettingsDialog::Actuator);
 
     hwSettings.exec();
 

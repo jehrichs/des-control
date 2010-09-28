@@ -92,8 +92,11 @@ void ActuatorSettings::deleteCurrent()
 {
     int currentRow = ui->listWidgetActuators->currentRow();
 
-    m_project->removeActuator(m_project->actuators().at(currentRow));
-    ui->listWidgetActuators->takeItem(currentRow);
+    if(currentRow != -1)
+    {
+        m_project->removeActuator(m_project->actuators().at(currentRow));
+        ui->listWidgetActuators->takeItem(currentRow);
+    }
 }
 
 void ActuatorSettings::saveChanges()

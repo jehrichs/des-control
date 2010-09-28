@@ -62,7 +62,7 @@ bool DCEvent::isActive()
     return m_active;
 }
 
-bool DCEvent::setActive(bool active)
+void DCEvent::setActive(bool active)
 {
     m_active = active;
 }

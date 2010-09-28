@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DCPLACE_H
-#define DCPLACE_H
+#ifndef DCSTATE_H
+#define DCSTATE_H
 
 #include <QGraphicsItem>
 #include <QGraphicsEllipseItem>
@@ -34,6 +34,7 @@ class DCState : public QGraphicsEllipseItem
 
 public:
     DCState();
+    ~DCState();
 
     void setId(int id);
     int id();
@@ -95,4 +96,4 @@ private:
     bool m_isActive;
 };
 
-#endif // DCPLACE_H
+#endif // DCSTATE_H

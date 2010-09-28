@@ -21,7 +21,7 @@
 #include "srcp/dctrain.h"
 #include "srcp/dcactuator.h"
 #include "srcp/dcsensor.h"
-// #include "mainwindow.h"
+#include "des/dcautomaton.h"
 
 #include <QIODevice>
 #include <QXmlStreamWriter>
@@ -224,6 +224,7 @@ void Project::initializeDevices()
     {
         actuator->initialize();
     }
+    //DEBUG !! SENSOR ARE NOT INITIALIZED YET!!!!!!!
     foreach(const DCSensor *sensor, m_sensors)
     {
         // skipped in local mode as it creates errors for now

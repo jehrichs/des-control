@@ -29,9 +29,9 @@ class HardwareTreeWidget : public QTreeWidget
 public:
     enum ItemType
     {
-        TrainHeader = 1,
-        ActuartorHeader,
+        ActuartorHeader = 1,
         SensorHeader,
+        TrainHeader,
         Train,
         Actuator,
         Sensor

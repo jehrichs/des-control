@@ -36,11 +36,13 @@ public:
     explicit SensorSettings(Project * project);
     ~SensorSettings();
 
+public slots:
+    void saveChanges();
+
 private slots:
     void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
     void newSensor();
     void deleteCurrent();
-    void saveChanges();
 
 private:
     void showItem(DCSensor *sensor);

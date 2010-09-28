@@ -37,8 +37,6 @@
 
 #include "import/importautomaton.h"
 
-#include "projectwidget.h"
-
 #include <QCloseEvent>
 #include <QtGui/QSplitter>
 #include <QFileDialog>
@@ -287,6 +285,11 @@ bool MainWindow::closeProject()
     }
 
     showEmptyView();
+    m_controller->stopController();
+
+    if( m_project->server() )
+        m_project->server()->disconnect();
+
     delete m_project;
     m_project = 0;
 
@@ -381,7 +384,12 @@ void MainWindow::editAutomaton()
     m_controller->stopController();
 
     if(m_automatonWidget->currentAutomaton())
+    {
         m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Edit);
+        ui->actStartController->setEnabled(false);
+        ui->actStopController->setEnabled(false);
+        ui->actPauseController->setEnabled(false);
+    }
     else
         return;
 }
@@ -391,13 +399,20 @@ void MainWindow::runAutomaton()
 
     m_controller->stopController();
 
+    if(m_controller->automaton())
+    {
+        m_controller->automaton()->setSceneMode(DCAutomaton::Edit);
+    }
+
     if(m_automatonWidget->currentAutomaton())
     {
         m_controller->setAutomaton(m_automatonWidget->currentAutomaton());
 
         m_controller->setMode(DCController::Live);
-
-        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Run);
+        ui->actStartController->setEnabled(true);
+        ui->actStopController->setEnabled(true);
+        ui->actPauseController->setEnabled(true);
+        ui->actStopController->setChecked(true);
     }
     else
     {
@@ -411,13 +426,21 @@ void MainWindow::simulateAutomaton()
 
     m_controller->stopController();
 
+    if(m_controller->automaton())
+    {
+        m_controller->automaton()->setSceneMode(DCAutomaton::Edit);
+    }
+
     if(m_automatonWidget->currentAutomaton())
     {
+        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Edit);
         m_controller->setAutomaton(m_automatonWidget->currentAutomaton());
 
         m_controller->setMode(DCController::Simulation);
-
-        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Simulate);
+        ui->actStartController->setEnabled(true);
+        ui->actStopController->setEnabled(true);
+        ui->actPauseController->setEnabled(true);
+        ui->actStopController->setChecked(true);
     }
     else
     {
@@ -461,13 +484,14 @@ void MainWindow::toggleStatusBar()
 
 void MainWindow::showProjectSettings()
 {
+    SettingsDialog setting(m_project);
+    setting.exec();
 
 }
 
 void MainWindow::showSettings()
 {
-    SettingsDialog setting;
-    setting.exec();
+
 }
 
 void MainWindow::showHandbook()
@@ -505,6 +529,7 @@ void MainWindow::showProjectView()
 
     connect(m_automatonWidget, SIGNAL(firstAutomatonOpend()), this, SLOT(someAutomataVisible()));
     connect(m_automatonWidget, SIGNAL(lastAutomatonClosed()), this, SLOT(noAutomatonVisible()));
+    connect(m_automatonWidget, SIGNAL(switchOpendAutomaton(DCAutomaton::SceneMode)), this, SLOT(switchOpendAutomaton(DCAutomaton::SceneMode)));
 }
 
 void MainWindow::showEmptyView()
@@ -551,7 +576,7 @@ void MainWindow::createActions()
 
     connect(ui->actStartController, SIGNAL(triggered()), m_controller, SLOT(startController()));
     connect(ui->actStopController, SIGNAL(triggered()), m_controller, SLOT(stopController()));
-    connect(ui->actPauseController, SIGNAL(triggered()), m_controller, SLOT(pauseController()));
+    connect(ui->actPauseController, SIGNAL(triggered(bool)), m_controller, SLOT(pauseController(bool)));
 }
 
 void MainWindow::createToolBars()
@@ -602,8 +627,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::noAutomatonVisible()
 {
     m_controller->stopController();
-    delete m_controller;
-    m_controller = 0;
+    m_controller->setAutomaton(0);
 
     ui->menuController->setEnabled(false);
     ui->actEditAutomaton->setEnabled(false);
@@ -620,15 +644,39 @@ void MainWindow::someAutomataVisible()
     ui->actEditAutomaton->setEnabled(true);
     ui->actRunwithHardware->setEnabled(true);
     ui->actRunSimulation->setEnabled(true);
-    ui->actStartController->setEnabled(true);
-    ui->actStopController->setEnabled(true);
-    ui->actPauseController->setEnabled(true);
+}
 
-    delete m_controller;
-    m_controller = new DCController();
-    connect(ui->actStartController, SIGNAL(triggered()), m_controller, SLOT(startController()));
-    connect(ui->actStopController, SIGNAL(triggered()), m_controller, SLOT(stopController()));
-    connect(ui->actPauseController, SIGNAL(triggered()), m_controller, SLOT(pauseController()));
+void MainWindow::switchOpendAutomaton(DCAutomaton::SceneMode currentMode)
+{
+    switch(currentMode)
+    {
+    case DCAutomaton::Edit:
+        ui->actEditAutomaton->setChecked(true);
+        ui->actStopController->setChecked(true);
+        ui->actStartController->setEnabled(false);
+        ui->actStopController->setEnabled(false);
+        ui->actPauseController->setEnabled(false);
+        break;
+    case DCAutomaton::Run:
+        if(m_controller->mode() == DCController::Live)
+            ui->actRunwithHardware->setChecked(true);
+        else
+            ui->actRunSimulation->setChecked(true);
+
+        ui->actStartController->setEnabled(true);
+        ui->actStopController->setEnabled(true);
+        ui->actPauseController->setEnabled(true);
+
+        if(m_controller->isRunnung())
+            ui->actStartController->setChecked(true);
+        else
+            if(m_controller->isPaused())
+                ui->actPauseController->setChecked(true);
+        else
+            ui->actStopController->setChecked(true);
+        break;
+
+    }
 }
 
 

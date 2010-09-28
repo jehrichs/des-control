@@ -46,6 +46,15 @@ DCState::DCState()
     setAcceptsHoverEvents(true);
 }
 
+DCState::~DCState()
+{
+    delete m_insideText;
+    delete m_markedCircle;
+    delete m_editPlace;
+    delete m_deletePlace;
+
+}
+
 void DCState::setId(int id)
 {
     m_id = id;
@@ -165,6 +174,8 @@ QRectF DCState::boundingRect () const
 
 void DCState::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
 
     if(isSelected())
     {
@@ -248,12 +259,14 @@ QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)
 
 void DCState::hoverEnterEvent ( QGraphicsSceneHoverEvent * event )
 {
+    Q_UNUSED(event);
     m_isHovered = true;
     update();
 }
 
 void DCState::hoverLeaveEvent ( QGraphicsSceneHoverEvent * event )
 {
+    Q_UNUSED(event);
     m_isHovered = false;
     update();
 }

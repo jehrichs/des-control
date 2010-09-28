@@ -159,7 +159,7 @@ void DCTrain::sendValue()
     // SET <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn>
     QString srcpString = QString("SET %1 GL %2 %3 %4 %5").arg(busID()).arg(address()).arg((int) m_driveMode).arg(m_speed).arg(m_maxSpeed);
 
-    foreach(bool fn, m_functions)
+    foreach(const bool fn, m_functions)
     {
         srcpString.append(QString(" %1").arg(fn));
     }
@@ -173,7 +173,6 @@ void DCTrain::updateValues(const QString & srcpString)
     // only <drivemode> and everything afterwards will be send to this slot, rest is stripped out by the server class
 
     QStringList valueList = srcpString.split(' ');
-    bool changedValues;
 
     m_driveMode  = (Drivemode) valueList.at(0).toInt();
     m_speed =valueList.at(1).toInt();

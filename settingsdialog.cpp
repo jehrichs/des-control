@@ -23,21 +23,25 @@
 #include "srcp/actuatorsettings.h"
 #include "srcp/sensorsettings.h"
 
-SettingsDialog::SettingsDialog(QWidget *parent)
+#include <QAbstractButton>
+#include <QDebug>
+
+SettingsDialog::SettingsDialog(Project * project, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::SettingsDialog)
-    , m_serverPage(new ServerSettings)
-    , m_trainPage(0)
-    , m_actuatorPage(0)
-    , m_sensorPage(0)
+    , m_project(project)
+    , m_serverPage(new ServerSettings(project))
+    , m_trainPage(new TrainSettings(project))
+    , m_actuatorPage(new ActuatorSettings(project))
+    , m_sensorPage(new SensorSettings(project))
 {
     ui->setupUi(this);
 
     ui->stackedWidget->addWidget(new QWidget);
     ui->stackedWidget->addWidget(m_serverPage);
-    ui->stackedWidget->addWidget(m_trainPage);
     ui->stackedWidget->addWidget(m_actuatorPage);
     ui->stackedWidget->addWidget(m_sensorPage);
+    ui->stackedWidget->addWidget(m_trainPage);
 
     createIcons();
 
@@ -63,12 +67,6 @@ void SettingsDialog::createIcons()
     serverButton->setTextAlignment(Qt::AlignHCenter);
     serverButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    QListWidgetItem *trainButton = new QListWidgetItem(ui->listWidget);
-    trainButton->setIcon(QIcon(":/icons/train.png"));
-    trainButton->setText(tr("Trains"));
-    trainButton->setTextAlignment(Qt::AlignHCenter);
-    trainButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
     QListWidgetItem *actuatorButton = new QListWidgetItem(ui->listWidget);
     actuatorButton->setIcon(QIcon(":/icons/actuator.png"));
     actuatorButton->setText(tr("Actuators"));
@@ -81,10 +79,17 @@ void SettingsDialog::createIcons()
     sensorButton->setTextAlignment(Qt::AlignHCenter);
     sensorButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
+    QListWidgetItem *trainButton = new QListWidgetItem(ui->listWidget);
+    trainButton->setIcon(QIcon(":/icons/train.png"));
+    trainButton->setText(tr("Trains"));
+    trainButton->setTextAlignment(Qt::AlignHCenter);
+    trainButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
     connect(ui->listWidget,
             SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
             this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
 }
+
 void SettingsDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous)
 {
     if (!current)
@@ -92,3 +97,26 @@ void SettingsDialog::changePage(QListWidgetItem *current, QListWidgetItem *previ
 
     ui->stackedWidget->setCurrentIndex(ui->listWidget->row(current));
 }
+
+void SettingsDialog::clicked ( QAbstractButton * button )
+{
+    if(ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole ||
+       ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
+    {
+        m_serverPage->saveChanges();
+        m_trainPage->saveChanges();
+        m_actuatorPage->saveChanges();
+        m_sensorPage->saveChanges();
+    }
+}
+
+void SettingsDialog::showPage(SettingsDialog::pageType type)
+{
+    ui->stackedWidget->setCurrentIndex((int)type);
+    ui->listWidget->setCurrentRow((int)type);
+}
+
+
+
+
+

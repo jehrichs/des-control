@@ -11,7 +11,10 @@ TEMPLATE = app
 TRANSLATIONS = descontroltr_en_US.ts\
                descontroltr_de_DE.ts
 
+
+
 unix:LIBS += -L/usr/lib -lgvc
+DEFINES +=GRAPHVIZ_FIX
 
 win32:INCLUDEPATH += C:\Programme\Graphviz2.26.3\include
 win32:LIBS += \C:\Programme\Graphviz2.26.3\lib\gvc.lib
@@ -49,8 +52,7 @@ SOURCES += main.cpp\
     projectwidget.cpp \
     des/automatonwidget.cpp \
     automatontreewidget.cpp \
-    hardwaretreewidget.cpp \
-    srcp/hardwaresettings.cpp
+    hardwaretreewidget.cpp
 
 HEADERS  += mainwindow.h \
             settingsdialog.h \
@@ -78,8 +80,7 @@ HEADERS  += mainwindow.h \
     projectwidget.h \
     des/automatonwidget.h \
     automatontreewidget.h \
-    hardwaretreewidget.h \
-    srcp/hardwaresettings.h
+    hardwaretreewidget.h
 
 FORMS    += mainwindow.ui \
             settingsdialog.ui \
@@ -89,8 +90,7 @@ FORMS    += mainwindow.ui \
             srcp/serversettings.ui \
             srcp/serverdebugconsole.ui \
     projectwidget.ui \
-    des/automatonwidget.ui \
-    srcp/hardwaresettings.ui
+    des/automatonwidget.ui
 
 RESOURCES += \
     desIcons.qrc \

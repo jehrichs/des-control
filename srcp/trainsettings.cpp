@@ -92,8 +92,11 @@ void TrainSettings::deleteCurrent()
 {
     int currentRow = ui->listWidgetTrains->currentRow();
 
-    m_project->removeTrain(m_project->trains().at(currentRow));
-    ui->listWidgetTrains->takeItem(currentRow);
+    if(currentRow != -1)
+    {
+        m_project->removeTrain(m_project->trains().at(currentRow));
+        ui->listWidgetTrains->takeItem(currentRow);
+    }
 }
 
 void TrainSettings::saveChanges()

@@ -19,6 +19,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "des/dcautomaton.h"
 
 namespace Ui {
     class MainWindow;
@@ -76,6 +77,7 @@ public Q_SLOTS:
 
     void noAutomatonVisible();
     void someAutomataVisible();
+    void switchOpendAutomaton(DCAutomaton::SceneMode currentMode);
 
 protected:
     void closeEvent(QCloseEvent *event);

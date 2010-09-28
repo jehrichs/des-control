@@ -27,6 +27,14 @@ SensorSettings::SensorSettings(Project * project)
     , m_project(project)
 {
     ui->setupUi(this);
+
+    foreach(DCSensor *sensor, m_project->sensors())
+    {
+        ui->listWidgetSensors->addItem(sensor->name());
+    }
+
+    connect(ui->listWidgetSensors, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(showNewItemInfo(QListWidgetItem*,QListWidgetItem*)));
+
 }
 
 SensorSettings::~SensorSettings()
@@ -76,8 +84,11 @@ void SensorSettings::deleteCurrent()
 {
     int currentRow = ui->listWidgetSensors->currentRow();
 
-    m_project->removeSensor(m_project->sensors().at(currentRow));
-    ui->listWidgetSensors->takeItem(currentRow);
+    if(currentRow != -1)
+    {
+        m_project->removeSensor(m_project->sensors().at(currentRow));
+        ui->listWidgetSensors->takeItem(currentRow);
+    }
 }
 
 void SensorSettings::saveChanges()

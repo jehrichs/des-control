@@ -182,13 +182,6 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="buttonSave">
-         <property name="text">
-          <string>Save</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -228,28 +221,11 @@
   <tabstop>spinBoxSpeedSteps</tabstop>
   <tabstop>spinBoxDecoderFunctions</tabstop>
   <tabstop>spinBoxAddress</tabstop>
-  <tabstop>buttonSave</tabstop>
   <tabstop>buttonNew</tabstop>
   <tabstop>buttonRemove</tabstop>
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>buttonSave</sender>
-   <signal>clicked()</signal>
-   <receiver>TrainSettings</receiver>
-   <slot>saveChanges()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>197</x>
-     <y>393</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>420</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>buttonNew</sender>
    <signal>clicked()</signal>

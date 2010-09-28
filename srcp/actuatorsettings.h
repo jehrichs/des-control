@@ -36,11 +36,13 @@ public:
     explicit ActuatorSettings(Project * project);
     ~ActuatorSettings();
 
+public slots:
+    void saveChanges();
+
 private slots:
     void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
     void newActuator();
     void deleteCurrent();
-    void saveChanges();
 
 private:
     void showItem(DCActuator *actuator);

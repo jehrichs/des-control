@@ -25,7 +25,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
-#include <QtGui>
+#include <QGraphicsSceneMouseEvent>
 #include <QPen>
 #include <QDebug>
 
@@ -51,10 +51,9 @@ void DCAutomaton::setSceneMode(SceneMode mode)
     case Run:
         setBackgroundBrush(Qt::lightGray);
         break;
-    case Simulate:
-        setBackgroundBrush(Qt::lightGray);
-        break;
     }
+
+    update();
 }
 
 DCAutomaton::SceneMode DCAutomaton::sceneMode()
@@ -142,6 +141,8 @@ DCState *DCAutomaton::getInitialState()
         if(state->isInitial())
             return state;
     }
+
+    return 0;
 }
 
 void DCAutomaton::selectItem()
@@ -195,7 +196,7 @@ void DCAutomaton::doLayout()
     }
 
     int i = 0;
-    foreach(DCTransition *transition, m_transitionList)
+    foreach(const DCTransition *transition, m_transitionList)
     {
         gvTest.addEdge( i,
                         QString("%1").arg(transition->sourceState()->id()),
@@ -206,12 +207,12 @@ void DCAutomaton::doLayout()
 
     gvTest.applyLayout();
 
-    foreach(GVNode node, gvTest.nodes())
+    foreach(const GVNode & node, gvTest.nodes())
     {
         getStateFromId(node.name.toInt())->setCenterPoint(node.centerPos);
     }
 
-    foreach(GVEdge edge, gvTest.edges())
+    foreach(const GVEdge & edge, gvTest.edges())
     {
         m_transitionList.at(edge.id)->setPath(edge.path);
         m_transitionList.at(edge.id)->automaticLabelPosition();
@@ -239,12 +240,10 @@ void DCAutomaton::bezierLayout()
 
 void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    //if (mouseEvent->button() != Qt::RightButton)
-        //qDebug() << m_stateList.size() << m_transitionList.size() << m_eventList.size();
     if (mouseEvent->button() != Qt::LeftButton)
         return;
 
-    if(m_mode != Edit)
+    if(m_sceneMode != DCAutomaton::Edit)
         return;
 
     switch (m_mode) {

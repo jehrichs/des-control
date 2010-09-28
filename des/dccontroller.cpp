@@ -29,9 +29,18 @@ DCController::DCController(QObject *parent)
     : QObject(parent)
     , m_mode(Simulation)
     , m_cycleTimer(new QTimer(this))
+    , m_automaton(0)
+    , m_initialState(0)
     , m_currentState(0)
+    , m_running(false)
+    , m_paused(false)
 {
     connect(m_cycleTimer, SIGNAL(timeout()), this, SLOT(updateDES()));
+}
+
+DCController::~DCController()
+{
+    delete m_cycleTimer;
 }
 
 void DCController::setMode(ControlMode mode)
@@ -48,8 +57,11 @@ void DCController::setAutomaton(DCAutomaton* automaton)
 {
     m_automaton = automaton;
 
-    m_initialState = m_automaton->getInitialState();
-    //m_currentState = m_initialState;
+    if(automaton)
+    {
+        m_initialState = m_automaton->getInitialState();
+        m_automaton->setSceneMode(DCAutomaton::Run);
+    }
 }
 
 DCAutomaton* DCController::automaton() const
@@ -60,11 +72,19 @@ DCAutomaton* DCController::automaton() const
 void DCController::startController()
 {
     m_cycleTimer->start(100);
+    m_running = true;
 }
 
 void DCController::stopController()
 {
+    if(m_currentState)
+    {
+        m_currentState->setActive(false);
+        m_currentState = 0;
+    }
     m_cycleTimer->stop();
+    m_paused = false;
+    m_running = false;
 }
 
 void DCController::pauseController(bool paused)
@@ -73,11 +93,23 @@ void DCController::pauseController(bool paused)
         m_cycleTimer->stop();
     else
         m_cycleTimer->start(100);
+
+    m_paused = paused;
+}
+
+bool DCController::isRunnung()
+{
+    return m_running;
+}
+
+bool DCController::isPaused()
+{
+    return m_paused;
 }
 
 void DCController::updateDES()
 {
-    //if no current state exist, we started, set current = initial
+    //if no current state exist, when started, set current = initial
     if(!m_currentState)
     {
         m_currentState = m_initialState;

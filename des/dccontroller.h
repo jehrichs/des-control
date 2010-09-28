@@ -28,15 +28,19 @@ class DCController : public QObject
 {
     Q_OBJECT
 public:
-    enum ControlMode { Simulation, Live };
+    enum ControlMode { Off, Simulation, Live };
 
     explicit DCController(QObject *parent = 0);
+    ~DCController();
 
     void setMode(ControlMode mode);
     DCController::ControlMode mode() const;
 
     void setAutomaton(DCAutomaton* automaton);
     DCAutomaton* automaton() const;
+
+    bool isRunnung();
+    bool isPaused();
 
 public slots:
     void startController();
@@ -52,6 +56,9 @@ private:
     DCAutomaton* m_automaton;
     DCState* m_initialState;
     DCState* m_currentState;
+
+    bool m_running;
+    bool m_paused;
 };
 
 #endif // DCCONTROLLER_H

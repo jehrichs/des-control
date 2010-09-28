@@ -170,22 +170,6 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="buttonSave">
-         <property name="text">
-          <string>Save</string>
-         </property>
-         <property name="autoDefault">
-          <bool>false</bool>
-         </property>
-         <property name="default">
-          <bool>false</bool>
-         </property>
-         <property name="flat">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -224,7 +208,6 @@
   <tabstop>comboBoxProtocol</tabstop>
   <tabstop>spinBoxAddress</tabstop>
   <tabstop>spinBoxPort</tabstop>
-  <tabstop>buttonSave</tabstop>
   <tabstop>buttonNew</tabstop>
   <tabstop>buttonRemove</tabstop>
  </tabstops>
@@ -259,22 +242,6 @@
     <hint type="destinationlabel">
      <x>529</x>
      <y>446</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonSave</sender>
-   <signal>clicked()</signal>
-   <receiver>ActuatorSettings</receiver>
-   <slot>saveChanges()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>225</x>
-     <y>411</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>229</x>
-     <y>441</y>
     </hint>
    </hints>
   </connection>

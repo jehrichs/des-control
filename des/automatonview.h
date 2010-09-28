@@ -29,7 +29,6 @@ public:
 protected:
     void scaleView(qreal scaleFactor);
     void wheelEvent(QWheelEvent *event);
-    //void drawBackground(QPainter *painter, const QRectF &rect);
 
 };
 

@@ -52,12 +52,14 @@ void AutomatonTreeWidget::updateView()
         insertTopLevelItem(0,automatonItem);
         i++;
 
-        //TODO add states / transitions / evets as children
+        //TODO add states / transitions / events as children
     }
 }
 
 void AutomatonTreeWidget::openAutomaton( QTreeWidgetItem * item, int column )
 {
+    Q_UNUSED(column);
+
     if(item->type() == Automaton)
     {
         DCAutomaton *automaton = m_project->automata().value(item->data(0,Qt::UserRole).toInt());

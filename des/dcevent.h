@@ -24,6 +24,7 @@
 class DCEvent : public QObject
 {
 
+    Q_OBJECT
 public:
     DCEvent();
 
@@ -38,7 +39,7 @@ public:
     bool controlable() const;
 
     bool isActive();
-    bool setActive(bool active);
+    void setActive(bool active);
 
 private:
     int m_id;

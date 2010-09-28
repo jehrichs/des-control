@@ -32,7 +32,7 @@ class DCAutomaton : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    enum SceneMode { Edit, Simulate, Run };
+    enum SceneMode { Edit, Run };
 
     enum Mode { InsertPlace, InsertEvent, InsertText, MoveItem };
 
@@ -69,6 +69,9 @@ public:
 
     void lineLayout();
     void bezierLayout();
+
+signals:
+    void modeChanged(SceneMode newMode);
 
 public slots:
     void selectItem();
