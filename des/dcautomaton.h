@@ -59,6 +59,9 @@ public:
     void addTransition(DCTransition *newtransition);
     void addEvent(DCEvent *newEvent);
 
+    QList<DCTransition *> getTransitionList();
+    QList<DCEvent *> getEventList();
+
     DCState *getStateFromId(int id);
     DCEvent *getEventFromId(int id);
     DCTransition *getTransitionFromId(int id);

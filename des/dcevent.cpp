@@ -65,4 +65,12 @@ bool DCEvent::isActive()
 void DCEvent::setActive(bool active)
 {
     m_active = active;
+    emit statusChanged();
+}
+
+void DCEvent::toggleStatus()
+{
+    m_active = m_active ? false : true;
+
+    emit statusChanged();
 }

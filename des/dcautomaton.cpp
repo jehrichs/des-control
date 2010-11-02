@@ -101,6 +101,16 @@ void DCAutomaton::addEvent(DCEvent *newEvent)
     m_eventList.append(newEvent);
 }
 
+QList<DCTransition *> DCAutomaton::getTransitionList()
+{
+    return m_transitionList;
+}
+
+QList<DCEvent *> DCAutomaton::getEventList()
+{
+    return m_eventList;
+}
+
 DCState *DCAutomaton::getStateFromId(int id)
 {
     foreach(DCState* state, m_stateList)

@@ -41,6 +41,12 @@ public:
     bool isActive();
     void setActive(bool active);
 
+public slots:
+    void toggleStatus();
+
+signals:
+    void statusChanged();
+
 private:
     int m_id;
     QString m_name;
