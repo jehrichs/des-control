@@ -34,6 +34,7 @@
 #include "des/dcautomaton.h"
 #include "des/automatonview.h"
 #include "des/dccontroller.h"
+#include "des/eventstatus.h"
 
 #include "import/importautomaton.h"
 
@@ -447,6 +448,15 @@ void MainWindow::simulateAutomaton()
         QMessageBox::warning(this, tr("DES Controller"),
                              tr("No Automaton selected for the controller.\n\n Please open one Automaton first"));
     }
+}
+
+void MainWindow::showEventStatus()
+{
+    EventStatus es;
+
+    es.setAutomaton(m_automatonWidget->currentAutomaton());
+
+    es.exec();
 }
 
 void MainWindow::connectToServer()

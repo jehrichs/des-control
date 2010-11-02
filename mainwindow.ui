@@ -145,6 +145,7 @@
     <addaction name="actStartController"/>
     <addaction name="actPauseController"/>
     <addaction name="actStopController"/>
+    <addaction name="actionEventStatus"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuAutomata"/>
@@ -633,6 +634,11 @@
     <string>Stop</string>
    </property>
   </action>
+  <action name="actionEventStatus">
+   <property name="text">
+    <string>Event Status</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -975,6 +981,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionEventStatus</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showEventStatus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>newProject()</slot>
@@ -1010,5 +1032,6 @@
   <slot>aboutDES()</slot>
   <slot>aboutqt()</slot>
   <slot>closeProject()</slot>
+  <slot>showEventStatus()</slot>
  </slots>
 </ui>

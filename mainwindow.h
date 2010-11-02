@@ -60,6 +60,7 @@ public Q_SLOTS:
     void editAutomaton();
     void runAutomaton();
     void simulateAutomaton();
+    void showEventStatus();
 
     void connectToServer();
     void connectedToServer();
