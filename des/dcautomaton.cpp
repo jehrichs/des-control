@@ -338,29 +338,3 @@ void DCAutomaton::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     m_line = 0;
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
-
-//void DCAutomaton::drawBackground ( QPainter * painter, const QRectF & rect )
-//{
-
-//    QPen pen;
-//    pen.setStyle(Qt::DashLine);
-//    pen.setWidth(1);
-//    pen.setBrush(Qt::green);
-
-//    painter->setPen(pen);
-
-//    painter->drawRect(sceneRect());
-
-//    pen.setBrush(Qt::gray);
-//    painter->setPen(pen);
-
-//    for(int i=0; i <= sceneRect().width(); i +=10)
-//    {
-//        painter->drawLine(i, 0, i, sceneRect().height());
-//    }
-
-//    for(int j=0; j <= sceneRect().height(); j +=10)
-//    {
-//        painter->drawLine(0, j, sceneRect().width(), j);
-//    }
-//}

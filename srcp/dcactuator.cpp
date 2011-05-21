@@ -64,11 +64,21 @@ QString DCActuator::value() const
     return m_value;
 }
 
+void switchLeft()
+{
+    qDebug() << "switch left ...";
+}
+
+void switchRight()
+{
+    qDebug() << "switch right ...";
+}
+
 bool DCActuator::initialize()
 {
-    if(address() != -1 && busID() != -1&& m_port != -1)
+    if(address() != -1 && m_port != -1)
     {
-        QString srcpString = QString("INIT %1 GA %2 %3").arg(busID()).arg(address()).arg(protocol2srcp[m_protocol]);
+        QString srcpString = QString("INIT 1 GA %1 %2").arg(address()).arg(protocol2srcp[m_protocol]);
 
         emit sendSRCPString(srcpString);
 
@@ -83,7 +93,7 @@ void DCActuator::sendValue()
     // SET <bus> GA <addr> <port> <value> <delay>
     // last -1 means no automatic deactivation
     // value > 0 deactivation after x milliseconds
-    QString srcpString = QString("SET %1 GA %2 %3 %4 -1").arg(busID()).arg(address()).arg(m_port).arg(m_value);
+    QString srcpString = QString("SET 1 GA %1 %2 %3 -1").arg(address()).arg(m_port).arg(m_value);
 
     emit sendSRCPString(srcpString);
 }

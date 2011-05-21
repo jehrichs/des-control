@@ -34,6 +34,8 @@ DCServer::DCServer(QObject *parent)
     connect(m_tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectFromSRCP()));
     connect(m_tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(displayError(QAbstractSocket::SocketError)));
+
+            qDebug() << "create server ...";
 }
 
 void DCServer::setHost(const QString & host)
@@ -89,9 +91,15 @@ void DCServer::disconnectSRCP()
 
 void DCServer::sendSRCP(const QString & srcpString)
 {
+    if( m_tcpSocket->state() == QAbstractSocket::ConnectedState )
+    {
     qDebug() << "write srcp string" << QString("%1\n").arg(srcpString).toAscii();
     m_tcpSocket->write(QString("%1\n").arg(srcpString).toAscii());
     m_tcpSocket->waitForBytesWritten();
+    }
+    else {
+        qDebug() << "try to send a message in unconnected state";
+    }
 }
 
 void DCServer::displayError(QAbstractSocket::SocketError socketError)
@@ -154,7 +162,6 @@ void DCServer::readSRCPInput()
     case Handshake:
         //expected reply -> 200 OK GO <ID>
         //TODO support other handshake commands
-
         if( parseSRCP( readLine.simplified() ) )
         {
             // succesfull started session
@@ -199,6 +206,10 @@ bool DCServer::parseSRCP( const QString & srcpString )
         {
             QStringList handshakeGo = returnText.split(' ');
             m_sessionId = handshakeGo.last().toInt();
+
+            if(m_connectionMode == Connected) {
+                emit connectionClosed();
+            }
             return true;
         }
     }

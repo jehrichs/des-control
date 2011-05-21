@@ -26,21 +26,18 @@
 #include <QAbstractButton>
 #include <QDebug>
 
-SettingsDialog::SettingsDialog(Project * project, QWidget *parent)
+SettingsDialog::SettingsDialog(HWSettings * hwsettings, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::SettingsDialog)
-    , m_project(project)
-    , m_serverPage(new ServerSettings(project))
-    , m_trainPage(new TrainSettings(project))
-    , m_actuatorPage(new ActuatorSettings(project))
-    , m_sensorPage(new SensorSettings(project))
+    , m_hwsettings(hwsettings)
+    , m_serverPage(new ServerSettings(hwsettings))
+    , m_trainPage(new TrainSettings(hwsettings))
+    , m_actuatorPage(new ActuatorSettings(hwsettings))
 {
     ui->setupUi(this);
 
-    ui->stackedWidget->addWidget(new QWidget);
     ui->stackedWidget->addWidget(m_serverPage);
     ui->stackedWidget->addWidget(m_actuatorPage);
-    ui->stackedWidget->addWidget(m_sensorPage);
     ui->stackedWidget->addWidget(m_trainPage);
 
     createIcons();
@@ -55,12 +52,6 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::createIcons()
 {
-    QListWidgetItem *generalButton = new QListWidgetItem(ui->listWidget);
-    generalButton->setIcon(QIcon(":/icons/sensor.png"));
-    generalButton->setText(tr("General"));
-    generalButton->setTextAlignment(Qt::AlignHCenter);
-    generalButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
     QListWidgetItem *serverButton = new QListWidgetItem(ui->listWidget);
     serverButton->setIcon(QIcon(":/icons/sensor.png"));
     serverButton->setText(tr("Server"));
@@ -72,12 +63,6 @@ void SettingsDialog::createIcons()
     actuatorButton->setText(tr("Actuators"));
     actuatorButton->setTextAlignment(Qt::AlignHCenter);
     actuatorButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
-    QListWidgetItem *sensorButton = new QListWidgetItem(ui->listWidget);
-    sensorButton->setIcon(QIcon(":/icons/sensor.png"));
-    sensorButton->setText(tr("Sensors"));
-    sensorButton->setTextAlignment(Qt::AlignHCenter);
-    sensorButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     QListWidgetItem *trainButton = new QListWidgetItem(ui->listWidget);
     trainButton->setIcon(QIcon(":/icons/train.png"));
@@ -106,7 +91,6 @@ void SettingsDialog::clicked ( QAbstractButton * button )
         m_serverPage->saveChanges();
         m_trainPage->saveChanges();
         m_actuatorPage->saveChanges();
-        m_sensorPage->saveChanges();
     }
 }
 

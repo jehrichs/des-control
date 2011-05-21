@@ -38,10 +38,6 @@ public:
 private:
     void readFile();
     void readProject();
-    void readServer();
-    void readSensors();
-    void readActuators();
-    void readTrains();
 
     QXmlStreamWriter writer;
     QXmlStreamReader reader;

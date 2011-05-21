@@ -36,7 +36,6 @@ void ProjectWidget::setProject(Project *newProject)
     m_project = newProject;
 
     ui->treeAutomata->setProject(m_project);
-    ui->treeHardware->setProject(m_project);
 }
 
 AutomatonTreeWidget* ProjectWidget::automatonList() const

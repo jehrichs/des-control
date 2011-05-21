@@ -25,6 +25,7 @@ namespace Ui {
     class MainWindow;
 }
 
+class HWSettings;
 class Project;
 class DCController;
 class QSplitter;
@@ -69,8 +70,6 @@ public Q_SLOTS:
 
     void toggleStatusBar();
     void showProjectSettings();
-    void showSettings();
-
     void showHandbook();
     void aboutDES();
 
@@ -91,6 +90,7 @@ private:
     void showEmptyView();
 
     Ui::MainWindow *ui;
+    HWSettings *m_hw;
     Project *m_project;
     DCController * m_controller;
     QSplitter *m_splitter;

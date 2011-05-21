@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-class Project;
+class HWSettings;
 
 namespace Ui {
     class ServerSettings;
@@ -31,7 +31,7 @@ class ServerSettings : public QWidget
     Q_OBJECT
 
 public:
-    explicit ServerSettings(Project * project, QWidget *parent = 0);
+    explicit ServerSettings(HWSettings * hwsettings, QWidget *parent = 0);
     ~ServerSettings();
 
 public slots:
@@ -39,7 +39,7 @@ public slots:
 
 private:
     Ui::ServerSettings *ui;
-    Project * m_project;
+    HWSettings * m_hwsettings;
 };
 
 #endif // SERVERSETTINGS_H

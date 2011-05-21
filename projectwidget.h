@@ -38,6 +38,7 @@ public:
     void setProject(Project *newProject);
 
     AutomatonTreeWidget* automatonList() const;
+
 private:
     Ui::ProjectWidget *ui;
 

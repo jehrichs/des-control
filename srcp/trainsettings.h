@@ -24,7 +24,7 @@ namespace Ui {
     class TrainSettings;
 }
 
-class Project;
+class HWSettings;
 class QListWidgetItem;
 class DCTrain;
 
@@ -33,7 +33,7 @@ class TrainSettings : public QWidget
     Q_OBJECT
 
 public:
-    explicit TrainSettings(Project * project);
+    explicit TrainSettings(HWSettings * hwsettings);
     ~TrainSettings();
 
 public slots:
@@ -48,7 +48,7 @@ private:
     void showItem(DCTrain *train);
 
     Ui::TrainSettings *ui;
-    Project* m_project;
+    HWSettings* m_hwsettings;
 };
 
 #endif // TRAINSETTINGS_H

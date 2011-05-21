@@ -91,8 +91,6 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
 
-    //void drawBackground ( QPainter * painter, const QRectF & rect );
-
 private:
     SceneMode m_sceneMode;
     AutomatonType m_type;

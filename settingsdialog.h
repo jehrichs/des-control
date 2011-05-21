@@ -26,11 +26,10 @@ namespace Ui {
 
 class QListWidgetItem;
 class QAbstractButton;
-class Project;
+class HWSettings;
 class ServerSettings;
 class TrainSettings;
 class ActuatorSettings;
-class SensorSettings;
 
 class SettingsDialog : public QDialog
 {
@@ -39,7 +38,7 @@ class SettingsDialog : public QDialog
 public:
     enum pageType { General = 0, Server, Actuator, Sensor, Train };
 
-    explicit SettingsDialog(Project * project, QWidget *parent = 0);
+    explicit SettingsDialog(HWSettings * hwsettings, QWidget *parent = 0);
     ~SettingsDialog();
 
 public slots:
@@ -53,11 +52,10 @@ private:
     void createIcons();
     Ui::SettingsDialog *ui;
 
-    Project * m_project;
+    HWSettings * m_hwsettings;
     ServerSettings   *m_serverPage;
     TrainSettings    *m_trainPage;
     ActuatorSettings *m_actuatorPage;
-    SensorSettings   *m_sensorPage;
 };
 
 #endif // SETTINGSDIALOG_H

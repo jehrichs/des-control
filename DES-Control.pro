@@ -30,7 +30,6 @@ SOURCES += main.cpp\
            settingsdialog.cpp \
            srcp/trainsettings.cpp \
            srcp/actuatorsettings.cpp \
-           srcp/sensorsettings.cpp \
            srcp/serversettings.cpp \
            srcp/serverdebugconsole.cpp \
            project.cpp \
@@ -52,14 +51,13 @@ SOURCES += main.cpp\
     projectwidget.cpp \
     des/automatonwidget.cpp \
     automatontreewidget.cpp \
-    hardwaretreewidget.cpp \
-    des/eventstatus.cpp
+    des/eventstatus.cpp \
+    hwsettings.cpp
 
 HEADERS  += mainwindow.h \
             settingsdialog.h \
             srcp/trainsettings.h \
             srcp/actuatorsettings.h \
-            srcp/sensorsettings.h \
             srcp/serversettings.h \
             srcp/serverdebugconsole.h \
             project.h \
@@ -81,8 +79,8 @@ HEADERS  += mainwindow.h \
     projectwidget.h \
     des/automatonwidget.h \
     automatontreewidget.h \
-    hardwaretreewidget.h \
-    des/eventstatus.h
+    des/eventstatus.h \
+    hwsettings.h
 
 FORMS    += mainwindow.ui \
             settingsdialog.ui \
