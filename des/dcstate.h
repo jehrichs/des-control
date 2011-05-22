@@ -55,6 +55,7 @@ public:
 
     void setActive(bool active);
 
+
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 
@@ -69,7 +70,6 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-    //void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void hoverEnterEvent ( QGraphicsSceneHoverEvent * event );
     void hoverLeaveEvent ( QGraphicsSceneHoverEvent * event );
 

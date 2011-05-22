@@ -51,6 +51,7 @@ QList<DCAutomaton*> ImportAutomaton::loadAutomaton(AutomatonFile fileType, QIODe
 
 QList<DCAutomaton*> ImportAutomaton::loadDesumaFile(QIODevice *device)
 {
+    Q_UNUSED(device);
     qDebug() << "DESUMA implementation still missing :P";
     return QList<DCAutomaton*>();
 }

@@ -17,6 +17,8 @@
 
 #include "dcactuator.h"
 
+#include <QDebug>
+
 static const char* protocol2srcp[] = {"M","N","S","P"};
 
 DCActuator::DCActuator()
@@ -64,12 +66,12 @@ QString DCActuator::value() const
     return m_value;
 }
 
-void switchLeft()
+void DCActuator::switchLeft()
 {
     qDebug() << "switch left ...";
 }
 
-void switchRight()
+void DCActuator::switchRight()
 {
     qDebug() << "switch right ...";
 }

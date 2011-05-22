@@ -52,7 +52,6 @@ DCState::~DCState()
     delete m_markedCircle;
     delete m_editPlace;
     delete m_deletePlace;
-
 }
 
 void DCState::setId(int id)
@@ -246,16 +245,6 @@ QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)
 
     return QGraphicsItem::itemChange(change, value);
 }
-
-// void DCState::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-// {
-//     if (event->modifiers() & Qt::ShiftModifier) {
-//         setPos(event->pos());
-//         update();
-//         return;
-//     }
-//     QGraphicsItem::mouseMoveEvent(event);
-// }
 
 void DCState::hoverEnterEvent ( QGraphicsSceneHoverEvent * event )
 {

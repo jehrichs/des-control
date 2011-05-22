@@ -17,38 +17,31 @@
 
 #include "dcsensor.h"
 
+#include <QDebug>
+
 DCSensor::DCSensor()
     : DCModelItem()
 {
 }
 
-QString DCSensor::value() const
+int DCSensor::value() const
 {
     return m_value;
 }
 
 bool DCSensor::initialize()
 {
-    if(address() != -1 && busID() != -1)
-    {
-        QString srcpString = QString("INIT %1 FB %2").arg(busID()).arg(address());
-
-        emit sendSRCPString(srcpString);
-
-        return true;
-    }
-
-    return false;
+    return true;
 }
 
 void DCSensor::updateValues(const QString & srcpString)
 {
-    //100 INFO <bus> FB <addr> <value>
-    // only <value> will be send to this slot, rest is stripped out by the server class
+    if(address() <= srcpString.size()) {
+        QString value = QString(srcpString.at(address() - 1));
 
-    if( srcpString != m_value)
-    {
-        m_value = srcpString;
-        emit stateChanged();
+        m_value = value.toInt();
+        if(m_value == 1) {
+            qDebug() << name() << " Activated";
+        }
     }
 }

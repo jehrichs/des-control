@@ -26,7 +26,7 @@ class DCSensor : public DCModelItem
 public:
     explicit DCSensor();
 
-    QString value() const;
+    int value() const;
 
     bool initialize();
 
@@ -34,7 +34,7 @@ public slots:
     void updateValues(const QString & srcpString);
 
 private:
-    QString m_value;
+    int m_value;
 };
 
 #endif // DCSENSOR_H

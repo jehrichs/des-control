@@ -23,6 +23,7 @@
 class QTimer;
 class DCAutomaton;
 class DCState;
+class HWSettings;
 
 class DCController : public QObject
 {
@@ -39,6 +40,8 @@ public:
     void setAutomaton(DCAutomaton* automaton);
     DCAutomaton* automaton() const;
 
+    void setHWSettings(HWSettings *hw);
+
     bool isRunnung();
     bool isPaused();
 
@@ -54,6 +57,7 @@ private:
     ControlMode m_mode;
     QTimer *m_cycleTimer;
     DCAutomaton* m_automaton;
+    HWSettings *m_hwSettings;
     DCState* m_initialState;
     DCState* m_currentState;
 
