@@ -173,8 +173,8 @@ QList<GVEdge> GVGraph::edges() const
         object.source=edge->tail->name;
         object.target=edge->head->name;
         object.id = _agget(edge, "label", "-1").toInt();
-        object.labelPos.setX(edge->u.label->p.x*(dpi/DotDefaultDPI));
-        object.labelPos.setY(edge->u.label->p.y*(dpi/DotDefaultDPI));
+        object.labelPos.setX(edge->u.label->pos.x*(dpi/DotDefaultDPI));
+        object.labelPos.setY(edge->u.label->pos.y*(dpi/DotDefaultDPI));
 
         //Calculate the path from the spline (only one spline, as the graph is strict. If it
         //wasn't, we would have to iterate over the first list too)
