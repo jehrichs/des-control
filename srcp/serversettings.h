@@ -20,6 +20,8 @@
 
 #include <QWidget>
 
+class HWSettings;
+
 namespace Ui {
     class ServerSettings;
 }
@@ -29,11 +31,15 @@ class ServerSettings : public QWidget
     Q_OBJECT
 
 public:
-    explicit ServerSettings(QWidget *parent = 0);
+    explicit ServerSettings(HWSettings * hwsettings, QWidget *parent = 0);
     ~ServerSettings();
+
+public slots:
+    void saveChanges();
 
 private:
     Ui::ServerSettings *ui;
+    HWSettings * m_hwsettings;
 };
 
 #endif // SERVERSETTINGS_H

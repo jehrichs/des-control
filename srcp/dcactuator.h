@@ -44,6 +44,9 @@ public:
     void setValue(const QString & value);
     QString value() const;
 
+    void switchLeft();
+    void switchRight();
+
     bool initialize();
     void sendValue();
 

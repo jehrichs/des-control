@@ -20,11 +20,19 @@
 
 #include <QObject>
 
+class DCSensor;
+class DCActuator;
 
 class DCEvent : public QObject
 {
-
+    Q_OBJECT
 public:
+
+    enum GAAction {
+        SWITCH_LEFT,
+        SWITCH_RIGHT
+    };
+
     DCEvent();
 
     void setId(int id);
@@ -38,7 +46,20 @@ public:
     bool controlable() const;
 
     bool isActive();
-    bool setActive(bool active);
+    void setActive(bool active);
+
+    void setSensor(DCSensor *sensor);
+    DCSensor * getSensor();
+
+    void setActuator(DCActuator *actuator, GAAction actuatorMode);
+    void activateActuator();
+
+public slots:
+    void toggleStatus();
+    void updateStatus();
+
+signals:
+    void statusChanged();
 
 private:
     int m_id;
@@ -47,6 +68,9 @@ private:
     bool m_controlable;
 
     bool m_active;
+    DCSensor *m_sensor;
+    DCActuator *m_actuator;
+    GAAction m_actuatorMode;
 
 
 };

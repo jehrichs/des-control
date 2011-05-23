@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DCPLACE_H
-#define DCPLACE_H
+#ifndef DCSTATE_H
+#define DCSTATE_H
 
 #include <QGraphicsItem>
 #include <QGraphicsEllipseItem>
@@ -34,6 +34,7 @@ class DCState : public QGraphicsEllipseItem
 
 public:
     DCState();
+    ~DCState();
 
     void setId(int id);
     int id();
@@ -54,6 +55,7 @@ public:
 
     void setActive(bool active);
 
+
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 
@@ -68,7 +70,6 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-    //void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void hoverEnterEvent ( QGraphicsSceneHoverEvent * event );
     void hoverLeaveEvent ( QGraphicsSceneHoverEvent * event );
 
@@ -95,4 +96,4 @@ private:
     bool m_isActive;
 };
 
-#endif // DCPLACE_H
+#endif // DCSTATE_H

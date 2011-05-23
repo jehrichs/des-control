@@ -21,6 +21,7 @@
 #include "des/automatonview.h"
 #include "des/dcautomaton.h"
 
+#include <QMessageBox>
 #include <QString>
 #include <QDebug>
 
@@ -32,6 +33,10 @@ AutomatonWidget::AutomatonWidget(QWidget *parent) :
 
     connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)),
             this, SLOT(closeTab(int)));
+
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)),
+            this, SLOT(openAutomatonChanged(int)));
+
 }
 
 AutomatonWidget::~AutomatonWidget()
@@ -48,7 +53,8 @@ DCAutomaton * AutomatonWidget::currentAutomaton() const
         if(currentView)
         {
             DCAutomaton *automaton = dynamic_cast<DCAutomaton *>(currentView->scene());
-            return automaton;
+            if(automaton)
+                return automaton;
         }
 
     }
@@ -72,13 +78,18 @@ void AutomatonWidget::openAutomaton(DCAutomaton* automaton)
     ui->tabWidget->setCurrentWidget(newView);
 }
 
-void AutomatonWidget::removeAutomaton(DCAutomaton* automaton)
-{
-
-}
-
 void AutomatonWidget::closeTab(int index)
 {
+    if(currentAutomaton())
+    {
+        if(currentAutomaton()->sceneMode() == DCAutomaton::Run)
+        {
+            QMessageBox::warning(this, tr("DES Controller"),
+                                 tr("Stop the controller first before closing the automaton") );
+
+            return;
+        }
+    }
     ui->tabWidget->removeTab(index);
 
     if(ui->tabWidget->count() == 0)
@@ -86,4 +97,19 @@ void AutomatonWidget::closeTab(int index)
         ui->tabWidget->addTab(ui->tabEmpty, tr("empty automaton"));
         emit lastAutomatonClosed();
     }
+}
+
+void AutomatonWidget::openAutomatonChanged(int index)
+{
+    AutomatonView *currentView = dynamic_cast<AutomatonView *>(ui->tabWidget->widget(index));
+
+    if(currentView)
+    {
+        DCAutomaton *automaton = dynamic_cast<DCAutomaton *>(currentView->scene());
+
+        if(automaton)
+            emit switchOpendAutomaton(automaton->sceneMode());
+
+    }
+
 }

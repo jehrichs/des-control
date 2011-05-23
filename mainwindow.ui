@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>797</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -63,21 +63,25 @@
    </widget>
    <widget class="QMenu" name="menuServer">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>S&amp;erver</string>
     </property>
     <addaction name="actConnectToServer"/>
     <addaction name="actDisconnectFromServer"/>
-    <addaction name="actToggleSystemPower"/>
+    <addaction name="separator"/>
+    <addaction name="actStartTrains"/>
+    <addaction name="actStopTrains"/>
     <addaction name="separator"/>
     <addaction name="actShowDebugConsole"/>
     <addaction name="actServerInformation"/>
     <addaction name="separator"/>
-    <addaction name="actServerSettings"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="tearOffEnabled">
      <bool>false</bool>
     </property>
@@ -93,7 +97,6 @@
     <addaction name="actToggleStatusBar"/>
     <addaction name="separator"/>
     <addaction name="actShowProjectSettings"/>
-    <addaction name="actShowSettings"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -116,21 +119,6 @@
     <addaction name="actEditAutomaton"/>
     <addaction name="separator"/>
     <addaction name="actSelectItem"/>
-    <addaction name="actAddState"/>
-    <addaction name="actAddTransition"/>
-    <addaction name="actDeleteSelected"/>
-    <addaction name="separator"/>
-    <addaction name="actAddEvent"/>
-   </widget>
-   <widget class="QMenu" name="menuHardware">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>Hardware</string>
-    </property>
-    <addaction name="actHardwareSettings"/>
-    <addaction name="actTestHardwareEvents"/>
    </widget>
    <widget class="QMenu" name="menuController">
     <property name="enabled">
@@ -145,11 +133,11 @@
     <addaction name="actStartController"/>
     <addaction name="actPauseController"/>
     <addaction name="actStopController"/>
+    <addaction name="actionEventStatus"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuAutomata"/>
    <addaction name="menuController"/>
-   <addaction name="menuHardware"/>
    <addaction name="menuServer"/>
    <addaction name="menuSettings"/>
    <addaction name="menu_Help"/>
@@ -352,14 +340,14 @@
   </action>
   <action name="actShowProjectSettings">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="oxygen.qrc">
      <normaloff>:/icons/configure.png</normaloff>:/icons/configure.png</iconset>
    </property>
    <property name="text">
-    <string>Project Settings</string>
+    <string>Settings</string>
    </property>
   </action>
   <action name="actAddState">
@@ -418,10 +406,10 @@
   </action>
   <action name="actSelectItem">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="enabled">
     <bool>false</bool>
@@ -631,6 +619,27 @@
    </property>
    <property name="text">
     <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionEventStatus">
+   <property name="text">
+    <string>Event Status</string>
+   </property>
+  </action>
+  <action name="actStartTrains">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Start Trains</string>
+   </property>
+  </action>
+  <action name="actStopTrains">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Stop Trains</string>
    </property>
   </action>
  </widget>
@@ -880,22 +889,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>actShowSettings</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>showSettings()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>300</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actHandbook</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -975,6 +968,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionEventStatus</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showEventStatus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>newProject()</slot>
@@ -1010,5 +1019,6 @@
   <slot>aboutDES()</slot>
   <slot>aboutqt()</slot>
   <slot>closeProject()</slot>
+  <slot>showEventStatus()</slot>
  </slots>
 </ui>

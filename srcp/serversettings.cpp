@@ -18,14 +18,27 @@
 #include "serversettings.h"
 #include "ui_serversettings.h"
 
-ServerSettings::ServerSettings(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ServerSettings)
+#include "hwsettings.h"
+#include "srcp/dcserver.h"
+
+ServerSettings::ServerSettings(HWSettings * hwsettings, QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::ServerSettings)
+    , m_hwsettings(hwsettings)
 {
     ui->setupUi(this);
+
+    ui->lineEditIP->setText(m_hwsettings->server()->ip());
+    ui->lineEditPort->setText(m_hwsettings->server()->port());
 }
 
 ServerSettings::~ServerSettings()
 {
     delete ui;
+}
+
+void ServerSettings::saveChanges()
+{
+    m_hwsettings->server()->setHost(ui->lineEditIP->text());
+    m_hwsettings->server()->setPort(ui->lineEditPort->text());
 }

@@ -23,20 +23,27 @@
 class QTimer;
 class DCAutomaton;
 class DCState;
+class HWSettings;
 
 class DCController : public QObject
 {
     Q_OBJECT
 public:
-    enum ControlMode { Simulation, Live };
+    enum ControlMode { Off, Simulation, Live };
 
     explicit DCController(QObject *parent = 0);
+    ~DCController();
 
     void setMode(ControlMode mode);
     DCController::ControlMode mode() const;
 
     void setAutomaton(DCAutomaton* automaton);
     DCAutomaton* automaton() const;
+
+    void setHWSettings(HWSettings *hw);
+
+    bool isRunnung();
+    bool isPaused();
 
 public slots:
     void startController();
@@ -50,8 +57,12 @@ private:
     ControlMode m_mode;
     QTimer *m_cycleTimer;
     DCAutomaton* m_automaton;
+    HWSettings *m_hwSettings;
     DCState* m_initialState;
     DCState* m_currentState;
+
+    bool m_running;
+    bool m_paused;
 };
 
 #endif // DCCONTROLLER_H

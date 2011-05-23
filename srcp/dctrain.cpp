@@ -114,34 +114,34 @@ bool DCTrain::function(int number) const
 
 bool DCTrain::initialize()
 {
-    if(address() != -1 && busID() != -1)
+    if(address() != -1)
     {
         QString srcpString;
 
         switch(m_protocol)
         {
         case ANALOG:
-            srcpString = QString("INIT %1 GL %2 A").arg(busID()).arg(address());
+            srcpString = QString("INIT 1 GL %1 A").arg(address());
             break;
 
         case MM1:
-            srcpString = QString("INIT %1 GL %2 M 1 %3 %4").arg(busID()).arg(address()).arg(m_decoderSteps).arg(m_decoderFunctions);
+            srcpString = QString("INIT 1 GL %1 M 1 %2 %3").arg(address()).arg(m_decoderSteps).arg(m_decoderFunctions);
             break;
 
         case MM2:
-            srcpString = QString("INIT %1 GL %2 M 2 %3 %4").arg(busID()).arg(address()).arg(m_decoderSteps).arg(m_decoderFunctions);
+            srcpString = QString("INIT 1 GL %1 M 2 %2 %3").arg(address()).arg(m_decoderSteps).arg(m_decoderFunctions);
             break;
 
         case DCC1:
-            srcpString = QString("INIT %1 GL %2 N 1 %3 %4").arg(busID()).arg(address()).arg(m_decoderSteps).arg(m_decoderFunctions);
+            srcpString = QString("INIT 1 GL %1 N 1 %2 %3").arg(address()).arg(m_decoderSteps).arg(m_decoderFunctions);
             break;
 
         case DCC2:
-            srcpString = QString("INIT %1 GL %2 N 1 %3 %4").arg(busID()).arg(address()).arg(m_decoderSteps).arg(m_decoderFunctions);
+            srcpString = QString("INIT 1 GL %1 N 1 %2 %3").arg(address()).arg(m_decoderSteps).arg(m_decoderFunctions);
             break;
 
         case SERVER:
-            srcpString = QString("INIT %1 GL %2 P").arg(busID()).arg(address());
+            srcpString = QString("INIT 1 GL %1 P").arg(address());
             break;
 
         }
@@ -157,9 +157,9 @@ bool DCTrain::initialize()
 void DCTrain::sendValue()
 {
     // SET <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn>
-    QString srcpString = QString("SET %1 GL %2 %3 %4 %5").arg(busID()).arg(address()).arg((int) m_driveMode).arg(m_speed).arg(m_maxSpeed);
+    QString srcpString = QString("SET %1 GL %2 %3 %4 %5").arg(1).arg(address()).arg((int) m_driveMode).arg(m_speed).arg(m_maxSpeed);
 
-    foreach(bool fn, m_functions)
+    foreach(const bool fn, m_functions)
     {
         srcpString.append(QString(" %1").arg(fn));
     }
@@ -173,7 +173,6 @@ void DCTrain::updateValues(const QString & srcpString)
     // only <drivemode> and everything afterwards will be send to this slot, rest is stripped out by the server class
 
     QStringList valueList = srcpString.split(' ');
-    bool changedValues;
 
     m_driveMode  = (Drivemode) valueList.at(0).toInt();
     m_speed =valueList.at(1).toInt();

@@ -18,6 +18,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "hwsettings.h"
 #include "settingsdialog.h"
 #include "project.h"
 #include "projectwidget.h"
@@ -34,10 +35,9 @@
 #include "des/dcautomaton.h"
 #include "des/automatonview.h"
 #include "des/dccontroller.h"
+#include "des/eventstatus.h"
 
 #include "import/importautomaton.h"
-
-#include "projectwidget.h"
 
 #include <QCloseEvent>
 #include <QtGui/QSplitter>
@@ -108,6 +108,79 @@ void MainWindow::readSettings()
     ui->actToggleStatusBar->setChecked(settings.value("statusbar", true).toBool());
 
     settings.endGroup();
+
+    m_hw = new HWSettings;
+
+    DCServer *server = new DCServer();
+    server->setHost("localhost");
+    server->setPort("4303");
+
+    m_hw->setServer(server);
+
+    connect (server, SIGNAL(connectionClosed()), this, SLOT(disconnectedFromServer()));
+    connect (server, SIGNAL(connectionEstablished()), this, SLOT(connectedToServer()));
+
+    DCTrain *t1 = new DCTrain();
+    t1->setName(QString("Train 1"));
+    t1->setProtocol(DCTrain::MM2);
+    t1->setAddress(10);
+    t1->setDecoderSteps(14);
+    t1->setDecoderFunctions(4);
+    m_hw->addTrain(t1);
+    DCTrain *t2 = new DCTrain();
+    t2->setName(QString("Train 2"));
+    t2->setProtocol(DCTrain::MM2);
+    t2->setAddress(20);
+    t2->setDecoderSteps(14);
+    t2->setDecoderFunctions(4);
+    m_hw->addTrain(t2);
+
+    connect ( ui->actStartTrains, SIGNAL(triggered()), m_hw, SLOT(startTrains()));
+    connect ( ui->actStopTrains, SIGNAL(triggered()), m_hw, SLOT(stopTrains()));
+
+    DCActuator *a1 = new DCActuator();
+    a1->setName(QString("Switch 1"));
+    a1->setProtocol(DCActuator::MAERKLIN);
+    a1->setAddress(10);
+    a1->setPort(1);
+    m_hw->addActuator(a1);
+    DCActuator *a2 = new DCActuator();
+    a2->setName(QString("Switch 2"));
+    a2->setProtocol(DCActuator::MAERKLIN);
+    a2->setAddress(10);
+    a2->setPort(2);
+    m_hw->addActuator(a2);
+    DCActuator *a3 = new DCActuator();
+    a3->setName(QString("Switch 3"));
+    a3->setProtocol(DCActuator::MAERKLIN);
+    a3->setAddress(10);
+    a3->setPort(3);
+    m_hw->addActuator(a3);
+    DCActuator *a4 = new DCActuator();
+    a4->setName(QString("Switch 4"));
+    a4->setProtocol(DCActuator::MAERKLIN);
+    a4->setAddress(10);
+    a4->setPort(4);
+    m_hw->addActuator(a4);
+
+    DCSensor *s1 = new DCSensor();
+    s1->setName(QString("Sensor 1"));
+    s1->setAddress(1);
+    m_hw->addSensor(s1);
+    DCSensor *s2 = new DCSensor();
+    s2->setName(QString("Sensor 2"));
+    s2->setAddress(2);
+    m_hw->addSensor(s2);
+    DCSensor *s3 = new DCSensor();
+    s3->setName(QString("Sensor 3"));
+    s3->setAddress(3);
+    m_hw->addSensor(s3);
+    DCSensor *s4 = new DCSensor();
+    s4->setName(QString("Sensor 4"));
+    s4->setAddress(4);
+    m_hw->addSensor(s4);
+
+    m_controller->setHWSettings(m_hw);
 }
 
 void MainWindow::newProject()
@@ -123,14 +196,6 @@ void MainWindow::newProject()
     m_project->setName("Test Project");
     connect (m_project, SIGNAL(projectChanged()), this, SLOT(unsavedChanges()));
 
-    DCServer *server = new DCServer();
-    server->setHost("192.168.0.10");
-    server->setPort("4303");
-
-    m_project->setServer(server);
-
-    connect (server, SIGNAL(connectionClosed()), this, SLOT(disconnectedFromServer()));
-    connect (server, SIGNAL(connectionEstablished()), this, SLOT(connectedToServer()));
 
     showProjectView();
     m_unsavedChanges = false;
@@ -144,7 +209,6 @@ void MainWindow::newProject()
     ui->actExportHardwareSettings->setEnabled(true);
     ui->menuExport->setEnabled(true);
     ui->menuAutomata->setEnabled(true);
-    ui->menuHardware->setEnabled(true);
     ui->menuServer->setEnabled(true);
     ui->actShowProjectSettings->setEnabled(true);
     ui->actNewAutomaton->setEnabled(true);
@@ -180,9 +244,6 @@ void MainWindow::openProject()
         m_project->setFileName(fileName);
         connect (m_project, SIGNAL(projectChanged()), this, SLOT(unsavedChanges()));
 
-        connect (m_project->server(), SIGNAL(connectionClosed()), this, SLOT(connectedToServer()));
-        connect (m_project->server(), SIGNAL(connectionEstablished()), this, SLOT(disconnectFromServer()));
-
         showProjectView();
         m_unsavedChanges = false;
 
@@ -195,7 +256,6 @@ void MainWindow::openProject()
         ui->actExportHardwareSettings->setEnabled(true);
         ui->menuExport->setEnabled(true);
         ui->menuAutomata->setEnabled(true);
-        ui->menuHardware->setEnabled(true);
         ui->menuServer->setEnabled(true);
         ui->actShowProjectSettings->setEnabled(true);
         ui->actNewAutomaton->setEnabled(true);
@@ -287,6 +347,11 @@ bool MainWindow::closeProject()
     }
 
     showEmptyView();
+    m_controller->stopController();
+
+    if( m_hw->server() )
+        m_hw->server()->disconnect();
+
     delete m_project;
     m_project = 0;
 
@@ -299,7 +364,6 @@ bool MainWindow::closeProject()
     ui->actExportHardwareSettings->setEnabled(false);
     ui->menuExport->setEnabled(false);
     ui->menuAutomata->setEnabled(false);
-    ui->menuHardware->setEnabled(false);
     ui->menuServer->setEnabled(false);
     ui->actShowProjectSettings->setEnabled(false);
     ui->actNewAutomaton->setEnabled(false);
@@ -309,7 +373,21 @@ bool MainWindow::closeProject()
 
 void MainWindow::importHardware()
 {
+    QString fileName =
+            QFileDialog::getOpenFileName(this, tr("Import Hardware Details"),
+                                         QDir::currentPath(),
+                                         tr("Hardware Settings (*.xml)"));
+    if (fileName.isEmpty())
+        return;
 
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("DES Hardware Importer"),
+                             tr("Cannot open file %1:\n%2.")
+                             .arg(fileName)
+                             .arg(file.errorString()));
+        return;
+    }
 }
 
 void MainWindow::importAutomaton()
@@ -381,7 +459,12 @@ void MainWindow::editAutomaton()
     m_controller->stopController();
 
     if(m_automatonWidget->currentAutomaton())
+    {
         m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Edit);
+        ui->actStartController->setEnabled(false);
+        ui->actStopController->setEnabled(false);
+        ui->actPauseController->setEnabled(false);
+    }
     else
         return;
 }
@@ -391,13 +474,20 @@ void MainWindow::runAutomaton()
 
     m_controller->stopController();
 
+    if(m_controller->automaton())
+    {
+        m_controller->automaton()->setSceneMode(DCAutomaton::Edit);
+    }
+
     if(m_automatonWidget->currentAutomaton())
     {
         m_controller->setAutomaton(m_automatonWidget->currentAutomaton());
 
         m_controller->setMode(DCController::Live);
-
-        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Run);
+        ui->actStartController->setEnabled(true);
+        ui->actStopController->setEnabled(true);
+        ui->actPauseController->setEnabled(true);
+        ui->actStopController->setChecked(true);
     }
     else
     {
@@ -411,13 +501,21 @@ void MainWindow::simulateAutomaton()
 
     m_controller->stopController();
 
+    if(m_controller->automaton())
+    {
+        m_controller->automaton()->setSceneMode(DCAutomaton::Edit);
+    }
+
     if(m_automatonWidget->currentAutomaton())
     {
+        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Edit);
         m_controller->setAutomaton(m_automatonWidget->currentAutomaton());
 
         m_controller->setMode(DCController::Simulation);
-
-        m_automatonWidget->currentAutomaton()->setSceneMode(DCAutomaton::Simulate);
+        ui->actStartController->setEnabled(true);
+        ui->actStopController->setEnabled(true);
+        ui->actPauseController->setEnabled(true);
+        ui->actStopController->setChecked(true);
     }
     else
     {
@@ -426,28 +524,42 @@ void MainWindow::simulateAutomaton()
     }
 }
 
+void MainWindow::showEventStatus()
+{
+    EventStatus es;
+
+    es.setAutomaton(m_automatonWidget->currentAutomaton());
+
+    es.exec();
+}
+
 void MainWindow::connectToServer()
 {
-    m_project->server()->connectSRCP();
+    m_hw->server()->connectSRCP();
 }
 
 void MainWindow::connectedToServer()
 {
-    m_project->initializeDevices();
     ui->actDisconnectFromServer->setEnabled(true);
     ui->actToggleSystemPower->setEnabled(true);
+    ui->actStartTrains->setEnabled(true);
+    ui->actStopTrains->setEnabled(true);
     statusBar()->showMessage(tr("Connection to SRCP Server established"), 2000);
+
+    m_hw->initializeDevices();
 }
 
 void MainWindow::disconnectFromServer()
 {
-    m_project->server()->disconnectSRCP();
+    m_hw->server()->disconnectSRCP();
 }
 
 void MainWindow::disconnectedFromServer()
 {
     ui->actDisconnectFromServer->setEnabled(false);
     ui->actToggleSystemPower->setEnabled(false);
+    ui->actStartTrains->setEnabled(false);
+    ui->actStopTrains->setEnabled(false);
     statusBar()->showMessage(tr("Connection to SRCP Server lost"), 2000);
 }
 
@@ -461,12 +573,7 @@ void MainWindow::toggleStatusBar()
 
 void MainWindow::showProjectSettings()
 {
-
-}
-
-void MainWindow::showSettings()
-{
-    SettingsDialog setting;
+    SettingsDialog setting(m_hw);
     setting.exec();
 }
 
@@ -505,6 +612,7 @@ void MainWindow::showProjectView()
 
     connect(m_automatonWidget, SIGNAL(firstAutomatonOpend()), this, SLOT(someAutomataVisible()));
     connect(m_automatonWidget, SIGNAL(lastAutomatonClosed()), this, SLOT(noAutomatonVisible()));
+    connect(m_automatonWidget, SIGNAL(switchOpendAutomaton(DCAutomaton::SceneMode)), this, SLOT(switchOpendAutomaton(DCAutomaton::SceneMode)));
 }
 
 void MainWindow::showEmptyView()
@@ -551,7 +659,7 @@ void MainWindow::createActions()
 
     connect(ui->actStartController, SIGNAL(triggered()), m_controller, SLOT(startController()));
     connect(ui->actStopController, SIGNAL(triggered()), m_controller, SLOT(stopController()));
-    connect(ui->actPauseController, SIGNAL(triggered()), m_controller, SLOT(pauseController()));
+    connect(ui->actPauseController, SIGNAL(triggered(bool)), m_controller, SLOT(pauseController(bool)));
 }
 
 void MainWindow::createToolBars()
@@ -561,16 +669,11 @@ void MainWindow::createToolBars()
     ui->mainToolBar->addAction(ui->actCloseProject);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(ui->actImportAutomaton);
-    ui->mainToolBar->addAction(ui->actImportHardware);
 
     ui->automatonToolBar->addAction(ui->actNewAutomaton);
     ui->automatonToolBar->addAction(ui->actDeleteAutomaton);
     ui->automatonToolBar->addSeparator();
     ui->automatonToolBar->addAction(ui->actSelectItem);
-    ui->automatonToolBar->addAction(ui->actAddState);
-    ui->automatonToolBar->addAction(ui->actAddTransition);
-    ui->automatonToolBar->addAction(ui->actAddEvent);
-    ui->automatonToolBar->addAction(ui->actDeleteSelected);
 
     ui->controllerToolBar->addAction(ui->actEditAutomaton);
     ui->controllerToolBar->addAction(ui->actRunSimulation);
@@ -602,8 +705,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::noAutomatonVisible()
 {
     m_controller->stopController();
-    delete m_controller;
-    m_controller = 0;
+    m_controller->setAutomaton(0);
 
     ui->menuController->setEnabled(false);
     ui->actEditAutomaton->setEnabled(false);
@@ -620,15 +722,39 @@ void MainWindow::someAutomataVisible()
     ui->actEditAutomaton->setEnabled(true);
     ui->actRunwithHardware->setEnabled(true);
     ui->actRunSimulation->setEnabled(true);
-    ui->actStartController->setEnabled(true);
-    ui->actStopController->setEnabled(true);
-    ui->actPauseController->setEnabled(true);
+}
 
-    delete m_controller;
-    m_controller = new DCController();
-    connect(ui->actStartController, SIGNAL(triggered()), m_controller, SLOT(startController()));
-    connect(ui->actStopController, SIGNAL(triggered()), m_controller, SLOT(stopController()));
-    connect(ui->actPauseController, SIGNAL(triggered()), m_controller, SLOT(pauseController()));
+void MainWindow::switchOpendAutomaton(DCAutomaton::SceneMode currentMode)
+{
+    switch(currentMode)
+    {
+    case DCAutomaton::Edit:
+        ui->actEditAutomaton->setChecked(true);
+        ui->actStopController->setChecked(true);
+        ui->actStartController->setEnabled(false);
+        ui->actStopController->setEnabled(false);
+        ui->actPauseController->setEnabled(false);
+        break;
+    case DCAutomaton::Run:
+        if(m_controller->mode() == DCController::Live)
+            ui->actRunwithHardware->setChecked(true);
+        else
+            ui->actRunSimulation->setChecked(true);
+
+        ui->actStartController->setEnabled(true);
+        ui->actStopController->setEnabled(true);
+        ui->actPauseController->setEnabled(true);
+
+        if(m_controller->isRunnung())
+            ui->actStartController->setChecked(true);
+        else
+            if(m_controller->isPaused())
+                ui->actPauseController->setChecked(true);
+        else
+            ui->actStopController->setChecked(true);
+        break;
+
+    }
 }
 
 

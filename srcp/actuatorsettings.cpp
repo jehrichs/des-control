@@ -18,19 +18,19 @@
 #include "actuatorsettings.h"
 #include "ui_actuatorsettings.h"
 
-#include "project.h"
+#include "hwsettings.h"
 #include "dcactuator.h"
 
 #include <QDebug>
 
-ActuatorSettings::ActuatorSettings(Project * project)
+ActuatorSettings::ActuatorSettings(HWSettings * hwsettings)
     : QWidget(0)
     , ui(new Ui::ActuatorSettings)
-    , m_project(project)
+    , m_hwsettings(hwsettings)
 {
     ui->setupUi(this);
 
-    foreach(DCActuator *actuator, m_project->actuators())
+    foreach(DCActuator *actuator, hwsettings->actuators())
     {
         ui->listWidgetActuators->addItem(actuator->name());
     }
@@ -53,9 +53,9 @@ void ActuatorSettings::showNewItemInfo ( QListWidgetItem * current, QListWidgetI
     //we assume no sorting in the listview thus => row of item = position in the project QList
 
     int currentRow = ui->listWidgetActuators->currentRow();
-    if(m_project->actuators().size() > currentRow && currentRow >= 0)
+    if(m_hwsettings->actuators().size() > currentRow && currentRow >= 0)
     {
-        showItem(m_project->actuators().at(currentRow));
+        showItem(m_hwsettings->actuators().at(currentRow));
     }
     else
     {
@@ -79,10 +79,10 @@ void ActuatorSettings::showItem(DCActuator *actuator)
 void ActuatorSettings::newActuator()
 {
     DCActuator *act = new DCActuator();
-    int itemNumber = m_project->actuators().size()+1;
+    int itemNumber = m_hwsettings->actuators().size()+1;
     act->setName(tr("NewActuator%1").arg(itemNumber));
 
-    m_project->addActuator(act);
+    m_hwsettings->addActuator(act);
     ui->listWidgetActuators->addItem(act->name());
     ui->listWidgetActuators->setCurrentRow(itemNumber-1);
     showItem(act);
@@ -92,8 +92,11 @@ void ActuatorSettings::deleteCurrent()
 {
     int currentRow = ui->listWidgetActuators->currentRow();
 
-    m_project->removeActuator(m_project->actuators().at(currentRow));
-    ui->listWidgetActuators->takeItem(currentRow);
+    if(currentRow != -1)
+    {
+        m_hwsettings->removeActuator(m_hwsettings->actuators().at(currentRow));
+        ui->listWidgetActuators->takeItem(currentRow);
+    }
 }
 
 void ActuatorSettings::saveChanges()
@@ -103,7 +106,7 @@ void ActuatorSettings::saveChanges()
     if(currentRow < 0)
         return;
 
-    DCActuator *act = m_project->actuators().at(currentRow);
+    DCActuator *act = m_hwsettings->actuators().at(currentRow);
 
     act->setName(ui->lineEditName->text());
     act->setAddress(ui->spinBoxAddress->value());

@@ -19,11 +19,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "des/dcautomaton.h"
 
 namespace Ui {
     class MainWindow;
 }
 
+class HWSettings;
 class Project;
 class DCController;
 class QSplitter;
@@ -59,6 +61,7 @@ public Q_SLOTS:
     void editAutomaton();
     void runAutomaton();
     void simulateAutomaton();
+    void showEventStatus();
 
     void connectToServer();
     void connectedToServer();
@@ -67,8 +70,6 @@ public Q_SLOTS:
 
     void toggleStatusBar();
     void showProjectSettings();
-    void showSettings();
-
     void showHandbook();
     void aboutDES();
 
@@ -76,6 +77,7 @@ public Q_SLOTS:
 
     void noAutomatonVisible();
     void someAutomataVisible();
+    void switchOpendAutomaton(DCAutomaton::SceneMode currentMode);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -88,6 +90,7 @@ private:
     void showEmptyView();
 
     Ui::MainWindow *ui;
+    HWSettings *m_hw;
     Project *m_project;
     DCController * m_controller;
     QSplitter *m_splitter;

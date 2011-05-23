@@ -17,7 +17,7 @@
 
 #include "automatonview.h"
 
-#include <QtGui>
+#include <QWheelEvent>
 #include <math.h>
 
 AutomatonView::AutomatonView(QWidget *parent)

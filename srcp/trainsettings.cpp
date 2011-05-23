@@ -18,17 +18,17 @@
 #include "trainsettings.h"
 #include "ui_trainsettings.h"
 
-#include "project.h"
+#include "hwsettings.h"
 #include "dctrain.h"
 
-TrainSettings::TrainSettings(Project * project)
+TrainSettings::TrainSettings(HWSettings * hwsettings)
     : QWidget(0)
     , ui(new Ui::TrainSettings)
-    , m_project(project)
+    , m_hwsettings(hwsettings)
 {
     ui->setupUi(this);
 
-    foreach(DCTrain *train, m_project->trains())
+    foreach(DCTrain *train, m_hwsettings->trains())
     {
         ui->listWidgetTrains->addItem(train->name());
     }
@@ -51,9 +51,9 @@ void TrainSettings::showNewItemInfo ( QListWidgetItem * current, QListWidgetItem
     //we assume no sorting in the listview thus => row of item = position in the project QList
 
     int currentRow = ui->listWidgetTrains->currentRow();
-    if(m_project->trains().size() > currentRow && currentRow >= 0)
+    if(m_hwsettings->trains().size() > currentRow && currentRow >= 0)
     {
-        showItem(m_project->trains().at(currentRow));
+        showItem(m_hwsettings->trains().at(currentRow));
     }
     else
     {
@@ -79,10 +79,10 @@ void TrainSettings::showItem(DCTrain *train)
 void TrainSettings::newTrain()
 {
     DCTrain *train = new DCTrain();
-    int itemNumber = m_project->trains().size()+1;
+    int itemNumber = m_hwsettings->trains().size()+1;
     train->setName(tr("NewTrain%1").arg(itemNumber));
 
-    m_project->addTrain(train);
+    m_hwsettings->addTrain(train);
     ui->listWidgetTrains->addItem(train->name());
     ui->listWidgetTrains->setCurrentRow(itemNumber-1);
     showItem(train);
@@ -92,8 +92,11 @@ void TrainSettings::deleteCurrent()
 {
     int currentRow = ui->listWidgetTrains->currentRow();
 
-    m_project->removeTrain(m_project->trains().at(currentRow));
-    ui->listWidgetTrains->takeItem(currentRow);
+    if(currentRow != -1)
+    {
+        m_hwsettings->removeTrain(m_hwsettings->trains().at(currentRow));
+        ui->listWidgetTrains->takeItem(currentRow);
+    }
 }
 
 void TrainSettings::saveChanges()
@@ -103,7 +106,7 @@ void TrainSettings::saveChanges()
     if(currentRow < 0)
         return;
 
-    DCTrain *train = m_project->trains().at(currentRow);
+    DCTrain *train = m_hwsettings->trains().at(currentRow);
 
     train->setName(ui->lineEditName->text());
     train->setAddress(ui->spinBoxAddress->value());

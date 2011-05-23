@@ -65,43 +65,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabHardware">
-      <attribute name="title">
-       <string>Hardware</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="HardwareTreeWidget" name="treeHardware">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="dragEnabled">
-          <bool>true</bool>
-         </property>
-         <property name="dragDropMode">
-          <enum>QAbstractItemView::DragDrop</enum>
-         </property>
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
-         <property name="rootIsDecorated">
-          <bool>true</bool>
-         </property>
-         <property name="sortingEnabled">
-          <bool>true</bool>
-         </property>
-         <property name="headerHidden">
-          <bool>true</bool>
-         </property>
-         <column>
-          <property name="text">
-           <string notr="true">1</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </item>
   </layout>
@@ -111,11 +74,6 @@
    <class>AutomatonTreeWidget</class>
    <extends>QTreeWidget</extends>
    <header location="global">automatontreewidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>HardwareTreeWidget</class>
-   <extends>QTreeWidget</extends>
-   <header location="global">hardwaretreewidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

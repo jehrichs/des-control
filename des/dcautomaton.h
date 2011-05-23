@@ -32,7 +32,7 @@ class DCAutomaton : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    enum SceneMode { Edit, Simulate, Run };
+    enum SceneMode { Edit, Run };
 
     enum Mode { InsertPlace, InsertEvent, InsertText, MoveItem };
 
@@ -59,6 +59,9 @@ public:
     void addTransition(DCTransition *newtransition);
     void addEvent(DCEvent *newEvent);
 
+    QList<DCTransition *> getTransitionList();
+    QList<DCEvent *> getEventList();
+
     DCState *getStateFromId(int id);
     DCEvent *getEventFromId(int id);
     DCTransition *getTransitionFromId(int id);
@@ -69,6 +72,9 @@ public:
 
     void lineLayout();
     void bezierLayout();
+
+signals:
+    void modeChanged(SceneMode newMode);
 
 public slots:
     void selectItem();
@@ -84,8 +90,6 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
-
-    //void drawBackground ( QPainter * painter, const QRectF & rect );
 
 private:
     SceneMode m_sceneMode;

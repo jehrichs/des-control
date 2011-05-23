@@ -73,7 +73,7 @@ public:
     {
         QString str=agget(object, const_cast<char *>(qPrintable(attr)));
 
-        if(str==QString())
+        if(str.isEmpty())
             return alt;
         else
             return str;

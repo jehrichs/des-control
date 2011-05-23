@@ -16,6 +16,8 @@
  */
 
 #include "dcevent.h"
+#include "../srcp/dcsensor.h"
+#include "../srcp/dcactuator.h"
 
 #include <QDebug>
 
@@ -23,6 +25,7 @@ DCEvent::DCEvent()
     : m_id(-1)
     , m_controlable(false)
     , m_active(false)
+    , m_actuator(0)
 {
 
 }
@@ -62,7 +65,55 @@ bool DCEvent::isActive()
     return m_active;
 }
 
-bool DCEvent::setActive(bool active)
+void DCEvent::setActive(bool active)
 {
     m_active = active;
+    emit statusChanged();
+}
+
+void DCEvent::setSensor(DCSensor *sensor)
+{
+    m_sensor = sensor;
+
+    connect(m_sensor, SIGNAL(stateChanged()), this, SLOT(updateStatus()));
+}
+
+DCSensor * DCEvent::getSensor()
+{
+    return m_sensor;
+}
+
+void DCEvent::setActuator(DCActuator *actuator, GAAction actuatorMode)
+{
+    m_actuator = actuator;
+    m_actuatorMode = actuatorMode;
+}
+
+void DCEvent::activateActuator()
+{
+    if(m_actuatorMode == SWITCH_LEFT) {
+        m_actuator->switchLeft();
+    }
+    else {
+        m_actuator->switchRight();
+    }
+}
+
+void DCEvent::toggleStatus()
+{
+    m_active = m_active ? false : true;
+
+    emit statusChanged();
+}
+
+void DCEvent::updateStatus()
+{
+    if(m_sensor->value() == 1) {
+        m_active =  true;
+    }
+    else {
+        m_active =  false;
+    }
+
+    emit statusChanged();
 }

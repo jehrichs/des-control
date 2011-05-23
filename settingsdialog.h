@@ -25,31 +25,37 @@ namespace Ui {
 }
 
 class QListWidgetItem;
-
+class QAbstractButton;
+class HWSettings;
 class ServerSettings;
 class TrainSettings;
 class ActuatorSettings;
-class SensorSettings;
 
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SettingsDialog(QWidget *parent = 0);
+    enum pageType { General = 0, Server, Actuator, Sensor, Train };
+
+    explicit SettingsDialog(HWSettings * hwsettings, QWidget *parent = 0);
     ~SettingsDialog();
 
 public slots:
     void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+    void clicked ( QAbstractButton * button );
+
+
+    void showPage(SettingsDialog::pageType type);
 
 private:
     void createIcons();
     Ui::SettingsDialog *ui;
 
+    HWSettings * m_hwsettings;
     ServerSettings   *m_serverPage;
     TrainSettings    *m_trainPage;
     ActuatorSettings *m_actuatorPage;
-    SensorSettings   *m_sensorPage;
 };
 
 #endif // SETTINGSDIALOG_H

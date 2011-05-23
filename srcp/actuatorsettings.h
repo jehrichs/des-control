@@ -24,7 +24,7 @@ namespace Ui {
     class ActuatorSettings;
 }
 
-class Project;
+class HWSettings;
 class QListWidgetItem;
 class DCActuator;
 
@@ -33,20 +33,22 @@ class ActuatorSettings : public QWidget
     Q_OBJECT
 
 public:
-    explicit ActuatorSettings(Project * project);
+    explicit ActuatorSettings(HWSettings * hwsettings);
     ~ActuatorSettings();
+
+public slots:
+    void saveChanges();
 
 private slots:
     void showNewItemInfo ( QListWidgetItem * current, QListWidgetItem * previous );
     void newActuator();
     void deleteCurrent();
-    void saveChanges();
 
 private:
     void showItem(DCActuator *actuator);
 
     Ui::ActuatorSettings *ui;
-    Project* m_project;
+    HWSettings * m_hwsettings;
 };
 
 #endif // ACTUATORSETTINGS_H

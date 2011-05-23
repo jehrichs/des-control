@@ -11,7 +11,10 @@ TEMPLATE = app
 TRANSLATIONS = descontroltr_en_US.ts\
                descontroltr_de_DE.ts
 
+
+
 unix:LIBS += -L/usr/lib -lgvc
+DEFINES +=GRAPHVIZ_FIX
 
 win32:INCLUDEPATH += C:\Programme\Graphviz2.26.3\include
 win32:LIBS += \C:\Programme\Graphviz2.26.3\lib\gvc.lib
@@ -27,7 +30,6 @@ SOURCES += main.cpp\
            settingsdialog.cpp \
            srcp/trainsettings.cpp \
            srcp/actuatorsettings.cpp \
-           srcp/sensorsettings.cpp \
            srcp/serversettings.cpp \
            srcp/serverdebugconsole.cpp \
            project.cpp \
@@ -49,14 +51,13 @@ SOURCES += main.cpp\
     projectwidget.cpp \
     des/automatonwidget.cpp \
     automatontreewidget.cpp \
-    hardwaretreewidget.cpp \
-    srcp/hardwaresettings.cpp
+    des/eventstatus.cpp \
+    hwsettings.cpp
 
 HEADERS  += mainwindow.h \
             settingsdialog.h \
             srcp/trainsettings.h \
             srcp/actuatorsettings.h \
-            srcp/sensorsettings.h \
             srcp/serversettings.h \
             srcp/serverdebugconsole.h \
             project.h \
@@ -78,8 +79,8 @@ HEADERS  += mainwindow.h \
     projectwidget.h \
     des/automatonwidget.h \
     automatontreewidget.h \
-    hardwaretreewidget.h \
-    srcp/hardwaresettings.h
+    des/eventstatus.h \
+    hwsettings.h
 
 FORMS    += mainwindow.ui \
             settingsdialog.ui \
@@ -90,7 +91,7 @@ FORMS    += mainwindow.ui \
             srcp/serverdebugconsole.ui \
     projectwidget.ui \
     des/automatonwidget.ui \
-    srcp/hardwaresettings.ui
+    des/eventstatus.ui
 
 RESOURCES += \
     desIcons.qrc \

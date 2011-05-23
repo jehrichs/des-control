@@ -21,10 +21,6 @@
 #include <QObject>
 #include <QList>
 
-class DCServer;
-class DCTrain;
-class DCActuator;
-class DCSensor;
 class DCAutomaton;
 class QIODevice;
 
@@ -43,35 +39,12 @@ public:
     void setFileName(const QString& name);
     QString fileName() const;
 
-    void setServer(DCServer *newServer);
-    DCServer* server() const;
-
-    void addTrain(DCTrain* newTrain);
-    QList<DCTrain*> trains() const;
-    void removeTrain(DCTrain* train);
-    void removeTrain(const QString & trainName);
-
-    void addActuator(DCActuator* newActuator);
-    QList<DCActuator*> actuators() const;
-    void removeActuator(DCActuator* train);
-    void removeActuator(const QString & actuatorName);
-
-    void addSensor(DCSensor* newSensor);
-    QList<DCSensor*> sensors() const;
-    void removeSensor(DCSensor* sensor);
-    void removeSensor(const QString & sensorName);
-
     void addAutomaton(DCAutomaton* newAutomaton);
     void removeAutomaton(DCAutomaton* automaton);
     QList<DCAutomaton*> automata() const;
 
-    void initializeDevices();
-
 signals:
     void projectChanged();
-    void updateTrains();
-    void updateSensors();
-    void updateActuators();
     void updateAutomata();
 
 private:
@@ -79,11 +52,6 @@ private:
     QString m_description;
 
     QString m_filename;
-
-    DCServer *m_server;
-    QList<DCTrain*> m_trains;
-    QList<DCActuator*> m_actuators;
-    QList<DCSensor*> m_sensors;
     QList<DCAutomaton*> m_automata;
 };
 
