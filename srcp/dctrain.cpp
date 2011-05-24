@@ -169,12 +169,18 @@ void DCTrain::sendValue()
 
 void DCTrain::start()
 {
-
+    setmaxSpeed(250);
+    setSpeed(250);
+    setDriveMode(FORWARD);
+    sendValue();
 }
 
 void DCTrain::stop()
 {
-
+    setmaxSpeed(0);
+    setSpeed(0);
+    setDriveMode(EMERGENCYSTOP);
+    sendValue();
 }
 
 void DCTrain::updateValues(const QString & srcpString)
