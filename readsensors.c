@@ -15,22 +15,22 @@ void bin_prnt_byte(int x)
    int state3 = 1;
    int state4 = 1;
    
-   for(n=0; n<4; n++)
+   for(n=0; n<6; n++)
    {
       if((x & 0x80) !=0)
       {
 	switch(n) {
 	  case 0:
-	    state2 = 1;
+	    state4 = 0;
 	    break;
-	  case 1:
-	    state1 = 0;
+	  case 4:
+	    state3 = 1;
 	    break;
 	  case 2:
-	    state3 = 0;
+	    state1 = 1;
 	    break;
 	  case 3:
-	    state4 = 0;
+	    state2 = 1;
 	    break;
 	}
       }
@@ -38,16 +38,16 @@ void bin_prnt_byte(int x)
       {
 	switch(n) {
 	  case 0:
-	    state2 = 0;
+	    state4 = 1;
 	    break;
-	  case 1:
-	    state1 = 1;
+	  case 4:
+	    state3 = 0;
 	    break;
 	  case 2:
-	    state3 = 1;
+	    state1 = 0;
 	    break;
 	  case 3:
-	    state4 = 1;
+	    state2 = 0;
 	    break;
 	}
       }
@@ -58,10 +58,7 @@ void bin_prnt_byte(int x)
    printf("%d", state2);
    printf("%d", state3);
    printf("%d", state4);
-//   printf("Switch 1: %d\n", state1);
-//   printf("Switch 2: %d\n", state2);
-//   printf("Switch 3: %d\n", state3);
-//   printf("Switch 4: %d\n++++++++++++++++++\n", state4);
+   printf("\n");
 }
 
 int main()
@@ -72,9 +69,11 @@ if(ioperm(BASEPORT, 3, 1)) {
 	return 1;
 }
 
-outb(0, BASEPORT);
+outb(1, BASEPORT);
+outb(1, BASEPORT + 1);
+outb(1, BASEPORT + 1);
 
-//sleep(1);
+sleep(1);
 
 //while(1) {
 bin_prnt_byte(inb(BASEPORT + 1));

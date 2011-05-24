@@ -69,26 +69,26 @@ QString DCActuator::value() const
 void DCActuator::switchLeft()
 {
     setPort(1);
-    setValue(0);
+    setValue(QString("1"));
     sendValue();
-    setPort(0);
-    setValue(1);
+    setPort(1);
+    setValue(QString("0"));
     sendValue();
 }
 
 void DCActuator::switchRight()
 {
     setPort(0);
-    setValue(0);
+    setValue(QString("1"));
     sendValue();
-    setPort(1);
-    setValue(1);
+    setPort(0);
+    setValue(QString("0"));
     sendValue();
 }
 
 bool DCActuator::initialize()
 {
-    if(address() != -1 && m_port != -1)
+    if(address() != -1)
     {
         QString srcpString = QString("INIT 1 GA %1 %2").arg(address()).arg(protocol2srcp[m_protocol]);
 

@@ -21,7 +21,6 @@
 #include "srcp/serversettings.h"
 #include "srcp/trainsettings.h"
 #include "srcp/actuatorsettings.h"
-#include "srcp/sensorsettings.h"
 
 #include <QAbstractButton>
 #include <QDebug>

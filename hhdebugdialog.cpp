@@ -43,7 +43,7 @@ HHDebugDialog::HHDebugDialog(HWSettings *hw) :
     }
 
     connect(m_cycleTimer, SIGNAL(timeout()), this, SLOT(updateSensors()));
-    m_cycleTimer->start(100);
+    m_cycleTimer->start(1);
 }
 
 HHDebugDialog::~HHDebugDialog()
@@ -145,8 +145,6 @@ void HHDebugDialog::updateSensors()
     QByteArray output = setConf.readAll();
 
     if( !output.isEmpty() ) {
-        //qDebug() << cmd;
-        //qDebug() << output;
         inputstring = QString(output);
 
         QList<DCSensor*> sensorList = m_hw->sensors();
