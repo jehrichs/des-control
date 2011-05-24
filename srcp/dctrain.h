@@ -70,6 +70,9 @@ public:
     bool initialize();
     void sendValue();
 
+    void start();
+    void stop();
+
 public slots:
     void updateValues(const QString & srcpString);
 

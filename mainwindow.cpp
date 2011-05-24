@@ -27,6 +27,7 @@
 #include "projectserializer.h"
 
 #include "srcp/serverdebugconsole.h"
+#include "hhdebugdialog.h"
 #include "srcp/dcserver.h"
 #include "srcp/dcsensor.h"
 #include "srcp/dcactuator.h"
@@ -563,6 +564,12 @@ void MainWindow::disconnectedFromServer()
     statusBar()->showMessage(tr("Connection to SRCP Server lost"), 2000);
 }
 
+void MainWindow::showHWDebugConsole()
+{
+    HHDebugDialog dbg(m_hw);
+    dbg.exec();
+}
+
 void MainWindow::toggleStatusBar()
 {
     if(ui->statusBar->isVisible())
@@ -750,8 +757,8 @@ void MainWindow::switchOpendAutomaton(DCAutomaton::SceneMode currentMode)
         else
             if(m_controller->isPaused())
                 ui->actPauseController->setChecked(true);
-        else
-            ui->actStopController->setChecked(true);
+            else
+                ui->actStopController->setChecked(true);
         break;
 
     }

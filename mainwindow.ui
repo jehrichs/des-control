@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>797</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -75,7 +75,6 @@
     <addaction name="actStopTrains"/>
     <addaction name="separator"/>
     <addaction name="actShowDebugConsole"/>
-    <addaction name="actServerInformation"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -984,6 +983,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actShowDebugConsole</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showHWDebugConsole()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>newProject()</slot>
@@ -1020,5 +1035,6 @@
   <slot>aboutqt()</slot>
   <slot>closeProject()</slot>
   <slot>showEventStatus()</slot>
+  <slot>showHWDebugConsole()</slot>
  </slots>
 </ui>

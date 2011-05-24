@@ -167,6 +167,16 @@ void DCTrain::sendValue()
     emit sendSRCPString(srcpString);
 }
 
+void DCTrain::start()
+{
+
+}
+
+void DCTrain::stop()
+{
+
+}
+
 void DCTrain::updateValues(const QString & srcpString)
 {
     // 100 INFO <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn>
