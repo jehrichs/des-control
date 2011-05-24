@@ -67,6 +67,7 @@ public Q_SLOTS:
     void connectedToServer();
     void disconnectFromServer();
     void disconnectedFromServer();
+    void showHWDebugConsole();
 
     void toggleStatusBar();
     void showProjectSettings();

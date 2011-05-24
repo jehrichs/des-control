@@ -68,12 +68,22 @@ QString DCActuator::value() const
 
 void DCActuator::switchLeft()
 {
-    qDebug() << "switch left ...";
+    setPort(1);
+    setValue(0);
+    sendValue();
+    setPort(0);
+    setValue(1);
+    sendValue();
 }
 
 void DCActuator::switchRight()
 {
-    qDebug() << "switch right ...";
+    setPort(0);
+    setValue(0);
+    sendValue();
+    setPort(1);
+    setValue(1);
+    sendValue();
 }
 
 bool DCActuator::initialize()

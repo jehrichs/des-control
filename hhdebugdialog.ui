@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HHDebugDialog</class>
+ <widget class="QDialog" name="HHDebugDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>257</width>
+    <height>498</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>HW Debug Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Positions</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="margin">
+       <number>10</number>
+      </property>
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Position 1.1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>79</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="status_p11">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Position 1.2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>79</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="status_p12">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Position 2.1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>79</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="status_p21">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Position 2.2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>79</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="status_p22">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Trains</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <property name="margin">
+       <number>10</number>
+      </property>
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Train 1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="pb_startTrain1">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="pb_stopTrain1">
+        <property name="text">
+         <string>Stop</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Train 2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pb_startTrain2">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pb_stopTrain2">
+        <property name="text">
+         <string>Stop</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Switches</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <property name="margin">
+       <number>10</number>
+      </property>
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Switch 1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="pb_switch1Left">
+        <property name="text">
+         <string>Left</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="pb_switch1Right">
+        <property name="text">
+         <string>Right</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Switch 2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pb_switch2Left">
+        <property name="text">
+         <string>Left</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pb_switch2Right">
+        <property name="text">
+         <string>Right</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Switch 3</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="pb_switch3Left">
+        <property name="text">
+         <string>Left</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pb_switch3Right">
+        <property name="text">
+         <string>Right</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Switch 4</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="pb_switch4Left">
+        <property name="text">
+         <string>Left</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="pb_switch4Right">
+        <property name="text">
+         <string>Right</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_startTrain1</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train1Start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_stopTrain1</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train1Stop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_startTrain2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train2Start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_stopTrain2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train2Stop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch1Left</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>switch1Left()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>337</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch1Right</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>switch1Right()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>337</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch2Left</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>switch2Left()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>371</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch2Right</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>switch2Right()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>371</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch3Left</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>switch3Left()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>405</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch3Right</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>switch3Right()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>405</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch4Left</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>switch4Left()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>439</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch4Right</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>switch4Right()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>439</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>train1Start()</slot>
+  <slot>train1Stop()</slot>
+  <slot>train2Start()</slot>
+  <slot>train2Stop()</slot>
+  <slot>switch1Left()</slot>
+  <slot>switch2Left()</slot>
+  <slot>switch3Left()</slot>
+  <slot>switch4Left()</slot>
+  <slot>switch1Right()</slot>
+  <slot>switch2Right()</slot>
+  <slot>switch3Right()</slot>
+  <slot>switch4Right()</slot>
+ </slots>
+</ui>

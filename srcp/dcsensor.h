@@ -33,6 +33,9 @@ public:
 public slots:
     void updateValues(const QString & srcpString);
 
+signals:
+    void sensorChanged();
+
 private:
     int m_value;
 };

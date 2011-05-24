@@ -40,8 +40,7 @@ void DCSensor::updateValues(const QString & srcpString)
         QString value = QString(srcpString.at(address() - 1));
 
         m_value = value.toInt();
-        if(m_value == 1) {
-            qDebug() << name() << " Activated";
-        }
+
+        emit sensorChanged();
     }
 }
