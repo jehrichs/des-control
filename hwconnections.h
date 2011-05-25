@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jörg Ehrichs <joerg.ehichs@gmx.de>
+ * Copyright 2011 Jörg Ehrichs <joerg.ehichs@gmx.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,37 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "dcsensor.h"
+#ifndef HWCONNECTIONS_H
+#define HWCONNECTIONS_H
 
-#include <QDebug>
+#include <QDialog>
 
-DCSensor::DCSensor()
-    : DCModelItem()
-{
+namespace Ui {
+    class HWConnections;
 }
 
-int DCSensor::value() const
+class HWSettings;
+class DCAutomaton;
+class QComboBox;
+
+class HWConnections : public QDialog
 {
-    return m_value;
-}
+    Q_OBJECT
 
-bool DCSensor::initialize()
-{
-    return true;
-}
+public:
+    explicit HWConnections(HWSettings *hw, DCAutomaton *automaton);
+    ~HWConnections();
 
-void DCSensor::updateValues(const QString & srcpString)
-{
-    if(address() <= srcpString.size()) {
-        QString value = QString(srcpString.at(address() - 1));
+public slots:
+    void applyChanges();
 
-        m_value = value.toInt();
+private:
+    void setupDialog();
+    Ui::HWConnections *ui;
 
-        emit sensorChanged();
+    HWSettings  *m_hw;
+    DCAutomaton *m_automaton;
 
-        if(m_value == 1)
-            emit sensorHigh();
-        else
-            emit sensorLow();
-    }
-}
+    QList<QComboBox *> m_cbList;
+};
+
+#endif // HWCONNECTIONS_H

@@ -35,6 +35,8 @@ public slots:
 
 signals:
     void sensorChanged();
+    void sensorHigh();
+    void sensorLow();
 
 private:
     int m_value;

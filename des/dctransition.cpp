@@ -35,8 +35,8 @@ DCTransition::DCTransition()
     m_eventText->setFlag(QGraphicsItem::ItemIsSelectable, true);
     m_eventText->setFlag(QGraphicsItem::ItemIsMovable, true);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
-    setFlag(QGraphicsItem::ItemIsMovable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, false);
+    setFlag(QGraphicsItem::ItemIsMovable, false);
     setZValue(5);
 }
 

@@ -34,10 +34,19 @@ DCAutomaton::DCAutomaton(QObject *parent)
     , m_sceneMode(Edit)
     , m_type(Plant)
     , m_name("Automata")
+    , m_line(0)
 {
     setSceneRect ( 0, 0, 1000, 1000 );
 }
 
+DCAutomaton::~DCAutomaton()
+{
+    delete  m_line;
+
+    m_stateList.clear();
+    m_transitionList.clear();
+    m_eventList.clear();
+}
 
 void DCAutomaton::setSceneMode(SceneMode mode)
 {
@@ -258,18 +267,18 @@ void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
     switch (m_mode) {
     case InsertPlace:
-        {
-            DCState *place = newState();
-            place->setPos(mouseEvent->scenePos());
-        }
-        //emit itemInserted(item);
-        break;
+//        {
+//            DCState *place = newState();
+//            place->setPos(mouseEvent->scenePos());
+//        }
+//        //emit itemInserted(item);
+//        break;
     case InsertEvent:
-        m_line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
-                                              mouseEvent->scenePos()));
-        m_line->setPen(QPen(Qt::black, 2));
-        addItem(m_line);
-        break;
+//        m_line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
+//                                              mouseEvent->scenePos()));
+//        m_line->setPen(QPen(Qt::black, 2));
+//        addItem(m_line);
+//        break;
     case InsertText:
         //        textItem = new DiagramTextItem();
         //        textItem->setFont(myFont);

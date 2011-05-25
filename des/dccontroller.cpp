@@ -84,6 +84,7 @@ void DCController::startController()
 
     m_cycleTimer->start(100);
     m_running = true;
+    emit curState(m_currentState);
 }
 
 void DCController::stopController()
@@ -92,12 +93,12 @@ void DCController::stopController()
 
     if(m_currentState)
     {
-        qDebug() << "stop controller :: curr state" << m_currentState->name();
         m_currentState->setActive(false);
         m_currentState = 0;
     }
     m_paused = false;
     m_running = false;
+    emit curState(m_currentState);
 }
 
 void DCController::pauseController(bool paused)
@@ -192,4 +193,6 @@ void DCController::updateDES()
             m_currentState->setActive(true);
         }
     }
+
+    emit curState(m_currentState);
 }

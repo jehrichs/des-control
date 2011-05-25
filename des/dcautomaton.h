@@ -45,6 +45,7 @@ public:
     };
 
     DCAutomaton(QObject *parent = 0);
+    ~DCAutomaton();
 
     void setSceneMode(SceneMode mode);
     DCAutomaton::SceneMode sceneMode();

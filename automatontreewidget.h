@@ -22,6 +22,7 @@
 
 class Project;
 class DCAutomaton;
+class QMenu;
 
 class AutomatonTreeWidget : public QTreeWidget
 {
@@ -38,16 +39,20 @@ public:
     explicit AutomatonTreeWidget(QWidget *parent = 0);
 
     void setProject(Project *newProject);
+    void setContextMenu(QMenu * contextMenu);
 
 signals:
     void openAutomaton(DCAutomaton *automaton);
 
 public slots:
     void updateView();
+    void showContextMenu(const QPoint & iPoint);
 
     void openAutomaton( QTreeWidgetItem * item, int column );
+
 private:
     Project *m_project;
+    QMenu * m_contextMenu;
 };
 
 #endif // AUTOMATONTREEWIDGET_H

@@ -41,6 +41,8 @@ public:
 
     void setName(const QString & name);
     QString name() const;
+    void setLongName(const QString & name);
+    QString longName() const;
 
     void setMarked(bool marked);
     bool marked() const;
@@ -79,6 +81,7 @@ private:
 
     int m_id;
     QString m_name;
+    QString m_longName;
     QList<DCTransition*> m_listFrom;
     QList<DCTransition*> m_listTo;
 

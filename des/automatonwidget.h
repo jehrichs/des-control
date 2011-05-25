@@ -44,6 +44,7 @@ signals:
 public slots:
     void openAutomaton(DCAutomaton* automaton);
     void closeTab(int index);
+    void closeTab(DCAutomaton* automaton);
     void openAutomatonChanged(int index);
 
 private:

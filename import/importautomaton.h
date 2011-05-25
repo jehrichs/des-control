@@ -52,6 +52,8 @@ private:
 
     QXmlStreamReader reader;
     QList<DCAutomaton*> m_automatonList;
+
+    bool m_useShortnames;
 };
 
 #endif // IMPORTAUTOMATON_H

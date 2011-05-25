@@ -33,6 +33,11 @@ public:
         SWITCH_RIGHT
     };
 
+    enum FBState {
+        HIGH,
+        LOW
+    };
+
     DCEvent();
 
     void setId(int id);
@@ -48,7 +53,7 @@ public:
     bool isActive();
     void setActive(bool active);
 
-    void setSensor(DCSensor *sensor);
+    void setSensor(DCSensor *sensor, FBState state);
     DCSensor * getSensor();
 
     void setActuator(DCActuator *actuator, GAAction actuatorMode);

@@ -53,7 +53,8 @@ SOURCES += main.cpp\
     automatontreewidget.cpp \
     des/eventstatus.cpp \
     hwsettings.cpp \
-    hhdebugdialog.cpp
+    hhdebugdialog.cpp \
+    hwconnections.cpp
 
 HEADERS  += mainwindow.h \
             settingsdialog.h \
@@ -82,7 +83,8 @@ HEADERS  += mainwindow.h \
     automatontreewidget.h \
     des/eventstatus.h \
     hwsettings.h \
-    hhdebugdialog.h
+    hhdebugdialog.h \
+    hwconnections.h
 
 FORMS    += mainwindow.ui \
             settingsdialog.ui \
@@ -94,7 +96,8 @@ FORMS    += mainwindow.ui \
     projectwidget.ui \
     des/automatonwidget.ui \
     des/eventstatus.ui \
-    hhdebugdialog.ui
+    hhdebugdialog.ui \
+    hwconnections.ui
 
 RESOURCES += \
     desIcons.qrc \

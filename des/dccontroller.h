@@ -45,6 +45,9 @@ public:
     bool isRunnung();
     bool isPaused();
 
+signals:
+    void curState(DCState *curstate);
+
 public slots:
     void startController();
     void stopController();

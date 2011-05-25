@@ -31,8 +31,12 @@ DCState::DCState()
     , m_name(QString())
     , m_marked(false)
     , m_initial(false)
+    , m_markedCircle(0)
+    , m_insideText(0)
     , m_isHovered(false)
     , m_circleGap(10.0)
+    , m_editPlace(0)
+    , m_deletePlace(0)
     , m_isActive(false)
 {
     m_insideText =  new QGraphicsSimpleTextItem(this);
@@ -73,6 +77,16 @@ void DCState::setName(const QString & name)
 QString DCState::name() const
 {
     return m_name;
+}
+
+void DCState::setLongName(const QString & name)
+{
+    m_longName = name;
+}
+
+QString DCState::longName() const
+{
+    return m_longName;
 }
 
 void DCState::setMarked(bool marked)
@@ -217,17 +231,18 @@ void DCState::paint ( QPainter * painter, const QStyleOptionGraphicsItem * optio
 
 void DCState::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    m_listFrom.first()->event()->setActive(!m_listFrom.first()->event()->isActive());
+    // ignore right click menu ...
+//    m_listFrom.first()->event()->setActive(!m_listFrom.first()->event()->isActive());
 
-    qDebug() << m_listFrom.first()->event()->name() << m_listFrom.first()->isActive();
+//    qDebug() << m_listFrom.first()->event()->name() << m_listFrom.first()->isActive();
 
-    scene()->clearSelection();
-    setSelected(true);
+//    scene()->clearSelection();
+//    setSelected(true);
 
-    QMenu contextMenu;
-    contextMenu.addAction("Edit Place");
-    contextMenu.addAction("Delete Place");
-    contextMenu.exec(event->screenPos());
+//    QMenu contextMenu;
+//    contextMenu.addAction("Edit Place");
+//    contextMenu.addAction("Delete Place");
+//    contextMenu.exec(event->screenPos());
 }
 
 QVariant DCState::itemChange(GraphicsItemChange change, const QVariant &value)

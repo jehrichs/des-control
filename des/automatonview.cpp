@@ -26,14 +26,13 @@ AutomatonView::AutomatonView(QWidget *parent)
 
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
-    //setAlignment(Qt::AlignLeft | Qt::AlignTop);
     setDragMode(QGraphicsView::ScrollHandDrag);
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 }
 
 void AutomatonView::wheelEvent(QWheelEvent *event)
 {
-    scaleView(pow((double)2, -event->delta() / 400.0));
+    scaleView(pow((double)2, +event->delta() / 400.0));
 }
 
 void AutomatonView::scaleView(qreal scaleFactor)

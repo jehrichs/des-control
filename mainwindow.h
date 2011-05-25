@@ -33,6 +33,7 @@ class ProjectWidget;
 class AutomatonWidget;
 class QActionGroup;
 class QCloseEvent;
+class EventStatus;
 
 class MainWindow : public QMainWindow
 {
@@ -52,12 +53,11 @@ public Q_SLOTS:
     void saveProjectAs();
     bool closeProject();
 
-    void importHardware();
     void importAutomaton();
-    void exportHardware();
-
-    void newAutomaton();
     void deleteAutomaton();
+
+    void editHWConnection();
+
     void editAutomaton();
     void runAutomaton();
     void simulateAutomaton();
@@ -98,11 +98,12 @@ private:
     ProjectWidget *m_projectWidget;
     AutomatonWidget *m_automatonWidget;
 
-    QActionGroup* m_autonamtonEdit;
     QActionGroup* m_autonamtonMode;
     QActionGroup* m_controllerState;
 
     bool m_unsavedChanges;
+
+    EventStatus *m_es;
 };
 
 #endif // MAINWINDOW_H

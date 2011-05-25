@@ -25,9 +25,9 @@
 #include <QDebug>
 
 ImportAutomaton::ImportAutomaton(QObject *parent) :
-        QObject(parent)
+    QObject(parent)
 {
-
+    m_useShortnames = true;
 }
 
 ImportAutomaton::~ImportAutomaton()
@@ -127,8 +127,12 @@ void ImportAutomaton::addSupEvent(DCAutomaton* automaton)
             newevent->setName(reader.attributes().value("label").toString());
             newevent->setId(reader.attributes().value("id").toString().toInt());
 
-            if(reader.attributes().value("controlable").toString() == "true")
+            if(reader.attributes().value("controllable").toString() == "false") {
+                newevent->setControlable(false);
+            }
+            else {
                 newevent->setControlable(true);
+            }
 
             automaton->addEvent(newevent);
         }
@@ -139,13 +143,22 @@ void ImportAutomaton::addSupEvent(DCAutomaton* automaton)
 void ImportAutomaton::addSupState(DCAutomaton* automaton)
 {
     reader.readNext();
+
+    int placeNumber = 1;
     while(reader.name() != "States")
     {
         if(reader.readNext() == QXmlStreamReader::StartElement)
         {
             DCState* newState = new DCState();
 
-            newState->setName(reader.attributes().value("name").toString());
+            if(m_useShortnames) {
+                newState->setName(QString("S%1").arg(placeNumber));
+            }
+            else {
+                newState->setName(reader.attributes().value("name").toString());
+            }
+
+            newState->setLongName(reader.attributes().value("name").toString());
             newState->setId(reader.attributes().value("id").toString().toInt());
 
             if(reader.attributes().value("initial").toString() == "true")
@@ -155,6 +168,8 @@ void ImportAutomaton::addSupState(DCAutomaton* automaton)
                 newState->setMarked(true);
 
             automaton->addState(newState);
+
+            placeNumber++;
         }
     }
 }

@@ -21,14 +21,20 @@
 #include "des/dcautomaton.h"
 
 #include <QTreeWidgetItem>
+#include <QMenu>
 #include <QDebug>
 
 AutomatonTreeWidget::AutomatonTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
     , m_project(0)
 {
+
+    setContextMenuPolicy ( Qt::CustomContextMenu );
+
     connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
             this, SLOT(openAutomaton(QTreeWidgetItem*,int)));
+
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 }
 
 void AutomatonTreeWidget::setProject(Project *newProject)
@@ -37,6 +43,11 @@ void AutomatonTreeWidget::setProject(Project *newProject)
     connect (m_project, SIGNAL(updateAutomata()), this, SLOT(updateView()));
 
     updateView();
+}
+
+void AutomatonTreeWidget::setContextMenu(QMenu * contextMenu)
+{
+    m_contextMenu = contextMenu;
 }
 
 void AutomatonTreeWidget::updateView()
@@ -53,6 +64,15 @@ void AutomatonTreeWidget::updateView()
         i++;
 
         //TODO add states / transitions / events as children
+    }
+}
+
+void AutomatonTreeWidget::showContextMenu(const QPoint & iPoint)
+{
+    QTreeWidgetItem * item = itemAt(iPoint);
+
+    if(item) {
+        m_contextMenu->exec(mapToGlobal(iPoint));
     }
 }
 

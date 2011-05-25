@@ -71,11 +71,16 @@ void DCEvent::setActive(bool active)
     emit statusChanged();
 }
 
-void DCEvent::setSensor(DCSensor *sensor)
+void DCEvent::setSensor(DCSensor *sensor, FBState state)
 {
     m_sensor = sensor;
 
-    connect(m_sensor, SIGNAL(stateChanged()), this, SLOT(updateStatus()));
+    if(state == HIGH) {
+        connect(m_sensor, SIGNAL(sensorHigh()), this, SLOT(updateStatus()));
+    }
+    else {
+        connect(m_sensor, SIGNAL(sensorLow()), this, SLOT(updateStatus()));
+    }
 }
 
 DCSensor * DCEvent::getSensor()
@@ -91,6 +96,10 @@ void DCEvent::setActuator(DCActuator *actuator, GAAction actuatorMode)
 
 void DCEvent::activateActuator()
 {
+    if(!m_actuator) {
+        return;
+    }
+
     if(m_actuatorMode == SWITCH_LEFT) {
         m_actuator->switchLeft();
     }

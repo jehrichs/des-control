@@ -26,6 +26,8 @@ namespace Ui {
 
 class Project;
 class AutomatonTreeWidget;
+class QMenu;
+class DCState;
 
 class ProjectWidget : public QWidget
 {
@@ -36,8 +38,13 @@ public:
     ~ProjectWidget();
 
     void setProject(Project *newProject);
+    void setContextMenu(QMenu * contextMenu);
 
     AutomatonTreeWidget* automatonList() const;
+
+public slots:
+    void setMode(QString mode);
+    void curState(DCState *curState);
 
 private:
     Ui::ProjectWidget *ui;

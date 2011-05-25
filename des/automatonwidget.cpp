@@ -26,8 +26,8 @@
 #include <QDebug>
 
 AutomatonWidget::AutomatonWidget(QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::AutomatonWidget)
+    QWidget(parent),
+    ui(new Ui::AutomatonWidget)
 {
     ui->setupUi(this);
 
@@ -97,6 +97,13 @@ void AutomatonWidget::closeTab(int index)
         ui->tabWidget->addTab(ui->tabEmpty, tr("empty automaton"));
         emit lastAutomatonClosed();
     }
+}
+
+void AutomatonWidget::closeTab(DCAutomaton* automaton)
+{
+    int index = ui->tabWidget->indexOf(automaton->views().first());
+
+    closeTab(index);
 }
 
 void AutomatonWidget::openAutomatonChanged(int index)

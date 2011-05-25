@@ -40,7 +40,6 @@ public:
     void removeTrain(DCTrain* train);
     void removeTrain(const QString & trainName);
 
-
     void addActuator(DCActuator* newActuator);
     QList<DCActuator*> actuators() const;
     void removeActuator(DCActuator* train);

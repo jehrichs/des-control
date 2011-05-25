@@ -34,8 +34,6 @@ DCServer::DCServer(QObject *parent)
     connect(m_tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectFromSRCP()));
     connect(m_tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(displayError(QAbstractSocket::SocketError)));
-
-            qDebug() << "create server ...";
 }
 
 void DCServer::setHost(const QString & host)
@@ -80,7 +78,7 @@ void DCServer::disconnectSRCP()
 {
     if( m_tcpSocket->state() == QAbstractSocket::ConnectedState )
     {
-        qDebug() << "send kill request";
+        //qDebug() << "send kill request";
         m_tcpSocket->write(QString("TERM 0 SESSION %1\n").arg(m_sessionId).toAscii());
         m_tcpSocket->waitForBytesWritten(500);
         m_tcpSocket->disconnectFromHost();
@@ -93,7 +91,7 @@ void DCServer::sendSRCP(const QString & srcpString)
 {
     if( m_tcpSocket->state() == QAbstractSocket::ConnectedState )
     {
-    qDebug() << "write srcp string" << QString("%1\n").arg(srcpString).toAscii();
+    //qDebug() << "write srcp string" << QString("%1\n").arg(srcpString).toAscii();
     m_tcpSocket->write(QString("%1\n").arg(srcpString).toAscii());
     m_tcpSocket->waitForBytesWritten();
     }
@@ -207,7 +205,7 @@ bool DCServer::parseSRCP( const QString & srcpString )
             QStringList handshakeGo = returnText.split(' ');
             m_sessionId = handshakeGo.last().toInt();
 
-            if(m_connectionMode == Connected) {
+            if(m_connectionState == Connected) {
                 emit connectionClosed();
             }
             return true;
@@ -216,7 +214,7 @@ bool DCServer::parseSRCP( const QString & srcpString )
 
     else
     {
-        qDebug() << "srcp parsing failed" << srcpString;
+        //qDebug() << "srcp parsing failed" << srcpString;
     }
 
     return false;

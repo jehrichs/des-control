@@ -18,6 +18,12 @@
 #include "projectwidget.h"
 #include "ui_projectwidget.h"
 
+#include "des/dcstate.h"
+#include "des/dcevent.h"
+#include "des/dctransition.h"
+
+#include <QDebug>
+
 ProjectWidget::ProjectWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ProjectWidget)
@@ -38,7 +44,38 @@ void ProjectWidget::setProject(Project *newProject)
     ui->treeAutomata->setProject(m_project);
 }
 
+void ProjectWidget::setContextMenu(QMenu * contextMenu)
+{
+    ui->treeAutomata->setContextMenu(contextMenu);
+}
+
 AutomatonTreeWidget* ProjectWidget::automatonList() const
 {
     return ui->treeAutomata;
+}
+
+void ProjectWidget::setMode(QString mode)
+{
+    ui->labelStatus->setText(mode);
+}
+
+void ProjectWidget::curState(DCState *curState)
+{
+    if(!curState) {
+        ui->labelCurState->setText(QString());
+        ui->labelEvents->setText(QString());
+    }
+    else {
+        ui->labelCurState->setText(curState->longName());
+
+        QList<DCTransition*> eventList = curState->outgoingTransitions();
+
+        QString eventNameList;
+        foreach(DCTransition* edge, eventList)
+        {
+            eventNameList.append( edge->event()->name() );
+            eventNameList.append("\n");
+        }
+        ui->labelEvents->setText(eventNameList);
+    }
 }

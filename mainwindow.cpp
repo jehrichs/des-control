@@ -37,6 +37,7 @@
 #include "des/automatonview.h"
 #include "des/dccontroller.h"
 #include "des/eventstatus.h"
+#include "hwconnections.h"
 
 #include "import/importautomaton.h"
 
@@ -55,7 +56,6 @@ MainWindow::MainWindow(QWidget *parent)
     , m_splitter(0)
     , m_projectWidget(0)
     , m_automatonWidget(0)
-    , m_autonamtonEdit(0)
     , m_autonamtonMode(0)
     , m_controllerState(0)
     , m_unsavedChanges(false)
@@ -68,6 +68,9 @@ MainWindow::MainWindow(QWidget *parent)
     showEmptyView();
 
     readSettings();
+
+    m_es = new EventStatus();
+
 }
 
 MainWindow::~MainWindow()
@@ -76,8 +79,8 @@ MainWindow::~MainWindow()
     delete m_projectWidget;
     delete m_automatonWidget;
     delete m_project;
-    delete m_autonamtonEdit;
     delete m_autonamtonMode;
+    delete m_es;
 }
 
 void MainWindow::writeSettings()
@@ -88,7 +91,6 @@ void MainWindow::writeSettings()
     settings.setValue("size", size());
     settings.setValue("pos", pos());
     settings.setValue("mainToolBar", ui->mainToolBar->isVisible());
-    settings.setValue("automatonToolBar", ui->automatonToolBar->isVisible());
     settings.setValue("controllerToolBar", ui->controllerToolBar->isVisible());
     settings.setValue("statusbar", ui->statusBar->isVisible());
     settings.endGroup();
@@ -103,8 +105,6 @@ void MainWindow::readSettings()
     move(settings.value("pos", QPoint(200, 200)).toPoint());
 
     ui->mainToolBar->setVisible(settings.value("mainToolBar", true).toBool());
-    ui->automatonToolBar->setVisible(settings.value("automatonToolBar", true).toBool());
-    ui->controllerToolBar->setVisible(settings.value("controllerToolBar", true).toBool());
     ui->statusBar->setVisible(settings.value("statusbar", true).toBool());
     ui->actToggleStatusBar->setChecked(settings.value("statusbar", true).toBool());
 
@@ -200,15 +200,13 @@ void MainWindow::newProject()
     ui->actSaveProject->setEnabled(true);
     ui->actSaveProjectAs->setEnabled(true);
     ui->actCloseProject->setEnabled(true);
-    ui->menuImport->setEnabled(true);
     ui->actImportAutomaton->setEnabled(true);
-    ui->actImportHardware->setEnabled(true);
-    ui->actExportHardwareSettings->setEnabled(true);
-    ui->menuExport->setEnabled(true);
     ui->menuAutomata->setEnabled(true);
     ui->menuServer->setEnabled(true);
-    ui->actShowProjectSettings->setEnabled(true);
-    ui->actNewAutomaton->setEnabled(true);
+    ui->actShowSettings->setEnabled(true);
+    ui->actDeleteAutomaton->setEnabled(true);
+
+    m_projectWidget->setMode("unknown");
 }
 
 void MainWindow::openProject()
@@ -237,7 +235,7 @@ void MainWindow::openProject()
     m_project = serializer.loadProject(&file);
     if(m_project)
     {
-        statusBar()->showMessage(tr("Project opened"), 2000);
+        statusBar()->showMessage(tr("Project opened"), 20000);
         m_project->setFileName(fileName);
         connect (m_project, SIGNAL(projectChanged()), this, SLOT(unsavedChanges()));
 
@@ -247,15 +245,13 @@ void MainWindow::openProject()
         ui->actSaveProject->setEnabled(true);
         ui->actSaveProjectAs->setEnabled(true);
         ui->actCloseProject->setEnabled(true);
-        ui->menuImport->setEnabled(true);
         ui->actImportAutomaton->setEnabled(true);
-        ui->actImportHardware->setEnabled(true);
-        ui->actExportHardwareSettings->setEnabled(true);
-        ui->menuExport->setEnabled(true);
         ui->menuAutomata->setEnabled(true);
         ui->menuServer->setEnabled(true);
-        ui->actShowProjectSettings->setEnabled(true);
-        ui->actNewAutomaton->setEnabled(true);
+        ui->actShowSettings->setEnabled(true);
+        ui->actDeleteAutomaton->setEnabled(true);
+
+        m_projectWidget->setMode("unknown");
     }
     else
     {
@@ -282,7 +278,7 @@ void MainWindow::saveProject()
 
         ProjectSerializer serializer;
         if(serializer.saveProject(m_project, &file))
-            statusBar()->showMessage(tr("Project saved"), 2000);
+            statusBar()->showMessage(tr("Project saved"), 20000);
 
         m_unsavedChanges = false;
     }
@@ -310,7 +306,7 @@ void MainWindow::saveProjectAs()
 
     ProjectSerializer serializer;
     if(serializer.saveProject(m_project, &file))
-        statusBar()->showMessage(tr("Project saved"), 2000);
+        statusBar()->showMessage(tr("Project saved"), 20000);
 
     m_unsavedChanges = false;
 }
@@ -355,36 +351,12 @@ bool MainWindow::closeProject()
     ui->actSaveProject->setEnabled(false);
     ui->actSaveProjectAs->setEnabled(false);
     ui->actCloseProject->setEnabled(false);
-    ui->menuImport->setEnabled(false);
     ui->actImportAutomaton->setEnabled(false);
-    ui->actImportHardware->setEnabled(false);
-    ui->actExportHardwareSettings->setEnabled(false);
-    ui->menuExport->setEnabled(false);
     ui->menuAutomata->setEnabled(false);
     ui->menuServer->setEnabled(false);
-    ui->actShowProjectSettings->setEnabled(false);
-    ui->actNewAutomaton->setEnabled(false);
+    ui->actShowSettings->setEnabled(false);
 
     return true;
-}
-
-void MainWindow::importHardware()
-{
-    QString fileName =
-            QFileDialog::getOpenFileName(this, tr("Import Hardware Details"),
-                                         QDir::currentPath(),
-                                         tr("Hardware Settings (*.xml)"));
-    if (fileName.isEmpty())
-        return;
-
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("DES Hardware Importer"),
-                             tr("Cannot open file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-        return;
-    }
 }
 
 void MainWindow::importAutomaton()
@@ -411,7 +383,7 @@ void MainWindow::importAutomaton()
 
     if(!automatonList.isEmpty())
     {
-        statusBar()->showMessage(tr("Automaton imported"), 2000);
+        statusBar()->showMessage(tr("Automaton imported"), 20000);
 
         foreach(DCAutomaton* automaton, automatonList)
         {
@@ -428,27 +400,25 @@ void MainWindow::importAutomaton()
     }
 }
 
-void MainWindow::exportHardware()
-{
-
-}
-
-void MainWindow::newAutomaton()
-{
-    //TODO show automata wizzard
-    DCAutomaton *newAutomaton = new DCAutomaton();
-    m_project->addAutomaton(newAutomaton);
-
-    //automaton created .. open and show it
-    //TODO m_automatonView->openAutomaton(newAutomaton);
-}
-
 void MainWindow::deleteAutomaton()
 {
-    //TODO DCAutomaton *delAutomaton = m_automatonView->currentAutomaton();
-    //TODO m_automatonView->closeActualTab();
+    DCAutomaton *delAutomaton = m_automatonWidget->currentAutomaton();
 
-    //TODO m_project->removeAutomaton(delAutomaton);
+    if(delAutomaton) {
+        m_automatonWidget->closeTab(delAutomaton);
+        m_project->removeAutomaton(delAutomaton);
+    }
+
+}
+
+void MainWindow::editHWConnection()
+{
+    DCAutomaton *automaton = m_automatonWidget->currentAutomaton();
+
+    if(automaton) {
+        HWConnections hwc(m_hw, automaton);
+        hwc.exec();
+    }
 }
 
 void MainWindow::editAutomaton()
@@ -461,6 +431,8 @@ void MainWindow::editAutomaton()
         ui->actStartController->setEnabled(false);
         ui->actStopController->setEnabled(false);
         ui->actPauseController->setEnabled(false);
+
+        m_projectWidget->setMode("edit mode");
     }
     else
         return;
@@ -485,6 +457,8 @@ void MainWindow::runAutomaton()
         ui->actStopController->setEnabled(true);
         ui->actPauseController->setEnabled(true);
         ui->actStopController->setChecked(true);
+
+        m_projectWidget->setMode("Hardware mode");
     }
     else
     {
@@ -513,6 +487,8 @@ void MainWindow::simulateAutomaton()
         ui->actStopController->setEnabled(true);
         ui->actPauseController->setEnabled(true);
         ui->actStopController->setChecked(true);
+
+        m_projectWidget->setMode("Simulation mode");
     }
     else
     {
@@ -523,11 +499,9 @@ void MainWindow::simulateAutomaton()
 
 void MainWindow::showEventStatus()
 {
-    EventStatus es;
+    m_es->setAutomaton(m_automatonWidget->currentAutomaton());
 
-    es.setAutomaton(m_automatonWidget->currentAutomaton());
-
-    es.exec();
+    m_es->show();
 }
 
 void MainWindow::connectToServer()
@@ -538,10 +512,9 @@ void MainWindow::connectToServer()
 void MainWindow::connectedToServer()
 {
     ui->actDisconnectFromServer->setEnabled(true);
-    ui->actToggleSystemPower->setEnabled(true);
     ui->actStartTrains->setEnabled(true);
     ui->actStopTrains->setEnabled(true);
-    statusBar()->showMessage(tr("Connection to SRCP Server established"), 2000);
+    statusBar()->showMessage(tr("Connection to SRCP Server established"), 20000);
 
     m_hw->initializeDevices();
 }
@@ -554,10 +527,9 @@ void MainWindow::disconnectFromServer()
 void MainWindow::disconnectedFromServer()
 {
     ui->actDisconnectFromServer->setEnabled(false);
-    ui->actToggleSystemPower->setEnabled(false);
     ui->actStartTrains->setEnabled(false);
     ui->actStopTrains->setEnabled(false);
-    statusBar()->showMessage(tr("Connection to SRCP Server lost"), 2000);
+    statusBar()->showMessage(tr("Connection to SRCP Server lost"), 20000);
 }
 
 void MainWindow::showHWDebugConsole()
@@ -600,6 +572,14 @@ void MainWindow::showProjectView()
     m_projectWidget = new ProjectWidget();
     m_projectWidget->setProject(m_project);
 
+    connect(m_controller, SIGNAL(curState(DCState*)), m_projectWidget, SLOT(curState(DCState*)));
+
+    QMenu * contextMenu = new QMenu();
+    contextMenu->addAction(ui->actEditHWConnection);
+    contextMenu->addAction(ui->actDeleteAutomaton);
+
+    m_projectWidget->setContextMenu(contextMenu);
+
     delete m_splitter;
     m_splitter = new QSplitter();
     m_splitter->addWidget(m_projectWidget);
@@ -628,23 +608,22 @@ void MainWindow::showEmptyView()
     m_automatonWidget = 0;
     delete m_splitter;
     m_splitter = 0;
+
+    if(m_controller &&  m_projectWidget)
+        disconnect(m_controller, SIGNAL(curState(DCState*)), m_projectWidget, SLOT(curState(DCState*)));
 }
 
 void MainWindow::createActions()
 {
-    m_autonamtonEdit = new QActionGroup(this);
-    m_autonamtonEdit->setExclusive(true);
-    m_autonamtonEdit->addAction(ui->actSelectItem);
-    m_autonamtonEdit->addAction(ui->actAddState);
-    m_autonamtonEdit->addAction(ui->actAddTransition);
-    ui->actSelectItem->setChecked(true);
-
     m_autonamtonMode = new QActionGroup(this);
     m_autonamtonMode->setExclusive(true);
     m_autonamtonMode->addAction(ui->actEditAutomaton);
     m_autonamtonMode->addAction(ui->actRunSimulation);
     m_autonamtonMode->addAction(ui->actRunwithHardware);
     ui->actEditAutomaton->setChecked(true);
+    ui->menuAutomata->setEnabled(false);
+    ui->actDeleteAutomaton->setEnabled(false);
+    ui->actImportAutomaton->setEnabled(false);
 
     m_controllerState= new QActionGroup(this);
     m_controllerState->setExclusive(true);
@@ -655,7 +634,6 @@ void MainWindow::createActions()
 
 
     ui->menuToggleToolBars->addAction(ui->mainToolBar->toggleViewAction());
-    ui->menuToggleToolBars->addAction(ui->automatonToolBar->toggleViewAction());
     ui->menuToggleToolBars->addAction(ui->controllerToolBar->toggleViewAction());
 
     connect(ui->actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -672,11 +650,7 @@ void MainWindow::createToolBars()
     ui->mainToolBar->addAction(ui->actCloseProject);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(ui->actImportAutomaton);
-
-    ui->automatonToolBar->addAction(ui->actNewAutomaton);
-    ui->automatonToolBar->addAction(ui->actDeleteAutomaton);
-    ui->automatonToolBar->addSeparator();
-    ui->automatonToolBar->addAction(ui->actSelectItem);
+    ui->mainToolBar->addAction(ui->actDeleteAutomaton);
 
     ui->controllerToolBar->addAction(ui->actEditAutomaton);
     ui->controllerToolBar->addAction(ui->actRunSimulation);
