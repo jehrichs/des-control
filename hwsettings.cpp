@@ -88,6 +88,7 @@ void HWSettings::startTrains()
     foreach(DCTrain* train, m_trains)
     {
         train->setSpeed(100);
+        train->setmaxSpeed(200);
         train->setDriveMode(DCTrain::FORWARD);
         train->sendValue();
     }

@@ -74,12 +74,13 @@ void DCEvent::setActive(bool active)
 void DCEvent::setSensor(DCSensor *sensor, FBState state)
 {
     m_sensor = sensor;
+    m_state = state;
 
     if(state == HIGH) {
-        connect(m_sensor, SIGNAL(sensorHigh()), this, SLOT(updateStatus()));
+        connect(m_sensor, SIGNAL(sensorChanged()), this, SLOT(updateStatus()));
     }
     else {
-        connect(m_sensor, SIGNAL(sensorLow()), this, SLOT(updateStatus()));
+        connect(m_sensor, SIGNAL(sensorChanged()), this, SLOT(updateStatus()));
     }
 }
 
@@ -122,6 +123,10 @@ void DCEvent::updateStatus()
     }
     else {
         m_active =  false;
+    }
+
+    if(m_state == LOW) {
+        m_active = !m_active;
     }
 
     emit statusChanged();

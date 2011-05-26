@@ -71,18 +71,12 @@ void DCActuator::switchLeft()
     setPort(1);
     setValue(QString("1"));
     sendValue();
-    setPort(1);
-    setValue(QString("0"));
-    sendValue();
 }
 
 void DCActuator::switchRight()
 {
     setPort(0);
     setValue(QString("1"));
-    sendValue();
-    setPort(0);
-    setValue(QString("0"));
     sendValue();
 }
 
@@ -105,7 +99,8 @@ void DCActuator::sendValue()
     // SET <bus> GA <addr> <port> <value> <delay>
     // last -1 means no automatic deactivation
     // value > 0 deactivation after x milliseconds
-    QString srcpString = QString("SET 1 GA %1 %2 %3 -1").arg(address()).arg(m_port).arg(m_value);
+    //QString srcpString = QString("SET 1 GA %1 %2 1 -1").arg(address()).arg(m_port).arg(m_value);
+    QString srcpString = QString("SET 1 GA %1 %2 1 50").arg(address()).arg(m_port);
 
     emit sendSRCPString(srcpString);
 }

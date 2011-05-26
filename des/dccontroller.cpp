@@ -106,7 +106,7 @@ void DCController::pauseController(bool paused)
     if(paused)
         m_cycleTimer->stop();
     else
-        m_cycleTimer->start(100);
+        m_cycleTimer->start(1);
 
     m_paused = paused;
 }
@@ -123,6 +123,30 @@ bool DCController::isPaused()
 
 void DCController::updateDES()
 {
+    //ok we have a current state
+    // what events are we listening to?
+    QList<DCTransition*> eventList = m_currentState->outgoingTransitions();
+
+    // do we have a controlled event which we can activate?
+    foreach(DCTransition* edge, eventList)
+    {
+        // if it is, follow current state to next state
+        if(edge->event()->controlable())
+        {
+            if(m_mode == Live) {
+                edge->event()->activateActuator();
+            }
+
+            m_currentState->setActive(false);
+            //qDebug() << "Switch state from " << m_currentState->name() << "to" << edge->destinationState()->name() << "via" <<  edge->event()->name();
+            m_currentState = edge->destinationState();
+            m_currentState->setActive(true);
+
+            emit curState(m_currentState); // do not check unconbtrolled events in this turn, change state and return for next cycle
+            return;
+        }
+    }
+
     // start every cycle by reading the inputs
     if(m_mode == Live) {
         QString  cmd = QString("readsensors");
@@ -144,8 +168,6 @@ void DCController::updateDES()
         QByteArray output = setConf.readAll();
 
         if( !output.isEmpty() ) {
-            //qDebug() << cmd;
-            //qDebug() << output;
             inputstring = QString(output);
 
             QList<DCSensor*> sensorList = m_hwSettings->sensors();
@@ -159,27 +181,6 @@ void DCController::updateDES()
         }
     }
 
-    //ok we have a current state
-    // what events are we listening to?
-    QList<DCTransition*> eventList = m_currentState->outgoingTransitions();
-
-    // do we have a controlled event which we can activate?
-    foreach(DCTransition* edge, eventList)
-    {
-        // if it is, follow current state to next state
-        if(edge->event()->controlable())
-        {
-            if(m_mode == Live) {
-                edge->event()->activateActuator();
-            }
-
-            m_currentState->setActive(false);
-            m_currentState = edge->destinationState();
-            m_currentState->setActive(true);
-            break;
-        }
-    }
-
     //is one of the uncontrolled events active?
     foreach(DCTransition* edge, eventList)
     {
@@ -187,12 +188,13 @@ void DCController::updateDES()
         // do not check 2 conrollable shortly after each other, we might not be able to switch so fast
         if(!edge->event()->controlable() && edge->event()->isActive())
         {
+            //qDebug() << "Switch state from " << m_currentState->name() << "to" << edge->destinationState()->name() << "via" <<  edge->event()->name();
             m_currentState->setActive(false);
             m_currentState = edge->destinationState();
-            qDebug() << edge->destinationState()->name();
             m_currentState->setActive(true);
+
+            emit curState(m_currentState); // do not check unconbtrolled events in this turn, change state and return for next cycle
+            return;
         }
     }
-
-    emit curState(m_currentState);
 }

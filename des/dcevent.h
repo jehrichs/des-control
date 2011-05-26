@@ -73,6 +73,7 @@ private:
     bool m_controlable;
 
     bool m_active;
+    FBState m_state;
     DCSensor *m_sensor;
     DCActuator *m_actuator;
     GAAction m_actuatorMode;

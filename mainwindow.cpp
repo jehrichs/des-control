@@ -161,19 +161,19 @@ void MainWindow::readSettings()
     m_hw->addActuator(a4);
 
     DCSensor *s1 = new DCSensor();
-    s1->setName(QString("Sensor 1"));
+    s1->setName(QString("Sensor 1 inner"));
     s1->setAddress(1);
     m_hw->addSensor(s1);
     DCSensor *s2 = new DCSensor();
-    s2->setName(QString("Sensor 2"));
+    s2->setName(QString("Sensor 1 outer"));
     s2->setAddress(2);
     m_hw->addSensor(s2);
     DCSensor *s3 = new DCSensor();
-    s3->setName(QString("Sensor 3"));
+    s3->setName(QString("Sensor 2 inner"));
     s3->setAddress(3);
     m_hw->addSensor(s3);
     DCSensor *s4 = new DCSensor();
-    s4->setName(QString("Sensor 4"));
+    s4->setName(QString("Sensor 2 outer"));
     s4->setAddress(4);
     m_hw->addSensor(s4);
 

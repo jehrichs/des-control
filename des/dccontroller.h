@@ -66,6 +66,7 @@ private:
 
     bool m_running;
     bool m_paused;
+    int m_tmp;
 };
 
 #endif // DCCONTROLLER_H
