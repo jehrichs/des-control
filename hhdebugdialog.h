@@ -36,9 +36,13 @@ public:
     ~HHDebugDialog();
 
 public slots:
-    void train1Start();
+    void train1Start100();
+    void train1Start50();
+    void train1Start25();
     void train1Stop();
-    void train2Start();
+    void train2Start100();
+    void train2Start50();
+    void train2Start25();
     void train2Stop();
     void switch1Left();
     void switch1Right();

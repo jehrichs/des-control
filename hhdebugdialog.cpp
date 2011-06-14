@@ -52,9 +52,30 @@ HHDebugDialog::~HHDebugDialog()
     delete m_cycleTimer;
 }
 
-void HHDebugDialog::train1Start()
+void HHDebugDialog::train1Start100()
 {
     DCTrain *t = m_hw->trains().at(0);
+    t->setSpeed(200);
+    t->setmaxSpeed(200);
+    t->setDriveMode(DCTrain::FORWARD);
+    t->start();
+}
+
+void HHDebugDialog::train1Start50()
+{
+    DCTrain *t = m_hw->trains().at(0);
+    t->setSpeed(100);
+    t->setmaxSpeed(200);
+    t->setDriveMode(DCTrain::FORWARD);
+    t->start();
+}
+
+void HHDebugDialog::train1Start25()
+{
+    DCTrain *t = m_hw->trains().at(0);
+    t->setSpeed(50);
+    t->setmaxSpeed(200);
+    t->setDriveMode(DCTrain::FORWARD);
     t->start();
 }
 
@@ -64,9 +85,30 @@ void HHDebugDialog::train1Stop()
     t->stop();
 }
 
-void HHDebugDialog::train2Start()
+void HHDebugDialog::train2Start100()
 {
     DCTrain *t = m_hw->trains().at(1);
+    t->setSpeed(200);
+    t->setmaxSpeed(200);
+    t->setDriveMode(DCTrain::FORWARD);
+    t->start();
+}
+
+void HHDebugDialog::train2Start50()
+{
+    DCTrain *t = m_hw->trains().at(1);
+    t->setSpeed(100);
+    t->setmaxSpeed(200);
+    t->setDriveMode(DCTrain::FORWARD);
+    t->start();
+}
+
+void HHDebugDialog::train2Start25()
+{
+    DCTrain *t = m_hw->trains().at(1);
+    t->setSpeed(50);
+    t->setmaxSpeed(200);
+    t->setDriveMode(DCTrain::FORWARD);
     t->start();
 }
 

@@ -71,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_es = new EventStatus();
 
+    connect(m_controller, SIGNAL(historyEntry(QString)), this, SLOT(printSessionHistory(QString)));
+
 }
 
 MainWindow::~MainWindow()
@@ -459,6 +461,10 @@ void MainWindow::runAutomaton()
         ui->actStopController->setChecked(true);
 
         m_projectWidget->setMode("Hardware mode");
+
+        if(!ui->actDisconnectFromServer->isEnabled()) {
+            connectToServer();
+        }
     }
     else
     {
@@ -738,4 +744,8 @@ void MainWindow::switchOpendAutomaton(DCAutomaton::SceneMode currentMode)
     }
 }
 
+void MainWindow::printSessionHistory(const QString & msg)
+{
+    ui->textEdit->append(msg);
+}
 

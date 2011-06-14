@@ -85,6 +85,9 @@ void DCController::startController()
     m_cycleTimer->start(100);
     m_running = true;
     emit curState(m_currentState);
+
+    QString historyString = QString("Controller started");
+    emit historyEntry(historyString);
 }
 
 void DCController::stopController()
@@ -99,6 +102,9 @@ void DCController::stopController()
     m_paused = false;
     m_running = false;
     emit curState(m_currentState);
+
+    QString historyString = QString("Controller stopped");
+    emit historyEntry(historyString);
 }
 
 void DCController::pauseController(bool paused)
@@ -109,6 +115,9 @@ void DCController::pauseController(bool paused)
         m_cycleTimer->start(1);
 
     m_paused = paused;
+
+    QString historyString = QString("Controller paused");
+    emit historyEntry(historyString);
 }
 
 bool DCController::isRunnung()
@@ -142,7 +151,11 @@ void DCController::updateDES()
             m_currentState = edge->destinationState();
             m_currentState->setActive(true);
 
-            emit curState(m_currentState); // do not check unconbtrolled events in this turn, change state and return for next cycle
+            emit curState(m_currentState); // do not check uncontrolled events in this turn, change state and return for next cycle
+
+            QString historyString = QString("Event: %1 :: New State: %2").arg(edge->event()->name()).arg(m_currentState->longName());
+            emit historyEntry(historyString);
+
             return;
         }
     }
@@ -194,6 +207,10 @@ void DCController::updateDES()
             m_currentState->setActive(true);
 
             emit curState(m_currentState); // do not check unconbtrolled events in this turn, change state and return for next cycle
+
+            QString historyString = QString("Event: %1 :: New State: %2").arg(edge->event()->name()).arg(m_currentState->longName());
+            emit historyEntry(historyString);
+
             return;
         }
     }

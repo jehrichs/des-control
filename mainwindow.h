@@ -80,6 +80,8 @@ public Q_SLOTS:
     void someAutomataVisible();
     void switchOpendAutomaton(DCAutomaton::SceneMode currentMode);
 
+    void printSessionHistory(const QString & msg);
+
 protected:
     void closeEvent(QCloseEvent *event);
 

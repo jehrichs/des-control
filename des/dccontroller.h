@@ -47,6 +47,7 @@ public:
 
 signals:
     void curState(DCState *curstate);
+    void historyEntry(const QString &entry);
 
 public slots:
     void startController();

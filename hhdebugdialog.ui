@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>257</width>
-    <height>498</height>
+    <width>394</width>
+    <height>505</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -159,11 +159,11 @@
       <item row="0" column="1">
        <widget class="QPushButton" name="pb_startTrain1">
         <property name="text">
-         <string>Start</string>
+         <string>Start 100%</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="0" column="4">
        <widget class="QPushButton" name="pb_stopTrain1">
         <property name="text">
          <string>Stop</string>
@@ -180,14 +180,42 @@
       <item row="1" column="1">
        <widget class="QPushButton" name="pb_startTrain2">
         <property name="text">
-         <string>Start</string>
+         <string>Start 100%</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QPushButton" name="pb_stopTrain2">
+        <property name="text">
+         <string>Stop</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Start 50%</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QPushButton" name="pb_stopTrain2">
+       <widget class="QPushButton" name="pushButton_2">
         <property name="text">
-         <string>Stop</string>
+         <string>Start 50%</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="text">
+         <string>Start 25%</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="text">
+         <string>Start 25%</string>
         </property>
        </widget>
       </item>
@@ -314,8 +342,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>252</x>
+     <y>500</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -330,28 +358,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>320</x>
+     <y>500</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pb_startTrain1</sender>
-   <signal>clicked()</signal>
-   <receiver>HHDebugDialog</receiver>
-   <slot>train1Start()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>128</x>
-     <y>218</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>128</x>
-     <y>248</y>
     </hint>
    </hints>
   </connection>
@@ -362,24 +374,8 @@
    <slot>train1Stop()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>218</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>128</x>
-     <y>248</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pb_startTrain2</sender>
-   <signal>clicked()</signal>
-   <receiver>HHDebugDialog</receiver>
-   <slot>train2Start()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>128</x>
-     <y>256</y>
+     <x>376</x>
+     <y>232</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -394,8 +390,8 @@
    <slot>train2Stop()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>256</y>
+     <x>376</x>
+     <y>268</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -410,8 +406,8 @@
    <slot>switch1Left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>337</y>
+     <x>253</x>
+     <y>349</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -426,8 +422,8 @@
    <slot>switch1Right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>337</y>
+     <x>376</x>
+     <y>349</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -442,8 +438,8 @@
    <slot>switch2Left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>371</y>
+     <x>253</x>
+     <y>385</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -458,8 +454,8 @@
    <slot>switch2Right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>371</y>
+     <x>376</x>
+     <y>385</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -474,8 +470,8 @@
    <slot>switch3Left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>405</y>
+     <x>253</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -490,8 +486,8 @@
    <slot>switch3Right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>405</y>
+     <x>376</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -506,8 +502,8 @@
    <slot>switch4Left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>439</y>
+     <x>253</x>
+     <y>457</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -522,8 +518,8 @@
    <slot>switch4Right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>439</y>
+     <x>376</x>
+     <y>457</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -531,11 +527,107 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pb_startTrain1</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train1Start100()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train1Start50()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>188</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train1Start25()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_startTrain2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train2Start100()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>258</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train2Start50()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>211</x>
+     <y>258</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>train2Start25()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>288</x>
+     <y>257</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>train1Start()</slot>
+  <slot>train1Start100()</slot>
   <slot>train1Stop()</slot>
-  <slot>train2Start()</slot>
+  <slot>train2Start100()</slot>
   <slot>train2Stop()</slot>
   <slot>switch1Left()</slot>
   <slot>switch2Left()</slot>
@@ -545,5 +637,9 @@
   <slot>switch2Right()</slot>
   <slot>switch3Right()</slot>
   <slot>switch4Right()</slot>
+  <slot>train2Start50()</slot>
+  <slot>train2Start25()</slot>
+  <slot>train1Start50()</slot>
+  <slot>train1Start25()</slot>
  </slots>
 </ui>
