@@ -459,6 +459,10 @@
    </property>
   </action>
   <action name="actEditHWConnection">
+   <property name="icon">
+    <iconset resource="oxygen.qrc">
+     <normaloff>:/icons/vcs_status.png</normaloff>:/icons/vcs_status.png</iconset>
+   </property>
    <property name="text">
     <string>Edit Hardware Connection</string>
    </property>

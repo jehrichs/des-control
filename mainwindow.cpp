@@ -624,6 +624,7 @@ void MainWindow::createActions()
     ui->menuAutomata->setEnabled(false);
     ui->actDeleteAutomaton->setEnabled(false);
     ui->actImportAutomaton->setEnabled(false);
+    ui->actEditHWConnection->setEnabled(false);
 
     m_controllerState= new QActionGroup(this);
     m_controllerState->setExclusive(true);
@@ -650,6 +651,7 @@ void MainWindow::createToolBars()
     ui->mainToolBar->addAction(ui->actCloseProject);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(ui->actImportAutomaton);
+    ui->mainToolBar->addAction(ui->actEditHWConnection);
     ui->mainToolBar->addAction(ui->actDeleteAutomaton);
 
     ui->controllerToolBar->addAction(ui->actEditAutomaton);
@@ -691,6 +693,7 @@ void MainWindow::noAutomatonVisible()
     ui->actStartController->setEnabled(false);
     ui->actStopController->setEnabled(false);
     ui->actPauseController->setEnabled(false);
+    ui->actEditHWConnection->setEnabled(false);
 }
 
 void MainWindow::someAutomataVisible()
@@ -699,6 +702,7 @@ void MainWindow::someAutomataVisible()
     ui->actEditAutomaton->setEnabled(true);
     ui->actRunwithHardware->setEnabled(true);
     ui->actRunSimulation->setEnabled(true);
+    ui->actEditHWConnection->setEnabled(true);
 }
 
 void MainWindow::switchOpendAutomaton(DCAutomaton::SceneMode currentMode)

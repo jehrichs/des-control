@@ -101,8 +101,10 @@ void DCActuator::sendValue()
     // value > 0 deactivation after x milliseconds
     //QString srcpString = QString("SET 1 GA %1 %2 1 -1").arg(address()).arg(m_port).arg(m_value);
     QString srcpString = QString("SET 1 GA %1 %2 1 50").arg(address()).arg(m_port);
+    QString srcpString2 = QString("SET 1 GA %1 %2 1 50").arg(address()).arg(m_port);
 
     emit sendSRCPString(srcpString);
+    emit sendSRCPString(srcpString2);
 }
 
 void DCActuator::updateValues(const QString & srcpString)
