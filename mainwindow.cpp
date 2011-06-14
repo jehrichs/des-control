@@ -47,6 +47,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QDebug>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -73,6 +74,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_controller, SIGNAL(historyEntry(QString)), this, SLOT(printSessionHistory(QString)));
 
+    QThread *testThread = new QThread;
+    m_controller->moveToThread(testThread);
+    testThread->start();
 }
 
 MainWindow::~MainWindow()
