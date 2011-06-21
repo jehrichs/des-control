@@ -47,6 +47,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QDebug>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -73,6 +74,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_controller, SIGNAL(historyEntry(QString)), this, SLOT(printSessionHistory(QString)));
 
+    QThread *testThread = new QThread;
+    m_controller->moveToThread(testThread);
+    testThread->start();
 }
 
 MainWindow::~MainWindow()
@@ -144,23 +148,55 @@ void MainWindow::readSettings()
     DCActuator *a1 = new DCActuator();
     a1->setName(QString("Switch 1"));
     a1->setProtocol(DCActuator::MAERKLIN);
+    a1->setType(DCActuator::GA_SWITCH);
     a1->setAddress(1);
     m_hw->addActuator(a1);
     DCActuator *a2 = new DCActuator();
     a2->setName(QString("Switch 2"));
     a2->setProtocol(DCActuator::MAERKLIN);
+    a2->setType(DCActuator::GA_SWITCH);
     a2->setAddress(2);
     m_hw->addActuator(a2);
     DCActuator *a3 = new DCActuator();
     a3->setName(QString("Switch 3"));
     a3->setProtocol(DCActuator::MAERKLIN);
+    a3->setType(DCActuator::GA_SWITCH);
     a3->setAddress(3);
     m_hw->addActuator(a3);
     DCActuator *a4 = new DCActuator();
     a4->setName(QString("Switch 4"));
     a4->setProtocol(DCActuator::MAERKLIN);
+    a4->setType(DCActuator::GA_SWITCH);
     a4->setAddress(4);
     m_hw->addActuator(a4);
+
+    DCActuator *a5 = new DCActuator();
+    a5->setName(QString("Signal 1i"));
+    a5->setProtocol(DCActuator::MAERKLIN);
+    a5->setType(DCActuator::GA_SIGNAL);
+    a5->setAddress(9);
+    m_hw->addActuator(a5);
+
+    DCActuator *a6 = new DCActuator();
+    a6->setName(QString("Signal 1o"));
+    a6->setProtocol(DCActuator::MAERKLIN);
+    a6->setType(DCActuator::GA_SIGNAL);
+    a6->setAddress(11);
+    m_hw->addActuator(a6);
+
+    DCActuator *a7 = new DCActuator();
+    a7->setName(QString("Signal 2i"));
+    a7->setProtocol(DCActuator::MAERKLIN);
+    a7->setType(DCActuator::GA_SIGNAL);
+    a7->setAddress(7);
+    m_hw->addActuator(a7);
+
+    DCActuator *a8 = new DCActuator();
+    a8->setName(QString("Signal 2o"));
+    a8->setProtocol(DCActuator::MAERKLIN);
+    a8->setType(DCActuator::GA_SIGNAL);
+    a8->setAddress(5);
+    m_hw->addActuator(a8);
 
     DCSensor *s1 = new DCSensor();
     s1->setName(QString("Sensor 1 inner"));

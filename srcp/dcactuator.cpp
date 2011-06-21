@@ -55,6 +55,15 @@ int DCActuator::port() const
 {
     return m_port;
 }
+void DCActuator::setType(GAType type)
+{
+    m_type = type;
+}
+
+DCActuator::GAType DCActuator::getType()
+{
+    return m_type;
+}
 
 void DCActuator::setValue(const QString & value)
 {
@@ -99,12 +108,17 @@ void DCActuator::sendValue()
     // SET <bus> GA <addr> <port> <value> <delay>
     // last -1 means no automatic deactivation
     // value > 0 deactivation after x milliseconds
-    //QString srcpString = QString("SET 1 GA %1 %2 1 -1").arg(address()).arg(m_port).arg(m_value);
+    if(m_type == GA_SWITCH) {
     QString srcpString = QString("SET 1 GA %1 %2 1 50").arg(address()).arg(m_port);
     QString srcpString2 = QString("SET 1 GA %1 %2 1 50").arg(address()).arg(m_port);
 
     emit sendSRCPString(srcpString);
     emit sendSRCPString(srcpString2);
+    }
+    else {
+        QString srcpString = QString("SET 1 GA %1 %2 1 -1").arg(address()).arg(m_port);
+        emit sendSRCPString(srcpString);
+    }
 }
 
 void DCActuator::updateValues(const QString & srcpString)

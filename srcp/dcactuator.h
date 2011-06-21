@@ -33,6 +33,11 @@ public:
         SERVER
     };
 
+    enum GAType {
+        GA_SWITCH,
+        GA_SIGNAL
+    };
+
     explicit DCActuator();
 
     void setProtocol(GAProtocol protocol);
@@ -40,6 +45,9 @@ public:
 
     void setPort(int port);
     int port() const;
+
+    void setType(GAType type);
+    GAType getType();
 
     void setValue(const QString & value);
     QString value() const;
@@ -55,6 +63,7 @@ public slots:
 
 private:
     GAProtocol m_protocol;
+    GAType m_type;
     int m_port;
 
     QString m_value;
