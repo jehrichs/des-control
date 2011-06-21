@@ -165,6 +165,53 @@ void HHDebugDialog::switch4Right()
     DCActuator *a = m_hw->actuators().at(3);
     a->switchRight();
 }
+void HHDebugDialog::signal1iGreen()
+{
+    DCActuator *a = m_hw->actuators().at(4);
+    a->switchLeft();
+}
+
+void HHDebugDialog::signal1iRed()
+{
+    DCActuator *a = m_hw->actuators().at(4);
+    a->switchRight();
+}
+
+void HHDebugDialog::signal1oGreen()
+{
+    DCActuator *a = m_hw->actuators().at(5);
+    a->switchLeft();
+}
+
+void HHDebugDialog::signal1oRed()
+{
+    DCActuator *a = m_hw->actuators().at(5);
+    a->switchRight();
+}
+
+void HHDebugDialog::signal2iGreen()
+{
+    DCActuator *a = m_hw->actuators().at(6);
+    a->switchLeft();
+}
+
+void HHDebugDialog::signal2iRed()
+{
+    DCActuator *a = m_hw->actuators().at(6);
+    a->switchRight();
+}
+
+void HHDebugDialog::signal2oGreen()
+{
+    DCActuator *a = m_hw->actuators().at(7);
+    a->switchLeft();
+}
+
+void HHDebugDialog::signal2oRed()
+{
+    DCActuator *a = m_hw->actuators().at(7);
+    a->switchRight();
+}
 
 void HHDebugDialog::updateSensors()
 {

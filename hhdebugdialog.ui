@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>394</width>
-    <height>505</height>
+    <width>470</width>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Position 1.1</string>
+         <string>Position 1i</string>
         </property>
        </widget>
       </item>
@@ -56,7 +56,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Position 1.2</string>
+         <string>Position 1o</string>
         </property>
        </widget>
       </item>
@@ -83,7 +83,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Position 2.1</string>
+         <string>Position 2i</string>
         </property>
        </widget>
       </item>
@@ -110,7 +110,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Position 2.2</string>
+         <string>Position 2o</string>
         </property>
        </widget>
       </item>
@@ -223,103 +223,206 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Switches</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <property name="margin">
-       <number>10</number>
-      </property>
-      <property name="spacing">
-       <number>10</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Switch 1</string>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>Switches</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <property name="margin">
+         <number>10</number>
         </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="pb_switch1Left">
-        <property name="text">
-         <string>Left</string>
+        <property name="spacing">
+         <number>10</number>
         </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="pb_switch1Right">
-        <property name="text">
-         <string>Right</string>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Switch 1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="pb_switch1Left">
+          <property name="text">
+           <string>Left</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="pb_switch1Right">
+          <property name="text">
+           <string>Right</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Switch 2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pb_switch2Left">
+          <property name="text">
+           <string>Left</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="pb_switch2Right">
+          <property name="text">
+           <string>Right</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Switch 3</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="pb_switch3Left">
+          <property name="text">
+           <string>Left</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pb_switch3Right">
+          <property name="text">
+           <string>Right</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Switch 4</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="pb_switch4Left">
+          <property name="text">
+           <string>Left</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QPushButton" name="pb_switch4Right">
+          <property name="text">
+           <string>Right</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_4">
+       <property name="title">
+        <string>Signals</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <property name="margin">
+         <number>10</number>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Switch 2</string>
+        <property name="spacing">
+         <number>10</number>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="pb_switch2Left">
-        <property name="text">
-         <string>Left</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="pb_switch2Right">
-        <property name="text">
-         <string>Right</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Switch 3</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="pb_switch3Left">
-        <property name="text">
-         <string>Left</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="pb_switch3Right">
-        <property name="text">
-         <string>Right</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Switch 4</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="pb_switch4Left">
-        <property name="text">
-         <string>Left</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="pb_switch4Right">
-        <property name="text">
-         <string>Right</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Signal 1i</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="pb_switch1Left_2">
+          <property name="text">
+           <string>red</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="pb_switch1Right_2">
+          <property name="text">
+           <string>green</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Signal 1o</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pb_switch2Left_2">
+          <property name="text">
+           <string>red</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="pb_switch2Right_2">
+          <property name="text">
+           <string>green</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Signal 2i</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="pb_switch3Left_2">
+          <property name="text">
+           <string>red</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pb_switch3Right_2">
+          <property name="text">
+           <string>green</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>Signal 2o</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="pb_switch4Left_2">
+          <property name="text">
+           <string>red</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QPushButton" name="pb_switch4Right_2">
+          <property name="text">
+           <string>green</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -342,8 +445,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>252</x>
-     <y>500</y>
+     <x>256</x>
+     <y>606</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -358,8 +461,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>320</x>
-     <y>500</y>
+     <x>324</x>
+     <y>606</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -374,8 +477,8 @@
    <slot>train1Stop()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>232</y>
+     <x>450</x>
+     <y>283</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -390,8 +493,8 @@
    <slot>train2Stop()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>268</y>
+     <x>450</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -406,8 +509,8 @@
    <slot>switch1Left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>253</x>
-     <y>349</y>
+     <x>139</x>
+     <y>452</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -422,8 +525,8 @@
    <slot>switch1Right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>349</y>
+     <x>213</x>
+     <y>452</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -438,8 +541,8 @@
    <slot>switch2Left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>253</x>
-     <y>385</y>
+     <x>139</x>
+     <y>487</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -454,8 +557,8 @@
    <slot>switch2Right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>385</y>
+     <x>213</x>
+     <y>487</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -470,8 +573,8 @@
    <slot>switch3Left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>253</x>
-     <y>421</y>
+     <x>139</x>
+     <y>522</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -486,8 +589,8 @@
    <slot>switch3Right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>421</y>
+     <x>213</x>
+     <y>522</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -502,8 +605,8 @@
    <slot>switch4Left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>253</x>
-     <y>457</y>
+     <x>139</x>
+     <y>557</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -518,8 +621,8 @@
    <slot>switch4Right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>457</y>
+     <x>213</x>
+     <y>557</y>
     </hint>
     <hint type="destinationlabel">
      <x>128</x>
@@ -534,8 +637,8 @@
    <slot>train1Start100()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>104</x>
-     <y>216</y>
+     <x>171</x>
+     <y>283</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -550,8 +653,8 @@
    <slot>train1Start50()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>188</x>
-     <y>221</y>
+     <x>275</x>
+     <y>283</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -566,8 +669,8 @@
    <slot>train1Start25()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>278</x>
-     <y>221</y>
+     <x>379</x>
+     <y>283</y>
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
@@ -582,8 +685,8 @@
    <slot>train2Start100()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>134</x>
-     <y>258</y>
+     <x>171</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
      <x>2</x>
@@ -598,8 +701,8 @@
    <slot>train2Start50()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>211</x>
-     <y>258</y>
+     <x>275</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
      <x>2</x>
@@ -614,12 +717,140 @@
    <slot>train2Start25()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>288</x>
-     <y>257</y>
+     <x>379</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
      <x>2</x>
      <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch1Left_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>signal1iRed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>361</x>
+     <y>439</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch1Right_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>signal1iGreen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>424</x>
+     <y>440</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>469</x>
+     <y>438</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch2Left_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>signal1oRed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>347</x>
+     <y>471</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>472</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch4Left_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>signal2oRed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>352</x>
+     <y>553</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>373</x>
+     <y>581</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch4Right_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>signal2oGreen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>426</x>
+     <y>552</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>553</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch3Left_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>signal2iRed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>327</x>
+     <y>513</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>230</x>
+     <y>548</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch3Right_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>signal2iGreen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>429</x>
+     <y>518</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>467</x>
+     <y>531</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_switch2Right_2</sender>
+   <signal>clicked()</signal>
+   <receiver>HHDebugDialog</receiver>
+   <slot>signal1oGreen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>405</x>
+     <y>480</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>474</y>
     </hint>
    </hints>
   </connection>
@@ -641,5 +872,13 @@
   <slot>train2Start25()</slot>
   <slot>train1Start50()</slot>
   <slot>train1Start25()</slot>
+  <slot>signal1iRed()</slot>
+  <slot>signal1oRed()</slot>
+  <slot>signal2iRed()</slot>
+  <slot>signal2oRed()</slot>
+  <slot>signal1iGreen()</slot>
+  <slot>signal1oGreen()</slot>
+  <slot>signal2iGreen()</slot>
+  <slot>signal2oGreen()</slot>
  </slots>
 </ui>

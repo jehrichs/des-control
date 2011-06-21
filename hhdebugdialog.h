@@ -54,6 +54,14 @@ public slots:
     void switch4Right();
     void updateSensors();
     void changeSensorState();
+    void signal1iRed();
+    void signal1iGreen();
+    void signal1oRed();
+    void signal1oGreen();
+    void signal2iRed();
+    void signal2iGreen();
+    void signal2oRed();
+    void signal2oGreen();
 
 private:
     Ui::HHDebugDialog *ui;

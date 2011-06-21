@@ -66,8 +66,14 @@ void HWConnections::setupDialog()
             cb->setProperty("type", "controlled");
 
             foreach(DCActuator *a, m_hw->actuators()) {
-                cb->addItem(QString("%1 :: %2").arg(a->name()).arg("inner"), DCEvent::SWITCH_LEFT );
-                cb->addItem(QString("%1 :: %2").arg(a->name()).arg("outer"), DCEvent::SWITCH_RIGHT );
+                if(a->getType() == DCActuator::GA_SWITCH) {
+                    cb->addItem(QString("%1 :: %2").arg(a->name()).arg("outer"), DCEvent::SWITCH_LEFT );
+                    cb->addItem(QString("%1 :: %2").arg(a->name()).arg("inner"), DCEvent::SWITCH_RIGHT );
+                }
+                else {
+                    cb->addItem(QString("%1 :: %2").arg(a->name()).arg("green"), DCEvent::SWITCH_LEFT );
+                    cb->addItem(QString("%1 :: %2").arg(a->name()).arg("red"), DCEvent::SWITCH_RIGHT );
+                }
             }
 
             layout->addWidget(cb);
