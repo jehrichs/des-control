@@ -392,7 +392,7 @@ void MainWindow::importAutomaton()
             m_project->addAutomaton(automaton);
         }
 
-        automatonList.first()->doLayout();
+        //automatonList.first()->doLayout();
         m_automatonWidget->openAutomaton(automatonList.first());
 
     }

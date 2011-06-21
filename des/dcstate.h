@@ -57,7 +57,6 @@ public:
 
     void setActive(bool active);
 
-
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 

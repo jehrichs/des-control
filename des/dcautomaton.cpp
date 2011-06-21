@@ -29,8 +29,9 @@
 #include <QPen>
 #include <QDebug>
 
-DCAutomaton::DCAutomaton(QObject *parent)
+DCAutomaton::DCAutomaton(ImportMode mode, QObject *parent)
     : QGraphicsScene(parent)
+    , m_visualMode(mode)
     , m_sceneMode(Edit)
     , m_type(Plant)
     , m_name("Automata")
@@ -92,16 +93,18 @@ DCAutomaton::AutomatonType DCAutomaton::automatonType() const
 
 void DCAutomaton::addState(DCState* newState)
 {
-
-    addItem(newState);
-    newState->setPos(50,50);
+    if(m_visualMode == DCAutomaton::Visual) {
+        addItem(newState);
+        newState->setPos(50,50);
+    }
     m_stateList.append(newState);
 }
 
 void DCAutomaton::addTransition(DCTransition *newtransition)
 {
-
-    addItem(newtransition);
+    if(m_visualMode == DCAutomaton::Visual) {
+        addItem(newtransition);
+    }
     m_transitionList.append(newtransition);
 }
 
@@ -174,36 +177,17 @@ void DCAutomaton::addState()
     m_mode = InsertPlace;
 }
 
-DCState * DCAutomaton::newState()
-{
-    DCState *newState = new DCState();
-    newState->setName("ON");
-    newState->setMarked(true);
-
-    addItem(newState);
-    m_stateList.append(newState);
-    return newState;
-
-}
-
 void DCAutomaton::addEvent()
 {
     m_mode = InsertEvent;
 }
 
-void DCAutomaton::deleteSelected()
-{
-
-}
-
-
-void DCAutomaton::editSelected()
-{
-
-}
-
 void DCAutomaton::doLayout()
 {
+    if(m_visualMode != DCAutomaton::Visual) {
+        return;
+    }
+
     GVGraph gvTest("layout1");
 
     foreach(DCState *state, m_stateList)
@@ -238,7 +222,6 @@ void DCAutomaton::doLayout()
     }
 
     setSceneRect(gvTest.boundingRect().adjusted(-100,-100,100,100));
-
 }
 
 void DCAutomaton::lineLayout()
@@ -259,42 +242,6 @@ void DCAutomaton::bezierLayout()
 
 void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (mouseEvent->button() != Qt::LeftButton)
-        return;
-
-    if(m_sceneMode != DCAutomaton::Edit)
-        return;
-
-    switch (m_mode) {
-    case InsertPlace:
-//        {
-//            DCState *place = newState();
-//            place->setPos(mouseEvent->scenePos());
-//        }
-//        //emit itemInserted(item);
-//        break;
-    case InsertEvent:
-//        m_line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
-//                                              mouseEvent->scenePos()));
-//        m_line->setPen(QPen(Qt::black, 2));
-//        addItem(m_line);
-//        break;
-    case InsertText:
-        //        textItem = new DiagramTextItem();
-        //        textItem->setFont(myFont);
-        //        textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-        //        textItem->setZValue(1000.0);
-        //        connect(textItem, SIGNAL(lostFocus(DiagramTextItem*)),
-        //                this, SLOT(editorLostFocus(DiagramTextItem*)));
-        //        connect(textItem, SIGNAL(selectedChange(QGraphicsItem*)),
-        //                this, SIGNAL(itemSelected(QGraphicsItem*)));
-        //        addItem(textItem);
-        //        textItem->setDefaultTextColor(myTextColor);
-        //        textItem->setPos(mouseEvent->scenePos());
-        //emit textInserted(textItem);
-    default:
-        ;
-    }
 
     QGraphicsScene::mousePressEvent(mouseEvent);
 }

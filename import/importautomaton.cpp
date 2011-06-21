@@ -69,7 +69,7 @@ QList<DCAutomaton*> ImportAutomaton::loadSupremicaFile(QIODevice *device)
             {
                 if (reader.name() == "Automaton")
                 {
-                    DCAutomaton* automaton = new DCAutomaton();
+                    DCAutomaton* automaton = new DCAutomaton(DCAutomaton::Visual);
                     automaton->setName(reader.attributes().value("name").toString());
 
                     QString type = reader.attributes().value("type").toString();
