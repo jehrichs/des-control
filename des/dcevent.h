@@ -54,9 +54,12 @@ public:
     void setActive(bool active);
 
     void setSensor(DCSensor *sensor, FBState state);
+    FBState getFBState();
     DCSensor * getSensor();
 
     void setActuator(DCActuator *actuator, GAAction actuatorMode);
+    DCActuator * getActuator();
+    GAAction getActuatorMode();
     void activateActuator();
 
 public slots:

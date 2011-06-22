@@ -131,23 +131,6 @@ void DCTransition::automaticLabelPosition()
     m_eventText->setPos(labelPos);
 }
 
-void DCTransition::pathToLine()
-{
-    QPainterPath newPath;
-    arrowHead.clear();
-    newPath.moveTo(m_source->center());
-    newPath.lineTo(m_destination->center());
-
-    setPath(newPath);
-
-    update();
-}
-
-void DCTransition::pathToBezier()
-{
-
-}
-
 void DCTransition::paint(QPainter *painter, const QStyleOptionGraphicsItem *,QWidget *)
 {
     if (m_source->collidesWithItem(m_destination))
@@ -180,29 +163,6 @@ void DCTransition::paint(QPainter *painter, const QStyleOptionGraphicsItem *,QWi
     painter->drawPolygon(arrowHead);
 }
 
-void DCTransition::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    event->pos();
-    event->lastPos();
-
-    qreal dx = event->lastPos().x() - event->pos().x();
-    qreal dy = event->lastPos().y() - event->pos().y();
-
-    QPainterPath original = path();
-
-    for(int i=1; i< original.elementCount() -1; i++)
-    {
-        if(original.elementAt(i).type == QPainterPath::CurveToDataElement)
-        {
-            original.setElementPositionAt(i, original.elementAt(i).x - dx,
-                                          original.elementAt(i).y - dy);
-        }
-    }
-
-    setPath(original);
-
-    //QGraphicsItem::mouseMoveEvent(event);
-}
 
 void DCTransition::createArrow()
 {

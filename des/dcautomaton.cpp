@@ -29,21 +29,37 @@
 #include <QPen>
 #include <QDebug>
 
-DCAutomaton::DCAutomaton(ImportMode mode, QObject *parent)
+DCAutomaton::DCAutomaton(VisualMode mode, QObject *parent)
     : QGraphicsScene(parent)
     , m_visualMode(mode)
     , m_sceneMode(Edit)
     , m_type(Plant)
     , m_name("Automata")
-    , m_line(0)
 {
     setSceneRect ( 0, 0, 1000, 1000 );
 }
 
+void DCAutomaton::setVisualMode(VisualMode mode)
+{
+    m_visualMode = mode;
+
+    if(m_visualMode == DCAutomaton::Nonvisual) {
+        foreach(DCState *dcs, m_stateList) {
+            removeItem(dcs);
+        }
+        foreach(DCTransition *dct, m_transitionList) {
+            removeItem(dct);
+        }
+    }
+}
+
+DCAutomaton::VisualMode DCAutomaton::getVisualMode()
+{
+    return m_visualMode;
+}
+
 DCAutomaton::~DCAutomaton()
 {
-    delete  m_line;
-
     m_stateList.clear();
     m_transitionList.clear();
     m_eventList.clear();
@@ -95,7 +111,7 @@ void DCAutomaton::addState(DCState* newState)
 {
     if(m_visualMode == DCAutomaton::Visual) {
         addItem(newState);
-        newState->setPos(50,50);
+        newState->setPos(50,50); // use doLayout to create a good looking automaton view
     }
     m_stateList.append(newState);
 }
@@ -167,21 +183,6 @@ DCState *DCAutomaton::getInitialState()
     return 0;
 }
 
-void DCAutomaton::selectItem()
-{
-    m_mode = MoveItem;
-}
-
-void DCAutomaton::addState()
-{
-    m_mode = InsertPlace;
-}
-
-void DCAutomaton::addEvent()
-{
-    m_mode = InsertEvent;
-}
-
 void DCAutomaton::doLayout()
 {
     if(m_visualMode != DCAutomaton::Visual) {
@@ -222,75 +223,4 @@ void DCAutomaton::doLayout()
     }
 
     setSceneRect(gvTest.boundingRect().adjusted(-100,-100,100,100));
-}
-
-void DCAutomaton::lineLayout()
-{
-    foreach(DCTransition *transition, m_transitionList)
-    {
-        transition->pathToLine();
-    }
-}
-
-void DCAutomaton::bezierLayout()
-{
-    foreach(DCTransition *transition, m_transitionList)
-    {
-        transition->pathToBezier();
-    }
-}
-
-void DCAutomaton::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-
-    QGraphicsScene::mousePressEvent(mouseEvent);
-}
-
-void DCAutomaton::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    if (m_mode == InsertEvent && m_line != 0) {
-        QLineF newLine(m_line->line().p1(), mouseEvent->scenePos());
-        m_line->setLine(newLine);
-    } else if (m_mode == MoveItem) {
-        QGraphicsScene::mouseMoveEvent(mouseEvent);
-    }
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
-}
-
-void DCAutomaton::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    if (m_line != 0 && m_mode == InsertEvent) {
-        QList<QGraphicsItem *> startItems = items(m_line->line().p1());
-        if (startItems.count() && startItems.first() == m_line)
-            startItems.removeFirst();
-        QList<QGraphicsItem *> endItems = items(m_line->line().p2());
-        if (endItems.count() && endItems.first() == m_line)
-            endItems.removeFirst();
-
-        removeItem(m_line);
-        delete m_line;
-
-        //qDebug() << "startItems" << startItems.count() << startItems.first()->type() << DCPlace::Type;
-
-        // foreach(QGraphicsItem *item,startItems)
-        // qDebug() << item->type();
-
-        if (startItems.count() > 0 && endItems.count() > 0 &&
-            startItems.last()->type() == DCState::Type &&
-            endItems.last()->type() == DCState::Type &&
-            startItems.last() != endItems.last()) {
-            DCState *startItem =
-                    qgraphicsitem_cast<DCState *>(startItems.last());
-            DCState *endItem =
-                    qgraphicsitem_cast<DCState *>(endItems.last());
-            DCTransition *transition = new DCTransition();
-
-            transition->setStates(startItem, endItem);
-
-            transition->updatePosition();
-            addItem(transition);
-        }
-    }
-    m_line = 0;
-    QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }

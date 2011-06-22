@@ -34,6 +34,7 @@ class AutomatonWidget;
 class QActionGroup;
 class QCloseEvent;
 class EventStatus;
+class ImportAutomaton;
 
 class MainWindow : public QMainWindow
 {
@@ -54,6 +55,7 @@ public Q_SLOTS:
     bool closeProject();
 
     void importAutomaton();
+    void importFinished(DCAutomaton* ia);
     void deleteAutomaton();
 
     void editHWConnection();
@@ -99,6 +101,7 @@ private:
     QSplitter *m_splitter;
     ProjectWidget *m_projectWidget;
     AutomatonWidget *m_automatonWidget;
+    ImportAutomaton *m_importer;
 
     QActionGroup* m_autonamtonMode;
     QActionGroup* m_controllerState;

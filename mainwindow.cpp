@@ -26,7 +26,6 @@
 #include "automatontreewidget.h"
 #include "projectserializer.h"
 
-#include "srcp/serverdebugconsole.h"
 #include "hhdebugdialog.h"
 #include "srcp/dcserver.h"
 #include "srcp/dcsensor.h"
@@ -37,6 +36,7 @@
 #include "des/automatonview.h"
 #include "des/dccontroller.h"
 #include "des/eventstatus.h"
+#include "des/dctransition.h"
 #include "hwconnections.h"
 
 #include "import/importautomaton.h"
@@ -48,6 +48,7 @@
 #include <QSettings>
 #include <QDebug>
 #include <QThread>
+#include <QProgressDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -406,30 +407,37 @@ void MainWindow::importAutomaton()
     if (fileName.isEmpty())
         return;
 
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("DES Automaton Importer"),
-                             tr("Cannot open file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-        return;
-    }
+    DCAutomaton* newAutomaton = new DCAutomaton(DCAutomaton::Visual);
+    m_importer = new ImportAutomaton(ImportAutomaton::SUPREMICA, fileName);
+    m_importer->setAutomaton(newAutomaton);
+    connect(m_importer, SIGNAL(importfinished(DCAutomaton*)), this, SLOT(importFinished(DCAutomaton*)));
+    m_importer->start();
 
-    ImportAutomaton importer;
+    QProgressDialog progress("Import automaton", "Abort Copy", 0, 100, this);
+    progress.setWindowModality(Qt::WindowModal);
 
-    QList<DCAutomaton*> automatonList = importer.loadAutomaton(ImportAutomaton::SUPREMICA, &file);
+    connect(m_importer, SIGNAL(importstatus(QString)), &progress, SLOT(setLabelText(QString)));
+    connect(m_importer, SIGNAL(importvalue(int)), &progress, SLOT(setValue(int)));
+    connect(m_importer, SIGNAL(importfinished()), &progress, SLOT(close()));
+    progress.exec();
 
-    if(!automatonList.isEmpty())
+}
+
+void MainWindow::importFinished(DCAutomaton* ia)
+{
+    disconnect(m_importer, SIGNAL(importfinished(DCAutomaton*)), this, SLOT(importFinished(DCAutomaton*)));
+
+    DCAutomaton* automaton = ia;
+    delete m_importer;
+
+    if(automaton)
     {
         statusBar()->showMessage(tr("Automaton imported"), 20000);
 
-        foreach(DCAutomaton* automaton, automatonList)
-        {
-            m_project->addAutomaton(automaton);
-        }
+        m_project->addAutomaton(automaton);
 
-        //automatonList.first()->doLayout();
-        m_automatonWidget->openAutomaton(automatonList.first());
+        automaton->doLayout();
+        m_automatonWidget->openAutomaton(automaton);
 
     }
     else
@@ -446,7 +454,6 @@ void MainWindow::deleteAutomaton()
         m_automatonWidget->closeTab(delAutomaton);
         m_project->removeAutomaton(delAutomaton);
     }
-
 }
 
 void MainWindow::editHWConnection()

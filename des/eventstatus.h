@@ -23,12 +23,11 @@ public:
 
     void setAutomaton(DCAutomaton* automaton);
 
-
 private slots:
     void updateStatus();
+    void toggleStatus();
 
 private:
-
     struct eventrow
     {
         DCEvent* event;

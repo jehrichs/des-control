@@ -48,7 +48,7 @@ void ActuatorSettings::showNewItemInfo ( QListWidgetItem * current, QListWidgetI
 {
     Q_UNUSED(current);
     Q_UNUSED(previous);
-    //TODO check if there are unsaved chanegs in the old item
+    //TODO check if there are unsaved changes in the old item
 
     //we assume no sorting in the listview thus => row of item = position in the project QList
 

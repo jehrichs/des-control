@@ -47,7 +47,8 @@ void EventStatus::setupDialog()
         er.button = new QPushButton("toggle");
         er.button->setProperty("event", i);
 
-        connect(er.button, SIGNAL(clicked()), er.event, SLOT(toggleStatus()));
+        //connect(er.button, SIGNAL(clicked()), event, SLOT(toggleStatus()));
+        connect(er.button, SIGNAL(clicked()), this, SLOT(toggleStatus()));
         connect(er.event, SIGNAL( statusChanged()) , this, SLOT(updateStatus()));
 
         ui->gridLayout->addWidget(er.name, i, 0);
@@ -58,6 +59,21 @@ void EventStatus::setupDialog()
         i++;
 
         eventList.append(er);
+    }
+}
+
+void EventStatus::toggleStatus()
+{
+    QPushButton* sender = dynamic_cast<QPushButton*>( this->sender() );
+
+    QList<DCEvent*> events =  m_automaton->getEventList();
+    DCEvent* e = events.at(sender->property("event").toInt() - 1);
+
+    if(e->isActive()) {
+        e->setActive(false);
+    }
+    else {
+        e->setActive(true);
     }
 }
 

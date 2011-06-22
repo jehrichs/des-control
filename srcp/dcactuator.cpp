@@ -109,11 +109,13 @@ void DCActuator::sendValue()
     // last -1 means no automatic deactivation
     // value > 0 deactivation after x milliseconds
     if(m_type == GA_SWITCH) {
+        //send the string twice ... otherwise the switch does noit react sometimes
     QString srcpString = QString("SET 1 GA %1 %2 1 50").arg(address()).arg(m_port);
     QString srcpString2 = QString("SET 1 GA %1 %2 1 50").arg(address()).arg(m_port);
 
     emit sendSRCPString(srcpString);
     emit sendSRCPString(srcpString2);
+
     }
     else {
         QString srcpString = QString("SET 1 GA %1 %2 1 -1").arg(address()).arg(m_port);

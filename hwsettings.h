@@ -61,7 +61,7 @@ signals:
     void updateSensors();
     void updateActuators();
 
-    private:
+private:
     DCServer *m_server;
     QList<DCTrain*> m_trains;
     QList<DCActuator*> m_actuators;

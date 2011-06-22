@@ -16,7 +16,6 @@
  */
 
 #include "dcserver.h"
-//#include <QtNetwork>
 #include <QTcpSocket>
 #include <QAbstractSocket>
 #include <QMessageBox>
@@ -78,7 +77,6 @@ void DCServer::disconnectSRCP()
 {
     if( m_tcpSocket->state() == QAbstractSocket::ConnectedState )
     {
-        //qDebug() << "send kill request";
         m_tcpSocket->write(QString("TERM 0 SESSION %1\n").arg(m_sessionId).toAscii());
         m_tcpSocket->waitForBytesWritten(500);
         m_tcpSocket->disconnectFromHost();
@@ -91,7 +89,6 @@ void DCServer::sendSRCP(const QString & srcpString)
 {
     if( m_tcpSocket->state() == QAbstractSocket::ConnectedState )
     {
-    //qDebug() << "write srcp string" << QString("%1\n").arg(srcpString).toAscii();
     m_tcpSocket->write(QString("%1\n").arg(srcpString).toAscii());
     m_tcpSocket->waitForBytesWritten();
     }
@@ -159,7 +156,6 @@ void DCServer::readSRCPInput()
 
     case Handshake:
         //expected reply -> 200 OK GO <ID>
-        //TODO support other handshake commands
         if( parseSRCP( readLine.simplified() ) )
         {
             // succesfull started session

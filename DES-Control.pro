@@ -31,7 +31,6 @@ SOURCES += main.cpp\
            srcp/trainsettings.cpp \
            srcp/actuatorsettings.cpp \
            srcp/serversettings.cpp \
-           srcp/serverdebugconsole.cpp \
            project.cpp \
            srcp/dcserver.cpp \
            srcp/dcmodelitem.cpp \
@@ -46,7 +45,6 @@ SOURCES += main.cpp\
            import/importautomaton.cpp \
     des/dctransition.cpp \
     des/gvgraph.cpp \
-    srcp/srcpevent.cpp \
     des/dccontroller.cpp \
     projectwidget.cpp \
     des/automatonwidget.cpp \
@@ -61,7 +59,6 @@ HEADERS  += mainwindow.h \
             srcp/trainsettings.h \
             srcp/actuatorsettings.h \
             srcp/serversettings.h \
-            srcp/serverdebugconsole.h \
             project.h \
             srcp/dcserver.h \
             srcp/dcmodelitem.h \
@@ -76,7 +73,6 @@ HEADERS  += mainwindow.h \
             import/importautomaton.h \
     des/dctransition.h \
     des/gvgraph.h \
-    srcp/srcpevent.h \
     des/dccontroller.h \
     projectwidget.h \
     des/automatonwidget.h \

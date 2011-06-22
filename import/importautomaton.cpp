@@ -22,112 +22,140 @@
 #include "../des/dctransition.h"
 #include "../des/dcevent.h"
 
+#include <QFile>
+#include <QMessageBox>
 #include <QDebug>
 
-ImportAutomaton::ImportAutomaton(QObject *parent) :
-    QObject(parent)
+ImportAutomaton::ImportAutomaton(AutomatonFile fileType, const QString & filename) :
+    QThread(0)
 {
     m_useShortnames = true;
+    m_fileType = fileType;
+    m_filename = filename;
 }
 
 ImportAutomaton::~ImportAutomaton()
 {
 }
 
-QList<DCAutomaton*> ImportAutomaton::loadAutomaton(AutomatonFile fileType, QIODevice *device)
+void ImportAutomaton::run()
 {
-    switch(fileType)
+    loadAutomaton();
+}
+
+void ImportAutomaton::loadAutomaton()
+{
+    QFile file(m_filename);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        QMessageBox::warning(0, tr("DES Automaton Importer"),
+                             tr("Cannot open file %1:\n%2.")
+                             .arg(m_filename)
+                             .arg(file.errorString()));
+        return;
+    }
+
+    switch(m_fileType)
     {
     case DESUMA:
-        return loadDesumaFile(device);
+        loadDesumaFile(&file);
         break;
     case SUPREMICA:
-        return loadSupremicaFile(device);
+        loadSupremicaFile(&file);
         break;
     }
 
-    return QList<DCAutomaton*>();
+    emit importfinished(m_automaton);
 }
 
-QList<DCAutomaton*> ImportAutomaton::loadDesumaFile(QIODevice *device)
+DCAutomaton* ImportAutomaton::getAutomaton()
+{
+    return m_automaton;
+}
+
+void ImportAutomaton::setAutomaton(DCAutomaton* newAutomaton)
+{
+    m_automaton = newAutomaton;
+}
+
+void ImportAutomaton::loadDesumaFile(QIODevice *device)
 {
     Q_UNUSED(device);
     qDebug() << "DESUMA implementation still missing :P";
-    return QList<DCAutomaton*>();
 }
 
-QList<DCAutomaton*> ImportAutomaton::loadSupremicaFile(QIODevice *device)
+void ImportAutomaton::loadSupremicaFile(QIODevice *device)
 {
-    reader.setDevice(device);
-    m_automatonList.clear();
+    m_reader.setDevice(device);
 
-    while (reader.readNextStartElement())
+    while (m_reader.readNextStartElement())
     {
-        if (reader.name() == "Automata")
+        if (m_reader.name() == "Automata")
         {
-            while (reader.readNextStartElement())
+            while (m_reader.readNextStartElement())
             {
-                if (reader.name() == "Automaton")
+                if (m_reader.name() == "Automaton")
                 {
-                    DCAutomaton* automaton = new DCAutomaton(DCAutomaton::Visual);
-                    automaton->setName(reader.attributes().value("name").toString());
+                    //DCAutomaton* automaton = new DCAutomaton(DCAutomaton::Visual);
+                    m_automaton->setName(m_reader.attributes().value("name").toString());
 
-                    QString type = reader.attributes().value("type").toString();
+                    QString type = m_reader.attributes().value("type").toString();
                     if(type == "Supervisor")
-                        automaton->setAutomatonType(DCAutomaton::Supervisor);
+                        m_automaton->setAutomatonType(DCAutomaton::Supervisor);
                     else if(type == "Plant")
-                        automaton->setAutomatonType(DCAutomaton::Plant);
+                        m_automaton->setAutomatonType(DCAutomaton::Plant);
                     else if(type == "Specification")
-                        automaton->setAutomatonType(DCAutomaton::Specification);
+                        m_automaton->setAutomatonType(DCAutomaton::Specification);
                     else if(type == "Property")
-                        automaton->setAutomatonType(DCAutomaton::Property);
+                        m_automaton->setAutomatonType(DCAutomaton::Property);
                     else
                         qDebug() << "Error unknown automaton type ::" << type;
 
-                    while (reader.readNextStartElement())
+                    while (m_reader.readNextStartElement())
                     {
-                        if (reader.name() == "Events")
+                        if (m_reader.name() == "Events")
                         {
-                            addSupEvent(automaton);
+                            emit importvalue(10);
+                            addSupEvent(m_automaton);
                         }
-                        else if (reader.name() == "States")
+                        else if (m_reader.name() == "States")
                         {
-                            addSupState(automaton);
+                            emit importvalue(33);
+                            addSupState(m_automaton);
+
                         }
-                        else if (reader.name() == "Transitions")
+                        else if (m_reader.name() == "Transitions")
                         {
-                            addSupTransition(automaton);
+                            emit importvalue(66);
+                            addSupTransition(m_automaton);
+                            emit importvalue(100);
                         }
                         else
-                            reader.skipCurrentElement();
+                            m_reader.skipCurrentElement();
                     }
-
-                    m_automatonList.append(automaton);
                 }
                 else
-                    reader.skipCurrentElement();
+                    m_reader.skipCurrentElement();
             }
         }
         else
-            reader.skipCurrentElement();
+            m_reader.skipCurrentElement();
     }
-
-    return m_automatonList;
 }
 
 void ImportAutomaton::addSupEvent(DCAutomaton* automaton)
 {
-    reader.readNext();
-    while(reader.name() != "Events")
+    m_reader.readNext();
+    int eventcounter = 0;
+    while(m_reader.name() != "Events")
     {
-        if(reader.readNext() == QXmlStreamReader::StartElement)
+        if(m_reader.readNext() == QXmlStreamReader::StartElement)
         {
             DCEvent* newevent = new DCEvent();
 
-            newevent->setName(reader.attributes().value("label").toString());
-            newevent->setId(reader.attributes().value("id").toString().toInt());
+            newevent->setName(m_reader.attributes().value("label").toString());
+            newevent->setId(m_reader.attributes().value("id").toString().toInt());
 
-            if(reader.attributes().value("controllable").toString() == "false") {
+            if(m_reader.attributes().value("controllable").toString() == "false") {
                 newevent->setControlable(false);
             }
             else {
@@ -135,6 +163,9 @@ void ImportAutomaton::addSupEvent(DCAutomaton* automaton)
             }
 
             automaton->addEvent(newevent);
+            eventcounter++;
+
+            emit importstatus(QString("Import Event %1").arg(eventcounter));
         }
     }
 
@@ -142,12 +173,12 @@ void ImportAutomaton::addSupEvent(DCAutomaton* automaton)
 
 void ImportAutomaton::addSupState(DCAutomaton* automaton)
 {
-    reader.readNext();
+    m_reader.readNext();
 
     int placeNumber = 1;
-    while(reader.name() != "States")
+    while(m_reader.name() != "States")
     {
-        if(reader.readNext() == QXmlStreamReader::StartElement)
+        if(m_reader.readNext() == QXmlStreamReader::StartElement)
         {
             DCState* newState = new DCState();
 
@@ -155,40 +186,49 @@ void ImportAutomaton::addSupState(DCAutomaton* automaton)
                 newState->setName(QString("S%1").arg(placeNumber));
             }
             else {
-                newState->setName(reader.attributes().value("name").toString());
+                newState->setName(m_reader.attributes().value("name").toString());
             }
 
-            newState->setLongName(reader.attributes().value("name").toString());
-            newState->setId(reader.attributes().value("id").toString().toInt());
+            newState->setLongName(m_reader.attributes().value("name").toString());
+            newState->setId(m_reader.attributes().value("id").toString().toInt());
 
-            if(reader.attributes().value("initial").toString() == "true")
+            if(m_reader.attributes().value("initial").toString() == "true")
                 newState->setInitial(true);
 
-            if(reader.attributes().value("accepting").toString() == "true")
+            if(m_reader.attributes().value("accepting").toString() == "true")
                 newState->setMarked(true);
 
             automaton->addState(newState);
 
             placeNumber++;
+
+            if(placeNumber > 100 && automaton->getVisualMode() == DCAutomaton::Visual) {
+                automaton->setVisualMode(DCAutomaton::Nonvisual);
+            }
+
+            emit importstatus(QString("Import State %1").arg(placeNumber));
         }
     }
 }
 
 void ImportAutomaton::addSupTransition(DCAutomaton* automaton)
 {
-    reader.readNext();
-    while(reader.name() != "Transitions")
+    m_reader.readNext();
+    int transitioncounter = 0;
+    while(m_reader.name() != "Transitions")
     {
-        if(reader.readNext() == QXmlStreamReader::StartElement)
+        if(m_reader.readNext() == QXmlStreamReader::StartElement)
         {
             DCTransition* newTransition = new DCTransition();
 
-            newTransition->setStates(automaton->getStateFromId(reader.attributes().value("source").toString().toInt()),
-                                     automaton->getStateFromId(reader.attributes().value("dest").toString().toInt()));
+            newTransition->setStates(automaton->getStateFromId(m_reader.attributes().value("source").toString().toInt()),
+                                     automaton->getStateFromId(m_reader.attributes().value("dest").toString().toInt()));
 
-            newTransition->setEvent(automaton->getEventFromId(reader.attributes().value("event").toString().toInt()));
+            newTransition->setEvent(automaton->getEventFromId(m_reader.attributes().value("event").toString().toInt()));
 
             automaton->addTransition(newTransition);
+            transitioncounter++;
+            emit importstatus(QString("Import Transition %1").arg(transitioncounter));
         }
     }
 }

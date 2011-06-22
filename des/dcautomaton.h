@@ -32,11 +32,9 @@ class DCAutomaton : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    enum ImportMode { Visual, Nonvisual};
+    enum VisualMode { Visual, Nonvisual};
 
     enum SceneMode { Edit, Run };
-
-    enum Mode { InsertPlace, InsertEvent, InsertText, MoveItem };
 
     enum AutomatonType
     {
@@ -46,8 +44,11 @@ public:
         Property
     };
 
-    DCAutomaton(ImportMode mode, QObject *parent = 0);
+    DCAutomaton(VisualMode mode, QObject *parent = 0);
     ~DCAutomaton();
+
+    void setVisualMode(VisualMode mode);
+    VisualMode getVisualMode();
 
     void setSceneMode(SceneMode mode);
     DCAutomaton::SceneMode sceneMode();
@@ -73,29 +74,14 @@ public:
 
     void doLayout();
 
-    void lineLayout();
-    void bezierLayout();
-
 signals:
     void modeChanged(SceneMode newMode);
 
-public slots:
-    void selectItem();
-    void addState();
-    void addEvent();
-
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
-
 private:
-    ImportMode m_visualMode;
+    VisualMode m_visualMode;
     SceneMode m_sceneMode;
     AutomatonType m_type;
     QString m_name;
-    Mode m_mode;
-    QGraphicsLineItem *m_line;
 
     QList<DCState *> m_stateList;
     QList<DCTransition *> m_transitionList;

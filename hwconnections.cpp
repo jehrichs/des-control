@@ -76,6 +76,32 @@ void HWConnections::setupDialog()
                 }
             }
 
+            if(e->getActuator()) {
+                QString lookupString;
+                switch(e->getActuatorMode()) {
+                    case(DCEvent::SWITCH_LEFT):
+                    if(e->getActuator()->getType() == DCActuator::GA_SWITCH) {
+                        lookupString =  "outer";
+                    }
+                    else {
+                        lookupString =  "green";
+                    }
+                    break;
+                case(DCEvent::SWITCH_RIGHT):
+                    if(e->getActuator()->getType() == DCActuator::GA_SWITCH) {
+                        lookupString =  "inner";
+                    }
+                    else {
+                        lookupString =  "red";
+                    }
+                break;
+
+                }
+
+                int index = cb->findText(QString("%1 :: %2").arg(e->getActuator()->name()).arg(lookupString));
+                cb->setCurrentIndex(index);
+            }
+
             layout->addWidget(cb);
             m_cbList.append(cb);
         }
@@ -87,6 +113,19 @@ void HWConnections::setupDialog()
             foreach(DCSensor *s, m_hw->sensors()) {
                 cb->addItem(QString("%1 :: %2").arg(s->name()).arg("On"), DCEvent::HIGH );
                 cb->addItem(QString("%1 :: %2").arg(s->name()).arg("Off"), DCEvent::LOW );
+            }
+
+            if(e->getSensor()) {
+                QString name;
+                if(e->getFBState() == DCEvent::HIGH) {
+                    name = QString("%1 :: %2").arg(e->getSensor()->name()).arg("On");
+                }
+                else {
+                    name = QString("%1 :: %2").arg(e->getSensor()->name()).arg("Off");
+                }
+
+                int index = cb->findText(name);
+                cb->setCurrentIndex(index);
             }
 
             layout->addWidget(cb);

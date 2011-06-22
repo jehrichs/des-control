@@ -50,9 +50,6 @@ public:
 
     bool isEventActive();
 
-    void pathToLine();
-    void pathToBezier();
-
     QPainterPath shape() const;
 
     enum { Type = UserType + 10 };
@@ -62,7 +59,6 @@ protected:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,QWidget *widget = 0);
 
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 private:
     void createArrow();
 

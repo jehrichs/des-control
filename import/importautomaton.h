@@ -19,14 +19,14 @@
 #define IMPORTAUTOMATON_H
 
 
-#include <QObject>
+#include <QThread>
 #include <QXmlStreamReader>
 #include <QList>
 
 class QIODevice;
 class DCAutomaton;
 
-class ImportAutomaton : public QObject
+class ImportAutomaton : public QThread
 {
     Q_OBJECT
 
@@ -37,21 +37,32 @@ public:
         SUPREMICA
     };
 
-    explicit ImportAutomaton(QObject *parent = 0);
+    explicit ImportAutomaton(AutomatonFile fileType, const QString & filename);
     ~ImportAutomaton();
 
-    QList<DCAutomaton*> loadAutomaton(AutomatonFile fileType, QIODevice *device);
+    void run();
+
+    void loadAutomaton();
+    DCAutomaton* getAutomaton();
+    void setAutomaton(DCAutomaton* newAutomaton);
+
+signals:
+    void importfinished(DCAutomaton* ia);
+    void importstatus(const QString & msg);
+    void importvalue (int value);
 
 private:
-    QList<DCAutomaton*> loadDesumaFile(QIODevice *device);
-    QList<DCAutomaton*> loadSupremicaFile(QIODevice *device);
+    void loadDesumaFile(QIODevice *m_device);
+    void loadSupremicaFile(QIODevice *m_device);
 
     void addSupEvent(DCAutomaton* automaton);
     void addSupState(DCAutomaton* automaton);
     void addSupTransition(DCAutomaton* automaton);
 
-    QXmlStreamReader reader;
-    QList<DCAutomaton*> m_automatonList;
+    AutomatonFile m_fileType;
+    QString m_filename;
+    QXmlStreamReader m_reader;
+    DCAutomaton* m_automaton;
 
     bool m_useShortnames;
 };

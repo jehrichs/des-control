@@ -25,6 +25,7 @@ DCEvent::DCEvent()
     : m_id(-1)
     , m_controlable(false)
     , m_active(false)
+    , m_sensor(0)
     , m_actuator(0)
 {
 
@@ -84,6 +85,11 @@ void DCEvent::setSensor(DCSensor *sensor, FBState state)
     }
 }
 
+DCEvent::FBState DCEvent::getFBState()
+{
+    return m_state;
+}
+
 DCSensor * DCEvent::getSensor()
 {
     return m_sensor;
@@ -93,6 +99,16 @@ void DCEvent::setActuator(DCActuator *actuator, GAAction actuatorMode)
 {
     m_actuator = actuator;
     m_actuatorMode = actuatorMode;
+}
+
+DCActuator * DCEvent::getActuator()
+{
+    return m_actuator;
+}
+
+DCEvent::GAAction DCEvent::getActuatorMode()
+{
+    return m_actuatorMode;
 }
 
 void DCEvent::activateActuator()

@@ -21,6 +21,7 @@ DCModelItem::DCModelItem()
     : QObject()
     , m_busID(-1)
     , m_address(-1)
+    , m_name(QString())
 {
 }
 
